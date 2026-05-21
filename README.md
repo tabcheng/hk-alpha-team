@@ -2,7 +2,7 @@
 
 HK Alpha Team is an **AI-assisted Hong Kong equity research and investment strategy advisory system**.
 
-It is designed to support human decision-making with structured analysis, portfolio strategy proposals, paper trading records, simulation reviews, and iterative learning artifacts.
+It supports human decision-making through structured analysis, strategy proposals, paper trading records, simulation reviews, and iterative learning artifacts.
 
 ## Important Scope Boundary
 
@@ -22,6 +22,20 @@ The human user acts as **Harness Engineering** and is responsible for:
 - Risk acceptance and capital allocation decisions.
 - Oversight of research quality, model behavior, and simulation integrity.
 
+## Strategy Recommendation Labels
+
+Preferred strategy labels:
+
+- `STRONG_WATCH`
+- `WAIT_FOR_PULLBACK`
+- `SMALL_POSITION`
+- `ACCUMULATE`
+- `HOLD`
+- `REDUCE_RISK`
+- `AVOID`
+
+Simple BUY/SELL outputs should be avoided unless they include context, confidence, key reasons, main risks, invalidation conditions, and explicit human decision framing.
+
 ## Repository Purpose (Foundation Phase)
 
 This repository currently provides project foundations:
@@ -35,13 +49,15 @@ This repository currently provides project foundations:
 ## Documentation Map
 
 - `PROJECT_BRIEF.md` — concise project charter.
+- `AGENTS.md` — Codex governance, rules, and definition of done.
 - `docs/00-project-vision.md` — long-form intent, boundaries, and outcomes.
 - `docs/01-system-architecture.md` — conceptual architecture for early planning.
-- `docs/02-agent-departments.md` — departmental agent responsibilities.
-- `docs/03-investment-strategy-office.md` — strategy recommendation workflow.
-- `docs/04-simulation-investment-desk.md` — simulation and paper-trading workflow.
+- `docs/02-agent-departments.md` — fixed eight-department model.
+- `docs/03-investment-strategy-office.md` — final recommendation standards.
+- `docs/04-simulation-investment-desk.md` — simulation learning and validation rules.
 - `docs/05-data-and-storage-plan.md` — initial data domain and storage plan.
 - `docs/06-codex-workflow.md` — Codex task execution and collaboration model.
+- `docs/07-chatgpt-project-instructions.md` — GitHub copy of high-level project instructions.
 - `docs/decision-log.md` — key project decisions.
 - `docs/progress-log.md` — milestone progress tracking.
 - `docs/lessons-learned.md` — retrospective notes and operational learning.
