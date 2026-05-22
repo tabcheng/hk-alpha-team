@@ -6,14 +6,14 @@
 
 ## Current Stage
 
-Foundation + Design complete; implementation not started.
+Foundation + Design complete; Tasks 002–004 are In Review / Pending Merge.
 
 ## Completed
 
 - Task 001: Project foundation documentation completed.
-- Task 002: Supabase schema design documentation completed.
-- Task 003: API and agent contract documentation completed.
-- Task 004: MVP implementation plan documentation completed.
+- Task 002: Supabase schema design documentation **In Review / Pending Merge**.
+- Task 003: API and agent contract documentation **In Review / Pending Merge**.
+- Task 004: MVP implementation plan documentation **In Review / Pending Merge**.
 
 ## In Progress
 

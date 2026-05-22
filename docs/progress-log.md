@@ -27,3 +27,12 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Added minimal JSON validation target rules to API/agent contracts doc.
 - Added draft milestone windows to MVP implementation plan for planning clarity.
 - Updated project status snapshot date to reflect revision day.
+
+## 2026-05-22 — PR #2 Re-Review Blockers Addressed
+
+- Updated schema doc to use agreed HK Alpha Team canonical primary table names.
+- Updated API contract doc to required MVP endpoint set and required response envelope section.
+- Added JSON examples for all eight agent departments.
+- Aligned MVP plan phases to requested phase model.
+- Updated project status to In Review / Pending Merge for Tasks 002–004.
+- Maintained documentation-only scope.

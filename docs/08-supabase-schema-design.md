@@ -29,6 +29,33 @@ Define the initial Supabase (Postgres) logical schema for HK Alpha Team v1 so fu
 
 ## Schema Blueprint (v1)
 
+## Primary HK Alpha Team Schema Table Names (Agreed Canonical Set)
+
+These table names are the **primary schema contract** for v1 and align directly with the agreed data domains in project docs:
+
+- `reference_securities`
+- `research_artifacts`
+- `strategy_records`
+- `simulation_records`
+- `governance_logs`
+
+Supporting tables that remain part of v1:
+
+- `profiles`
+- `research_universes`
+- `universe_members`
+- `strategy_reviews`
+- `simulation_runs`
+- `paper_positions`
+- `paper_trades`
+- `simulation_metrics`
+- `improvement_proposals`
+- `api_request_logs`
+- `agent_runs`
+
+Naming rule for implementation PRs:
+- When table names below differ from older draft names, implementation must use the canonical names above as the source of truth.
+
 ### 1) Identity and Access
 
 #### `profiles`
@@ -63,7 +90,7 @@ Defines watchlists/universe buckets (e.g., Hang Seng Core, growth candidates).
 | created_at | timestamptz | default now() |
 | updated_at | timestamptz | default now() |
 
-#### `securities`
+#### `reference_securities`
 Canonical security master records.
 
 | Column | Type | Notes |
@@ -91,7 +118,7 @@ Many-to-many relation between universes and securities.
 | Column | Type | Notes |
 |---|---|---|
 | universe_id | uuid FK -> `research_universes.id` |
-| security_id | uuid FK -> `securities.id` |
+| security_id | uuid FK -> `reference_securities.id` |
 | added_by_user_id | uuid FK -> `profiles.id` |
 | added_at | timestamptz | default now() |
 | notes | text | nullable |
@@ -99,14 +126,14 @@ Many-to-many relation between universes and securities.
 Constraints:
 - Composite PK `(universe_id, security_id)`
 
-#### `research_notes`
+#### `research_artifacts`
 Structured qualitative/quantitative research notes.
 
 | Column | Type | Notes |
 |---|---|---|
 | id | uuid PK |
 | owner_user_id | uuid FK -> `profiles.id` |
-| security_id | uuid FK -> `securities.id` |
+| security_id | uuid FK -> `reference_securities.id` |
 | title | text | required |
 | thesis | text | required |
 | key_points | jsonb | list-like structure |
@@ -124,15 +151,15 @@ Indexes:
 
 ### 3) Strategy Recommendations
 
-#### `strategy_recommendations`
+#### `strategy_records`
 Core advisory output table.
 
 | Column | Type | Notes |
 |---|---|---|
 | id | uuid PK |
 | owner_user_id | uuid FK -> `profiles.id` |
-| security_id | uuid FK -> `securities.id` |
-| research_note_id | uuid FK -> `research_notes.id` nullable |
+| security_id | uuid FK -> `reference_securities.id` |
+| research_note_id | uuid FK -> `research_artifacts.id` nullable |
 | label | text | enum-like; preferred labels from AGENTS.md |
 | confidence | numeric(5,2) | 0–100 |
 | summary | text | concise recommendation statement |
@@ -157,7 +184,7 @@ Human review/approval layer for recommendations.
 | Column | Type | Notes |
 |---|---|---|
 | id | uuid PK |
-| recommendation_id | uuid FK -> `strategy_recommendations.id` |
+| recommendation_id | uuid FK -> `strategy_records.id` |
 | reviewer_user_id | uuid FK -> `profiles.id` |
 | decision | text | `accept`, `revise`, `reject` |
 | review_notes | text | nullable |
@@ -190,8 +217,8 @@ Open/closed simulated positions.
 |---|---|---|
 | id | uuid PK |
 | simulation_run_id | uuid FK -> `simulation_runs.id` |
-| security_id | uuid FK -> `securities.id` |
-| recommendation_id | uuid FK -> `strategy_recommendations.id` nullable |
+| security_id | uuid FK -> `reference_securities.id` |
+| recommendation_id | uuid FK -> `strategy_records.id` nullable |
 | side | text | `long` only in v1 |
 | quantity | numeric(18,4) | required |
 | entry_price | numeric(18,6) | required |
@@ -235,7 +262,7 @@ Materialized per-run metrics snapshot.
 
 ### 5) Learning and Governance Logs
 
-#### `improvement_proposals`
+#### `governance_logs`
 Improvement actions generated from simulation/review outcomes.
 
 | Column | Type | Notes |

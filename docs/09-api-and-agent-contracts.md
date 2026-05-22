@@ -17,7 +17,7 @@ Define stable v1 contracts between clients, backend API, and internal agent depa
 3. Agent outputs must include reasoning, risks, and invalidation conditions where strategy advice is present.
 4. Versioning uses explicit `v1` pathing and semantic contract updates.
 
-## Standard API Envelope
+## Required Response Envelope (All MVP Endpoints)
 
 ### Success
 
@@ -51,72 +51,22 @@ Define stable v1 contracts between clients, backend API, and internal agent depa
 }
 ```
 
-## MVP Endpoint Blueprint
+## MVP Endpoint Blueprint (Required)
 
-## 1) Research
+- `POST /api/v1/research/artifacts`
+- `GET /api/v1/research/artifacts/{id}`
+- `GET /api/v1/research/artifacts?security_id=&status=`
+- `POST /api/v1/strategy/records`
+- `GET /api/v1/strategy/records/{id}`
+- `GET /api/v1/strategy/records?security_id=&status=`
+- `POST /api/v1/strategy/records/{id}/reviews`
+- `POST /api/v1/simulation/runs`
+- `GET /api/v1/simulation/runs/{id}`
+- `POST /api/v1/simulation/runs/{id}/positions`
+- `POST /api/v1/simulation/positions/{position_id}/events`
+- `GET /api/v1/simulation/runs/{id}/metrics`
 
-- `POST /api/v1/research/notes`
-- `GET /api/v1/research/notes/{id}`
-- `GET /api/v1/research/notes?security_id=&status=`
-
-### Example request (`POST /research/notes`)
-
-```json
-{
-  "security_id": "uuid",
-  "title": "Tencent ad monetization thesis update",
-  "thesis": "Revenue quality improving on margin discipline.",
-  "key_points": ["point_a", "point_b"],
-  "sources": [{"type": "filing", "url": "https://example.com"}],
-  "confidence": 67.5
-}
-```
-
-## 2) Strategy
-
-- `POST /api/v1/strategy/recommendations`
-- `GET /api/v1/strategy/recommendations/{id}`
-- `GET /api/v1/strategy/recommendations?security_id=&status=`
-- `POST /api/v1/strategy/recommendations/{id}/reviews`
-
-### Example strategy response payload (`data`)
-
-```json
-{
-  "recommendation_id": "uuid",
-  "security_id": "uuid",
-  "label": "WAIT_FOR_PULLBACK",
-  "confidence": 64.0,
-  "summary": "Attractive long-term quality but near-term entry is extended.",
-  "reasoning": "Valuation has moved ahead of baseline assumptions.",
-  "key_risks": ["macro slowdown", "regulatory tightening"],
-  "invalidation_conditions": ["re-acceleration in earnings surprises"]
-}
-```
-
-## 3) Simulation
-
-- `POST /api/v1/simulations/runs`
-- `GET /api/v1/simulations/runs/{id}`
-- `POST /api/v1/simulations/runs/{id}/positions`
-- `POST /api/v1/simulations/positions/{position_id}/events`
-- `GET /api/v1/simulations/runs/{id}/metrics`
-
-### Example simulation run create request
-
-```json
-{
-  "name": "Q3 Pullback Discipline Test",
-  "objective": "Evaluate pullback entries under volatile regime.",
-  "configuration": {
-    "max_positions": 8,
-    "position_size_pct": 5,
-    "stop_loss_pct": 8
-  },
-  "start_date": "2024-01-01",
-  "end_date": "2024-12-31"
-}
-```
+All MVP endpoints must return the required response envelope in this document.
 
 ## Agent Department Contracts
 
@@ -174,6 +124,48 @@ Required fields:
 - Strategy `label` must be one of: `STRONG_WATCH`, `WAIT_FOR_PULLBACK`, `SMALL_POSITION`, `ACCUMULATE`, `HOLD`, `REDUCE_RISK`, `AVOID`.
 - `human_decision_required` must always be `true` in v1 strategy outputs.
 - `request_id` and `run_id` are required non-empty strings for traceability.
+
+## JSON Examples for All Eight Agent Departments
+
+### 1) Market Intelligence Agent
+```json
+{"department":"Market Intelligence Agent","market_regime":"risk_off","key_drivers":["USD strength"],"watch_items":["HK rate sensitivity"],"confidence":71}
+```
+
+### 2) Company Research Agent
+```json
+{"department":"Company Research Agent","security":"0700.HK","thesis":"Margin discipline improving","catalysts":["ad recovery"],"invalidation_conditions":["margin compression"],"confidence":68}
+```
+
+### 3) News & Sentiment Agent
+```json
+{"department":"News & Sentiment Agent","security":"0700.HK","sentiment":"neutral","material_events":["earnings preview"],"confidence":62}
+```
+
+### 4) Technical Analysis Agent
+```json
+{"department":"Technical Analysis Agent","security":"0700.HK","trend":"uptrend","support_levels":[360.0],"resistance_levels":[392.0],"invalidation_level":352.0}
+```
+
+### 5) Risk Manager Agent
+```json
+{"department":"Risk Manager Agent","portfolio_risk":"moderate","concentration_flags":["internet overweight"],"guardrails":["max position 5%"],"confidence":74}
+```
+
+### 6) Investment Committee Agent
+```json
+{"department":"Investment Committee Agent","posture":"WAIT_FOR_PULLBACK","consensus_score":0.64,"dissenting_views":["valuation stretched"],"open_questions":["policy sensitivity"]}
+```
+
+### 7) Simulation Investment Desk
+```json
+{"department":"Simulation Investment Desk","run_id":"sim_2026_001","performance_metrics":{"total_return_pct":4.2},"losing_trades_review":"2 stop-outs due to gap risk","improvement_proposals":["tighter event filter"]}
+```
+
+### 8) Investment Strategy Office
+```json
+{"department":"Investment Strategy Office","label":"WAIT_FOR_PULLBACK","summary":"Quality intact but entry extended","reasoning":"risk/reward unfavorable at current level","key_risks":["macro shock"],"invalidation_conditions":["earnings beat with re-rating"],"human_decision_required":true}
+```
 
 ## Error Taxonomy
 

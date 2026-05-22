@@ -16,66 +16,30 @@ Define execution roadmap from documentation design to a testable MVP without vio
 3. User can run paper-trading simulations and inspect full trade history (including losses).
 4. User can review telemetry and governance logs for auditability.
 
-## Phased Plan
+## Phased Plan (Requested Model)
 
-## Phase 0 — Alignment and Setup
+## Phase 1 — Schema and Storage Foundation (Task 002 alignment)
 
-- Validate docs 08/09 with maintainers.
-- Freeze v1 field definitions for critical tables and endpoint envelopes.
-- Define branch and PR sequencing rules for implementation tasks.
+- Finalize canonical v1 table names and field contracts.
+- Convert design to migration-ready specs (still review-first).
+- Confirm RLS intent and audit retention boundaries.
 
-Exit criteria:
-- Sign-off comment in project status log.
+## Phase 2 — API and Envelope Contract Finalization (Task 003 alignment)
 
-## Phase 1 — Data Layer Foundation
+- Lock required MVP endpoint set.
+- Lock required response envelope format.
+- Lock error taxonomy and traceability metadata.
 
-- Create initial Supabase migration set from doc 08.
-- Implement constraints/indexes for core tables (`securities`, `research_notes`, `strategy_recommendations`, `simulation_runs`, `paper_positions`, `paper_trades`).
-- Enable baseline RLS policies and seed minimal reference data.
+## Phase 3 — Agent Department Contract Finalization
 
-Exit criteria:
-- Migrations apply cleanly in local/staging.
-- Basic CRUD smoke tests pass.
+- Lock input/output JSON contracts for all eight agent departments.
+- Validate strategy outputs include label, reasoning, risks, invalidation, and human decision framing.
 
-## Phase 2 — API Layer (FastAPI)
+## Phase 4 — Implementation Readiness and PR Sequencing (Task 004 alignment)
 
-- Implement `/api/v1/research/*`, `/api/v1/strategy/*`, `/api/v1/simulations/*` endpoints.
-- Implement standard response envelope and error taxonomy.
-- Add request validation and correlation IDs.
-
-Exit criteria:
-- OpenAPI spec generated and reviewed.
-- Endpoint contract tests pass for success and error paths.
-
-## Phase 3 — Agent Integration Layer
-
-- Implement internal adapters for research/strategy/simulation agent departments.
-- Validate agent input/output schemas against doc 09.
-- Persist run traces in `agent_runs`.
-
-Exit criteria:
-- Contract conformance tests pass.
-- At least one end-to-end advisory flow executes with mock data.
-
-## Phase 4 — Simulation and Learning Loop
-
-- Implement paper position/trade recording flow.
-- Compute and persist run metrics snapshots.
-- Generate improvement proposals from simulation summaries.
-
-Exit criteria:
-- Simulation report includes losing-trade analysis and explicit limitations.
-
-## Phase 5 — Hardening and Review
-
-- Add role-aware access checks.
-- Add observability dashboards/queries for API + agent traces.
-- Conduct boundary compliance review (no execution APIs, no real-money actions).
-
-Exit criteria:
-- Governance checklist passes.
-- MVP readiness documented.
-
+- Finalize PR slicing and exit criteria.
+- Confirm risks/mitigations and governance checks.
+- Mark Tasks 002–004 status for review and merge readiness.
 
 ## Draft Milestone Windows (Planning Baseline)
 

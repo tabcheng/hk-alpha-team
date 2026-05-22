@@ -38,3 +38,17 @@
 **Implications:**
 - Reduces ambiguity for upcoming implementation PRs.
 - Preserves documentation-only scope and boundary compliance.
+
+## 2026-05-22 — Decision: Enforce Canonical Schema/Contract Naming for PR #2
+
+**Context:** Harness re-review requested exact blocker fixes to align schema naming, endpoint set, envelope format, and phase/status model.
+
+**Decision:**
+- Treat canonical HK Alpha Team table names as the primary v1 schema contract.
+- Treat required MVP endpoint set and response envelope as fixed v1 contract surfaces.
+- Require JSON examples for all eight defined agent departments.
+- Update status state for Tasks 002–004 to In Review / Pending Merge.
+
+**Implications:**
+- Reduces ambiguity in implementation PRs.
+- Aligns design docs with agreed project governance artifacts.
