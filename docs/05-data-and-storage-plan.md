@@ -1,12 +1,12 @@
-# 05 Data and Storage Plan (Initial)
+# 05 Data and Storage Plan (Canonical v1)
 
-## Data Domains
+## Canonical Primary Tables (Required Names)
 
-1. **Reference Data**: tickers, sectors, metadata.
-2. **Research Artifacts**: theses, memos, assumptions.
-3. **Strategy Records**: recommendation packets and revisions.
-4. **Simulation Records**: paper trades, PnL snapshots, review notes.
-5. **Governance Logs**: decisions, progress, lessons learned.
+1. `reference_securities`
+2. `research_artifacts`
+3. `strategy_records`
+4. `simulation_records`
+5. `governance_logs`
 
 ## Storage Principles
 
@@ -20,7 +20,7 @@
 - Clear labels for simulated vs real-world records.
 - Backup and retention policy to be defined in implementation phase.
 
-## Next Step
+## Contract Alignment
 
-Detailed schema design is tracked in:
-- `codex-tasks/002-design-supabase-schema.md`
+- API contracts must use the exact MVP endpoint set in `docs/09-api-and-agent-contracts.md`.
+- All endpoint responses must use the required response envelope in `docs/09-api-and-agent-contracts.md`.

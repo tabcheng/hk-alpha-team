@@ -2,7 +2,15 @@
 
 ## Objective
 
-Design initial Supabase/Postgres schema for HK Alpha Team data domains.
+Design initial Supabase/Postgres schema for HK Alpha Team data domains using required canonical primary table names.
+
+## Required Canonical Primary Table Names
+
+- `reference_securities`
+- `research_artifacts`
+- `strategy_records`
+- `simulation_records`
+- `governance_logs`
 
 ## Proposed Scope
 
@@ -15,7 +23,3 @@ Design initial Supabase/Postgres schema for HK Alpha Team data domains.
 - Schema design document (ERD-level).
 - SQL migration draft (design-only stage).
 - Notes on RBAC and auditability implications.
-
-## Dependencies
-
-- Completion of Task 001 foundation docs.
