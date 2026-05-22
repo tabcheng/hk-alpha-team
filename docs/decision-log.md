@@ -9,3 +9,18 @@
 | 2026-05-21 | Paper trading and simulation are included from early design. | Enables validation and learning before any real-money confidence scaling. | Simulation desk and review loops are first-class design components. |
 | 2026-05-21 | Final real-money decisions remain with the user. | Preserves explicit human authority and accountability. | System outputs must frame decisions as advisory with human approval boundaries. |
 | 2026-05-21 | Project details should move into GitHub docs to keep ChatGPT Project Instructions lightweight. | Reduces prompt bloat while preserving project memory in versioned documentation. | High-level instructions remain concise; detailed governance lives in repository docs. |
+
+## 2026-05-21 — Decision: Adopt Append-First Advisory Data Model for MVP
+
+**Context:** Tasks 002-004 required a coherent design for schema, contracts, and rollout sequencing.
+
+**Decision:**
+- Use append-first records for strategy and simulation history.
+- Standardize API envelopes with traceability metadata (`request_id`, `timestamp`, `version`).
+- Require strategy outputs to include reasoning, key risks, invalidation conditions, and explicit human decision framing.
+- Keep v1 strictly advisory and simulation-only (no execution APIs).
+
+**Implications:**
+- Improves auditability and governance.
+- Enables contract-driven implementation sequencing in subsequent PRs.
+- Defers non-essential infrastructure details until implementation phase.

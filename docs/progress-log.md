@@ -9,3 +9,13 @@
 - GitHub-first documentation workflow selected.
 - Codex will be used to generate and maintain repository files.
 - PR #1 foundation docs created and now being aligned with Harness Engineering review.
+
+## 2026-05-21 — Tasks 002-004 Design Documentation Completed
+
+- Added Supabase schema design doc (`docs/08-supabase-schema-design.md`).
+- Added API and agent contract doc (`docs/09-api-and-agent-contracts.md`).
+- Added MVP implementation plan (`docs/10-mvp-implementation-plan.md`).
+- Added current project status snapshot (`docs/11-project-status.md`).
+- Added codex task definition for Task 004 (`codex-tasks/004-create-mvp-implementation-plan.md`).
+
+Scope check: documentation-only, no implementation code, no deployment config, no external data integration.
