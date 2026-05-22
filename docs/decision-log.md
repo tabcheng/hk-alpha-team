@@ -78,3 +78,18 @@
 **Implications:**
 - Reduces contract drift risk during implementation.
 - Strengthens reviewability and traceability requirements before coding begins.
+
+## 2026-05-22 — Decision: Standardize PR Governance Artifacts Before Implementation
+
+**Context:** With PR #2 merged, implementation is next. Review consistency and scope control needed strengthening before migration and backend work.
+
+**Decision:**
+- Capture original project intent in a dedicated brief doc.
+- Define reusable large PR handling policy and PR review checklist.
+- Define reusable Codex task prompt template.
+- Prepare Task 005 as the explicit entry point for Phase 2.
+
+**Implications:**
+- Improves repeatability and review quality for implementation PRs.
+- Reduces scope drift risk while contract-locked components move into code.
+- Establishes a consistent prompt/review standard for subsequent tasks.

@@ -6,17 +6,17 @@
 
 ## Current Phase
 
-**Phase 1 — Documentation and Contracts** (In Review / Pending Merge).
+**Phase 2 — Database Preparation** (Ready to Start via Task 005).
 
 ## Tasks 001–010 Status
 
 | Task | Title | Status | Notes |
 |---|---|---|---|
 | 001 | Create Project Foundation | Completed | Foundation docs merged in PR #1. |
-| 002 | Design Supabase Schema | In Review / Pending Merge | Exact required table set now documented. |
-| 003 | Design API and Agent Contracts | In Review / Pending Merge | Exact endpoints, envelope, and agent examples documented. |
-| 004 | Create MVP Implementation Plan | In Review / Pending Merge | Phase model aligned to required seven phases. |
-| 005 | Database Preparation | Planned | Follows merge of docs contracts. |
+| 002 | Design Supabase Schema | Completed | Merged in PR #2 as schema source-of-truth baseline. |
+| 003 | Design API and Agent Contracts | Completed | Merged in PR #2 with fixed MVP contract surfaces. |
+| 004 | Create MVP Implementation Plan | Completed | Merged in PR #2 with seven-phase rollout model. |
+| 005 | Create Supabase Migration Draft | Ready to Start | Task card prepared; next execution step. |
 | 006 | Backend Skeleton | Planned | Contract-first backend scaffolding phase. |
 | 007 | First Analysis Workflow | Planned | Analyze-stock flow from required endpoint set. |
 | 008 | Simulation Desk MVP | Planned | Paper-orders and paper-portfolio workflow. |
@@ -28,8 +28,8 @@
 | Milestone | Name | Status |
 |---|---|---|
 | M0 | Foundation Baseline | Completed |
-| M1 | Documentation and Contracts | In Review / Pending Merge |
-| M2 | Database Preparation | Planned |
+| M1 | Documentation and Contracts | Completed |
+| M2 | Database Preparation | Ready to Start |
 | M3 | Backend Skeleton | Planned |
 | M4 | First Analysis Workflow | Planned |
 | M5 | Simulation Desk MVP | Planned |
@@ -38,10 +38,10 @@
 
 ## Current Decisions Summary
 
-- Use the exact required HK Alpha Team schema table set as canonical for v1 documentation and future migrations.
-- Use the exact required MVP endpoint set as the fixed v1 API surface.
-- Use the exact required response envelope (`request_id`, `status`, `data`, `metadata`, `warnings`) for all endpoints.
-- Keep v1 advisory-only and human-in-the-loop; no real-money execution and no brokerage execution integration.
+- Canonical schema table names are locked unless same-PR decision-log justification is added.
+- MVP endpoint names and required response envelope are locked for implementation continuity.
+- v1 remains advisory-only and human-in-the-loop.
+- Real-money execution and brokerage API integration remain explicitly out of scope.
 
 ## Scope Compliance Check
 
@@ -50,7 +50,7 @@
 - Brokerage API integration added: **No**
 - Secrets committed: **No**
 
-
 ## Latest Review Update
 
-- Deep Audit documentation blockers addressed in current PR revision (governance rules, endpoint detail expansion, error envelope/codes, MVP acceptance criteria, migration planning note).
+- PR #2 is merged and baseline design contracts are now the implementation starting point.
+- Governance hardening docs and Task 005 preparation added in current PR.
