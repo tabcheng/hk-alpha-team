@@ -52,3 +52,15 @@
 **Implications:**
 - Reduces ambiguity in implementation PRs.
 - Aligns design docs with agreed project governance artifacts.
+
+## 2026-05-22 — Decision: Standardize Agent Example Payloads on a Common Contract Shape
+
+**Context:** Final Harness re-review required all eight agent examples to share a single contract shape and include a final strategy recommendation envelope example.
+
+**Decision:**
+- All agent examples use `agent_run_id`, `department`, `status`, `output`, `confidence`, `generated_at`, `notes`.
+- Final strategy recommendation examples use the exact required response envelope.
+
+**Implications:**
+- Reduces interpretation drift across departments and implementation stages.
+- Improves API/agent contract consistency and testability for subsequent implementation PRs.

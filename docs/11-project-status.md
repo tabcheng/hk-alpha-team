@@ -4,26 +4,44 @@
 
 2026-05-22
 
-## Current Stage
+## Current Phase
 
-Foundation + Design complete; Tasks 002–004 are In Review / Pending Merge.
+**Phase 1 — Documentation and Contracts** (In Review / Pending Merge).
 
-## Completed
+## Tasks 001–010 Status
 
-- Task 001: Project foundation documentation completed.
-- Task 002: Supabase schema design documentation **In Review / Pending Merge**.
-- Task 003: API and agent contract documentation **In Review / Pending Merge**.
-- Task 004: MVP implementation plan documentation **In Review / Pending Merge**.
+| Task | Title | Status | Notes |
+|---|---|---|---|
+| 001 | Create Project Foundation | Completed | Foundation docs merged in PR #1. |
+| 002 | Design Supabase Schema | In Review / Pending Merge | Exact required table set now documented. |
+| 003 | Design API and Agent Contracts | In Review / Pending Merge | Exact endpoints, envelope, and agent examples documented. |
+| 004 | Create MVP Implementation Plan | In Review / Pending Merge | Phase model aligned to required seven phases. |
+| 005 | Database Preparation | Planned | Follows merge of docs contracts. |
+| 006 | Backend Skeleton | Planned | Contract-first backend scaffolding phase. |
+| 007 | First Analysis Workflow | Planned | Analyze-stock flow from required endpoint set. |
+| 008 | Simulation Desk MVP | Planned | Paper-orders and paper-portfolio workflow. |
+| 009 | Simple UI or Report Output | Planned | Minimal output layer for strategy reports. |
+| 010 | Review and Learning Loop | Planned | Trade reviews, proposals, and audit continuity. |
 
-## In Progress
+## Milestones M0–M7
 
-- No active implementation tasks in this document set.
+| Milestone | Name | Status |
+|---|---|---|
+| M0 | Foundation Baseline | Completed |
+| M1 | Documentation and Contracts | In Review / Pending Merge |
+| M2 | Database Preparation | Planned |
+| M3 | Backend Skeleton | Planned |
+| M4 | First Analysis Workflow | Planned |
+| M5 | Simulation Desk MVP | Planned |
+| M6 | Simple UI or Report Output | Planned |
+| M7 | Review and Learning Loop | Planned |
 
-## Next Planned Work
+## Current Decisions Summary
 
-1. Convert schema design into reviewed migration PR(s).
-2. Build FastAPI v1 endpoints from contract docs.
-3. Add contract tests and simulation traceability checks.
+- Use the exact required HK Alpha Team schema table set as canonical for v1 documentation and future migrations.
+- Use the exact required MVP endpoint set as the fixed v1 API surface.
+- Use the exact required response envelope (`request_id`, `status`, `data`, `metadata`, `warnings`) for all endpoints.
+- Keep v1 advisory-only and human-in-the-loop; no real-money execution and no brokerage execution integration.
 
 ## Scope Compliance Check
 
@@ -31,9 +49,3 @@ Foundation + Design complete; Tasks 002–004 are In Review / Pending Merge.
 - Real-money trading automation added: **No**
 - Brokerage API integration added: **No**
 - Secrets committed: **No**
-
-## Open Questions
-
-- Confirm initial role model (`owner`, `analyst`, `reviewer`) for RLS policy granularity.
-- Confirm baseline retention period for telemetry beyond MVP.
-- Confirm first simulation benchmark universe and test date ranges.

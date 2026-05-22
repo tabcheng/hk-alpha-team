@@ -36,3 +36,11 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Aligned MVP plan phases to requested phase model.
 - Updated project status to In Review / Pending Merge for Tasks 002–004.
 - Maintained documentation-only scope.
+
+## 2026-05-22 — PR #2 Final Re-Review Blockers Addressed
+
+- Expanded `docs/08-supabase-schema-design.md` with ERD-level details for each required table.
+- Added full `strategy_recommendations` field set for Investment Strategy Office outputs.
+- Converted all eight agent examples to one common contract shape in `docs/09-api-and-agent-contracts.md`.
+- Added final strategy recommendation JSON example using the exact required response envelope.
+- Expanded `docs/11-project-status.md` with Current Phase, Tasks 001–010 table, Milestones M0–M7, and Current Decisions summary.
