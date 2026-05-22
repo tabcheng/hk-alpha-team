@@ -2,34 +2,33 @@
 
 ## Objective
 
-Define service contracts between application layers and agent departments using exact MVP endpoint names and required response envelope.
+Define service contracts between application layers and agent departments using the exact required MVP endpoint set and exact required response envelope.
 
-## Required MVP Endpoint Names
+## Required MVP Endpoint Set
 
-- `POST /api/v1/research/artifacts`
-- `GET /api/v1/research/artifacts/{id}`
-- `GET /api/v1/research/artifacts?security_id=&status=`
-- `POST /api/v1/strategy/records`
-- `GET /api/v1/strategy/records/{id}`
-- `GET /api/v1/strategy/records?security_id=&status=`
-- `POST /api/v1/strategy/records/{id}/reviews`
-- `POST /api/v1/simulation/runs`
-- `GET /api/v1/simulation/runs/{id}`
-- `POST /api/v1/simulation/runs/{id}/positions`
-- `POST /api/v1/simulation/positions/{position_id}/events`
-- `GET /api/v1/simulation/runs/{id}/metrics`
+- `GET /health`
+- `POST /api/v1/analyze-stock`
+- `GET /api/v1/stocks/{symbol}`
+- `GET /api/v1/strategy-recommendations/{recommendation_id}`
+- `POST /api/v1/strategy-recommendations`
+- `POST /api/v1/simulation/paper-orders`
+- `GET /api/v1/paper-portfolios/{portfolio_id}`
+- `GET /api/v1/agent-runs/{agent_run_id}`
+- `GET /api/v1/project-status`
 
 ## Required Response Envelope
 
 ```json
 {
-  "meta": {
-    "request_id": "req_123",
-    "timestamp": "2026-05-22T00:00:00Z",
-    "version": "v1"
-  },
+  "request_id": "uuid",
+  "status": "success",
   "data": {},
-  "error": null
+  "metadata": {
+    "schema_version": "v0.1",
+    "generated_at": "ISO-8601 timestamp",
+    "source": "HK_ALPHA_TEAM"
+  },
+  "warnings": []
 }
 ```
 
