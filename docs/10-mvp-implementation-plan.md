@@ -76,6 +76,18 @@ Exit criteria:
 - Governance checklist passes.
 - MVP readiness documented.
 
+
+## Draft Milestone Windows (Planning Baseline)
+
+- Phase 0: 2026-05-25 to 2026-05-29
+- Phase 1: 2026-06-01 to 2026-06-12
+- Phase 2: 2026-06-15 to 2026-06-26
+- Phase 3: 2026-06-29 to 2026-07-10
+- Phase 4: 2026-07-13 to 2026-07-24
+- Phase 5: 2026-07-27 to 2026-08-07
+
+These windows are estimates for planning and will be refined during implementation PR sequencing.
+
 ## Suggested PR Breakdown
 
 1. PR-A: Supabase migrations + schema tests.

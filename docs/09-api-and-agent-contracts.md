@@ -167,6 +167,14 @@ Required fields:
 - `improvement_proposals[]`
 - `limitations`
 
+
+## Minimal JSON Contract Rules (Validation Targets)
+
+- `confidence` fields must be numeric in `[0, 100]`.
+- Strategy `label` must be one of: `STRONG_WATCH`, `WAIT_FOR_PULLBACK`, `SMALL_POSITION`, `ACCUMULATE`, `HOLD`, `REDUCE_RISK`, `AVOID`.
+- `human_decision_required` must always be `true` in v1 strategy outputs.
+- `request_id` and `run_id` are required non-empty strings for traceability.
+
 ## Error Taxonomy
 
 - `VALIDATION_ERROR` (400)

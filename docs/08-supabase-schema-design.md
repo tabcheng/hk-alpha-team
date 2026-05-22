@@ -298,6 +298,63 @@ Execution envelope for agent calls.
 | started_at | timestamptz | required |
 | finished_at | timestamptz | nullable |
 
+
+## Design-Only SQL Migration Draft (Illustrative)
+
+> This section is intentionally non-executable as-is and exists to validate naming/shape decisions before implementation PRs.
+
+```sql
+-- draft_v1_schema_outline.sql (design draft only)
+create table profiles (
+  id uuid primary key,
+  display_name text,
+  role text not null default 'owner',
+  timezone text not null default 'Asia/Hong_Kong',
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create table securities (
+  id uuid primary key default gen_random_uuid(),
+  ticker text not null,
+  exchange text not null,
+  name text not null,
+  sector text,
+  currency text not null default 'HKD',
+  is_active boolean not null default true,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  unique (ticker, exchange)
+);
+
+create table strategy_recommendations (
+  id uuid primary key default gen_random_uuid(),
+  owner_user_id uuid not null references profiles(id),
+  security_id uuid not null references securities(id),
+  label text not null check (label in (
+    'STRONG_WATCH','WAIT_FOR_PULLBACK','SMALL_POSITION',
+    'ACCUMULATE','HOLD','REDUCE_RISK','AVOID'
+  )),
+  confidence numeric(5,2) not null check (confidence >= 0 and confidence <= 100),
+  summary text not null,
+  reasoning text not null,
+  key_risks jsonb not null default '[]'::jsonb,
+  invalidation_conditions jsonb not null default '[]'::jsonb,
+  created_at timestamptz not null default now()
+);
+
+create table simulation_runs (
+  id uuid primary key default gen_random_uuid(),
+  owner_user_id uuid not null references profiles(id),
+  name text not null,
+  configuration jsonb not null default '{}'::jsonb,
+  start_date date not null,
+  end_date date not null,
+  status text not null check (status in ('queued','running','completed','failed')),
+  created_at timestamptz not null default now()
+);
+```
+
 ## Relationship Summary
 
 - One `profile` owns many universes, notes, recommendations, and simulation runs.

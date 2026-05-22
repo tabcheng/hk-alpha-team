@@ -19,3 +19,11 @@
 - Added codex task definition for Task 004 (`codex-tasks/004-create-mvp-implementation-plan.md`).
 
 Scope check: documentation-only, no implementation code, no deployment config, no external data integration.
+
+
+## 2026-05-22 — PR #2 Revision (Harness Review Follow-up)
+
+- Added design-only SQL draft section to schema doc for migration-shape validation.
+- Added minimal JSON validation target rules to API/agent contracts doc.
+- Added draft milestone windows to MVP implementation plan for planning clarity.
+- Updated project status snapshot date to reflect revision day.

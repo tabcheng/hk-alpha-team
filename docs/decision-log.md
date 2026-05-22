@@ -24,3 +24,17 @@
 - Improves auditability and governance.
 - Enables contract-driven implementation sequencing in subsequent PRs.
 - Defers non-essential infrastructure details until implementation phase.
+
+
+## 2026-05-22 — Decision: Include Design-Only SQL Draft and Validation Rules Before Implementation
+
+**Context:** Harness review requested clearer implementation readiness without adding executable code.
+
+**Decision:**
+- Add an illustrative SQL draft section to validate table/constraint shapes.
+- Add explicit minimal JSON contract validation targets for API/agent payloads.
+- Add draft milestone windows to improve implementation planning readability.
+
+**Implications:**
+- Reduces ambiguity for upcoming implementation PRs.
+- Preserves documentation-only scope and boundary compliance.
