@@ -130,29 +130,34 @@ Define the exact required HK Alpha Team v1 Supabase/Postgres schema table set wi
 - **Notes/constraints:** captures unresolved issues and decision rationale.
 
 ### `strategy_recommendations`
-- **Purpose:** Final Investment Strategy Office advisory recommendation records.
+- **Purpose:** Final Investment Strategy Office recommendation records using the exact required recommendation payload fields.
 - **Primary key:** `id` (uuid).
-- **Major columns (full v1 set):**
+- **Major columns (exact Investment Strategy Office set):**
   - `recommendation_uuid`
   - `stock_id`
   - `committee_review_id`
-  - `label` (`STRONG_WATCH`, `WAIT_FOR_PULLBACK`, `SMALL_POSITION`, `ACCUMULATE`, `HOLD`, `REDUCE_RISK`, `AVOID`)
-  - `confidence`
+  - `symbol`
+  - `company_name`
+  - `strategy_recommendation`
   - `summary`
-  - `reasoning`
-  - `key_risks_json`
+  - `confidence_level`
+  - `scores_market`
+  - `scores_fundamental`
+  - `scores_technical`
+  - `scores_sentiment`
+  - `scores_risk`
+  - `scores_simulation`
+  - `key_reasons_json`
+  - `main_risks_json`
   - `invalidation_conditions_json`
-  - `time_horizon`
-  - `entry_guidance`
-  - `position_sizing_note`
-  - `human_decision_required` (must be `true` in v1)
-  - `created_by`
-  - `status` (`proposed`, `reviewed`, `superseded`, `archived`)
+  - `paper_trading_action`
+  - `real_money_decision`
+  - `next_review_date`
   - `created_at`
   - `updated_at`
 - **Important foreign keys:** `stock_id -> stocks.id`; `committee_review_id -> investment_committee_reviews.id`.
-- **Indexes:** unique `recommendation_uuid`; index on `(stock_id, created_at desc)`; index on `(label, status)`.
-- **Notes/constraints:** enforce strategy label whitelist; confidence bounded `[0,100]`.
+- **Indexes:** unique `recommendation_uuid`; index on `(symbol, created_at desc)`; index on `(next_review_date)`.
+- **Notes/constraints:** `real_money_decision` remains human-controlled; `confidence_level` bounded `[0,100]`.
 
 ### `paper_portfolios`
 - **Purpose:** Simulation desk portfolio containers.
