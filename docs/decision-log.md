@@ -58,7 +58,7 @@
 **Context:** Final Harness re-review required all eight agent examples to share a single contract shape and include a final strategy recommendation envelope example.
 
 **Decision:**
-- All agent examples use `agent_run_id`, `department`, `status`, `output`, `confidence`, `generated_at`, `notes`.
+- All agent examples use `agent_name`, `agent_version`, `stock_symbol`, `input_summary`, `evidence`, `score`, `confidence`, `key_findings`, `risks`, `invalidation_conditions`, `generated_at`, `schema_version`.
 - Final strategy recommendation examples use the exact required response envelope.
 
 **Implications:**
