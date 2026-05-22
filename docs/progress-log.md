@@ -44,3 +44,11 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Converted all eight agent examples to one common contract shape in `docs/09-api-and-agent-contracts.md`.
 - Added final strategy recommendation JSON example using the exact required response envelope.
 - Expanded `docs/11-project-status.md` with Current Phase, Tasks 001–010 table, Milestones M0–M7, and Current Decisions summary.
+
+
+## 2026-05-22 — Deep Audit Contract Expansion
+
+- Added endpoint-by-endpoint required details and explicit error envelope/codes in `docs/09-api-and-agent-contracts.md`.
+- Added strict governance rules and source-of-truth map in `AGENTS.md`.
+- Added MVP acceptance criteria in `docs/10-mvp-implementation-plan.md`.
+- Added schema migration planning note in `docs/08-supabase-schema-design.md`.

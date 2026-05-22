@@ -223,3 +223,9 @@ Define the exact required HK Alpha Team v1 Supabase/Postgres schema table set wi
 
 - Strategy, simulation, and audit history should remain retained for governance traceability.
 - High-volume telemetry can be summarized/archived by future implementation policy.
+
+
+## Migration Planning Note
+
+Production SQL migrations must be created in a later task after this schema design is reviewed.
+Do not create `supabase/migrations/` files in this PR.

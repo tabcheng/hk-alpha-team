@@ -64,3 +64,17 @@
 **Implications:**
 - Reduces interpretation drift across departments and implementation stages.
 - Improves API/agent contract consistency and testability for subsequent implementation PRs.
+
+
+## 2026-05-22 — Decision: Deep Audit Contract Governance Tightening
+
+**Context:** Harness Deep Audit requested stricter contract lock and consistency governance plus explicit endpoint/error details.
+
+**Decision:**
+- Added Contract Lock, PR Completion, and Consistency Audit rules in `AGENTS.md`.
+- Added endpoint-level contract details and explicit error envelope/codes in `docs/09-api-and-agent-contracts.md`.
+- Added MVP acceptance criteria and schema migration planning note in docs 10 and 08.
+
+**Implications:**
+- Reduces contract drift risk during implementation.
+- Strengthens reviewability and traceability requirements before coding begins.

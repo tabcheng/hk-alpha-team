@@ -49,3 +49,8 @@
 - Real-money trading automation added: **No**
 - Brokerage API integration added: **No**
 - Secrets committed: **No**
+
+
+## Latest Review Update
+
+- Deep Audit documentation blockers addressed in current PR revision (governance rules, endpoint detail expansion, error envelope/codes, MVP acceptance criteria, migration planning note).

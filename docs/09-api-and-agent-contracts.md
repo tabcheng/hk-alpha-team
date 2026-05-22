@@ -32,6 +32,102 @@ Define the exact required MVP endpoint set, exact required response envelope, an
 }
 ```
 
+
+## Endpoint Specifications (Required Details)
+
+### `GET /health`
+- **Purpose:** Liveness/readiness check for service health.
+- **Path parameters:** None.
+- **Request body:** None.
+- **Response shape:** Required success envelope with `data = { "service": "ok" }`.
+- **Validation notes:** No authentication payload expected.
+- **Error cases:** `INTERNAL_ERROR`.
+
+### `POST /api/v1/analyze-stock`
+- **Purpose:** Trigger first-pass analysis for one stock symbol.
+- **Path parameters:** None.
+- **Request body:** `{ "symbol": "0700.HK" }`.
+- **Response shape:** Required success envelope with strategy/analysis payload in `data`.
+- **Validation notes:** `symbol` required; must match supported symbol format.
+- **Error cases:** `VALIDATION_ERROR`, `NOT_FOUND`, `AGENT_CONTRACT_VIOLATION`, `INTERNAL_ERROR`.
+
+### `GET /api/v1/stocks/{symbol}`
+- **Purpose:** Fetch canonical stock reference and latest context.
+- **Path parameters:** `symbol` (required).
+- **Request body:** None.
+- **Response shape:** Required success envelope with stock record in `data`.
+- **Validation notes:** `symbol` must be URL-safe and canonical.
+- **Error cases:** `VALIDATION_ERROR`, `NOT_FOUND`, `INTERNAL_ERROR`.
+
+### `GET /api/v1/strategy-recommendations/{recommendation_id}`
+- **Purpose:** Retrieve one strategy recommendation by identifier.
+- **Path parameters:** `recommendation_id` (required).
+- **Request body:** None.
+- **Response shape:** Required success envelope with recommendation object in `data`.
+- **Validation notes:** `recommendation_id` must be valid id format.
+- **Error cases:** `VALIDATION_ERROR`, `NOT_FOUND`, `INTERNAL_ERROR`.
+
+### `POST /api/v1/strategy-recommendations`
+- **Purpose:** Persist/create a strategy recommendation record.
+- **Path parameters:** None.
+- **Request body:** Strategy recommendation payload fields defined in this document.
+- **Response shape:** Required success envelope with created recommendation in `data`.
+- **Validation notes:** required fields must be present; labels/score ranges validated.
+- **Error cases:** `VALIDATION_ERROR`, `AGENT_CONTRACT_VIOLATION`, `INTERNAL_ERROR`.
+
+### `POST /api/v1/simulation/paper-orders`
+- **Purpose:** Create a paper-trading order record for simulation desk.
+- **Path parameters:** None.
+- **Request body:** `{ "portfolio_id": "...", "symbol": "...", "side": "buy|sell", "quantity": n }`.
+- **Response shape:** Required success envelope with created paper order data in `data`.
+- **Validation notes:** non-negative quantity; portfolio must exist.
+- **Error cases:** `VALIDATION_ERROR`, `NOT_FOUND`, `INTERNAL_ERROR`.
+
+### `GET /api/v1/paper-portfolios/{portfolio_id}`
+- **Purpose:** Return paper portfolio state and recent snapshots.
+- **Path parameters:** `portfolio_id` (required).
+- **Request body:** None.
+- **Response shape:** Required success envelope with portfolio object in `data`.
+- **Validation notes:** `portfolio_id` must be valid id format.
+- **Error cases:** `VALIDATION_ERROR`, `NOT_FOUND`, `INTERNAL_ERROR`.
+
+### `GET /api/v1/agent-runs/{agent_run_id}`
+- **Purpose:** Return traceability details for one agent run.
+- **Path parameters:** `agent_run_id` (required).
+- **Request body:** None.
+- **Response shape:** Required success envelope with run and output summary in `data`.
+- **Validation notes:** `agent_run_id` must be valid id format.
+- **Error cases:** `VALIDATION_ERROR`, `NOT_FOUND`, `INTERNAL_ERROR`.
+
+### `GET /api/v1/project-status`
+- **Purpose:** Provide current project/task status snapshot from source-of-truth docs.
+- **Path parameters:** None.
+- **Request body:** None.
+- **Response shape:** Required success envelope with phase, milestone, and task statuses in `data`.
+- **Validation notes:** read-only endpoint.
+- **Error cases:** `INTERNAL_ERROR`.
+
+## Explicit Error Envelope
+
+```json
+{
+  "request_id": "uuid",
+  "status": "error",
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Human readable error message",
+    "details": {}
+  }
+}
+```
+
+## Basic Error Codes
+
+- `VALIDATION_ERROR`
+- `NOT_FOUND`
+- `AGENT_CONTRACT_VIOLATION`
+- `INTERNAL_ERROR`
+
 ## Common Agent Contract Shape
 
 All eight agent outputs use this exact field set:

@@ -88,6 +88,17 @@ Define execution roadmap from documentation design to a testable MVP without vio
 - Task 002 (schema design) and Task 003 (contracts) accepted.
 - Supabase project/bootstrap available for local testing in future tasks.
 
+
+## MVP Acceptance Criteria
+
+- User can request analysis for one symbol.
+- System returns structured strategy recommendation.
+- System records recommendation.
+- System can create paper trade record.
+- System can later compare recommendation with outcome.
+- All outputs are traceable and reviewable.
+- Real-money decision remains with user.
+
 ## Definition of Done for MVP (Planned)
 
 - All v1 schema objects and API endpoints implemented with tests.
