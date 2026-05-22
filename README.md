@@ -34,17 +34,56 @@ Preferred strategy labels:
 - `REDUCE_RISK`
 - `AVOID`
 
-Simple BUY/SELL outputs should be avoided unless they include context, confidence, key reasons, main risks, invalidation conditions, and explicit human decision framing.
+## v1 Canonical Design Contracts
 
-## Repository Purpose (Foundation Phase)
+### Primary Schema Table Names
 
-This repository currently provides project foundations:
+- `stocks`
+- `market_indices`
+- `price_bars`
+- `market_snapshots`
+- `company_financials`
+- `news_items`
+- `research_documents`
+- `agent_runs`
+- `agent_outputs`
+- `investment_committee_reviews`
+- `strategy_recommendations`
+- `paper_portfolios`
+- `paper_orders`
+- `paper_positions`
+- `portfolio_snapshots`
+- `trade_reviews`
+- `learning_proposals`
+- `audit_events`
 
-- Vision and project brief documentation.
-- Agent department definitions and operating boundaries.
-- Strategy and simulation desk role split.
-- Data and storage planning documents.
-- Codex workflow, task sequencing, and project logs.
+### Required MVP API Endpoints
+
+- `GET /health`
+- `POST /api/v1/analyze-stock`
+- `GET /api/v1/stocks/{symbol}`
+- `GET /api/v1/strategy-recommendations/{recommendation_id}`
+- `POST /api/v1/strategy-recommendations`
+- `POST /api/v1/simulation/paper-orders`
+- `GET /api/v1/paper-portfolios/{portfolio_id}`
+- `GET /api/v1/agent-runs/{agent_run_id}`
+- `GET /api/v1/project-status`
+
+### Required Response Envelope
+
+```json
+{
+  "request_id": "uuid",
+  "status": "success",
+  "data": {},
+  "metadata": {
+    "schema_version": "v0.1",
+    "generated_at": "ISO-8601 timestamp",
+    "source": "HK_ALPHA_TEAM"
+  },
+  "warnings": []
+}
+```
 
 ## Documentation Map
 
@@ -55,20 +94,13 @@ This repository currently provides project foundations:
 - `docs/02-agent-departments.md` — fixed eight-department model.
 - `docs/03-investment-strategy-office.md` — final recommendation standards.
 - `docs/04-simulation-investment-desk.md` — simulation learning and validation rules.
-- `docs/05-data-and-storage-plan.md` — initial data domain and storage plan.
+- `docs/05-data-and-storage-plan.md` — canonical v1 data and storage naming.
 - `docs/06-codex-workflow.md` — Codex task execution and collaboration model.
 - `docs/07-chatgpt-project-instructions.md` — GitHub copy of high-level project instructions.
+- `docs/08-supabase-schema-design.md` — Supabase schema design.
+- `docs/09-api-and-agent-contracts.md` — required API and agent contracts.
+- `docs/10-mvp-implementation-plan.md` — requested phase model plan.
+- `docs/11-project-status.md` — task status and merge readiness.
 - `docs/decision-log.md` — key project decisions.
 - `docs/progress-log.md` — milestone progress tracking.
 - `docs/lessons-learned.md` — retrospective notes and operational learning.
-
-## Task Backlog (Codex)
-
-- `codex-tasks/001-create-project-foundation.md`
-- `codex-tasks/002-design-supabase-schema.md`
-- `codex-tasks/003-design-api-and-agent-contracts.md`
-
-## Current Status
-
-Project is in **Phase 0: Foundation & Documentation**.
-No backend/frontend/database implementation is included yet.

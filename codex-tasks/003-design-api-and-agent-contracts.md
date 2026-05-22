@@ -2,20 +2,38 @@
 
 ## Objective
 
-Define service contracts between application layers and agent departments.
+Define service contracts between application layers and agent departments using the exact required MVP endpoint set and exact required response envelope.
 
-## Proposed Scope
+## Required MVP Endpoint Set
 
-- API endpoint blueprint (request/response envelopes).
-- Agent input/output contract definitions.
-- Error taxonomy and traceability metadata standards.
+- `GET /health`
+- `POST /api/v1/analyze-stock`
+- `GET /api/v1/stocks/{symbol}`
+- `GET /api/v1/strategy-recommendations/{recommendation_id}`
+- `POST /api/v1/strategy-recommendations`
+- `POST /api/v1/simulation/paper-orders`
+- `GET /api/v1/paper-portfolios/{portfolio_id}`
+- `GET /api/v1/agent-runs/{agent_run_id}`
+- `GET /api/v1/project-status`
+
+## Required Response Envelope
+
+```json
+{
+  "request_id": "uuid",
+  "status": "success",
+  "data": {},
+  "metadata": {
+    "schema_version": "v0.1",
+    "generated_at": "ISO-8601 timestamp",
+    "source": "HK_ALPHA_TEAM"
+  },
+  "warnings": []
+}
+```
 
 ## Deliverables
 
 - Contract specification document.
-- Example payloads for research, strategy, and simulation flows.
+- Example payloads for all eight agent departments.
 - Versioning and backward-compatibility policy draft.
-
-## Dependencies
-
-- Task 002 schema design outputs.

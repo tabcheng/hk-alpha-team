@@ -90,6 +90,40 @@ A documentation task is done when:
 4. Scope constraints are respected (documentation-only when required).
 5. Changes are committed and summarized in PR metadata.
 
+
+## Contract and Completion Governance (Deep Audit Additions)
+
+### Contract Lock Rule
+
+Do not rename any of the following without an explicit `docs/decision-log.md` entry in the same PR:
+- Canonical schema table names
+- MVP API endpoint names
+- Response envelope fields
+- Preferred strategy labels
+- MVP phase names
+- Investment Strategy Office required fields
+
+### PR Completion Rule
+
+A pull request is not considered complete until it is mergeable.
+
+### Consistency Audit Rule
+
+If `docs/09-api-and-agent-contracts.md` changes, update related governance artifacts in the same PR:
+- `README.md`
+- `codex-tasks/002-design-supabase-schema.md` (if schema/API coupling is affected)
+- `codex-tasks/003-design-api-and-agent-contracts.md`
+- `docs/decision-log.md`
+- `docs/progress-log.md`
+- `docs/11-project-status.md`
+
+### Source-of-Truth Map
+
+- `docs/08-supabase-schema-design.md` = schema contract
+- `docs/09-api-and-agent-contracts.md` = API and agent contract
+- `docs/10-mvp-implementation-plan.md` = MVP phase plan
+- `docs/11-project-status.md` = project progress status
+
 ## Security & Sensitive Information Warning (Do Not Commit)
 
 Never include any of the following in repository files, examples, screenshots, or logs:

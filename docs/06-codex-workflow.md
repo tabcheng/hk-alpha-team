@@ -12,14 +12,18 @@ Define how Codex tasks are planned, executed, reviewed, and logged.
 4. **Commit & PR**: create traceable change sets.
 5. **Log Update**: record decision/progress/lessons as needed.
 
-## Task Management
+## Re-Review Rule
 
-- Tasks live under `codex-tasks/`.
-- Use numbered task files with concise acceptance criteria.
-- Keep future tasks implementation-oriented but boundary-aware.
+When Harness Engineering provides re-review blockers, fix blockers exactly:
+
+- Use exact required schema table names.
+- Use exact required MVP API endpoint names.
+- Use exact required response envelope.
+- Use exact required MVP phase model.
+- Update all explicitly required files in the review note.
 
 ## Quality Expectations
 
 - Explicitly state assumptions.
 - Keep docs easy to skim and audit.
-- Avoid premature implementation details during foundation phase.
+- Keep tasks documentation-only when requested.

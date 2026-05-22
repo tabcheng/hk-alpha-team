@@ -1,12 +1,25 @@
-# 05 Data and Storage Plan (Initial)
+# 05 Data and Storage Plan (Canonical v1)
 
-## Data Domains
+## Canonical Primary Tables (Required Names)
 
-1. **Reference Data**: tickers, sectors, metadata.
-2. **Research Artifacts**: theses, memos, assumptions.
-3. **Strategy Records**: recommendation packets and revisions.
-4. **Simulation Records**: paper trades, PnL snapshots, review notes.
-5. **Governance Logs**: decisions, progress, lessons learned.
+1. `stocks`
+2. `market_indices`
+3. `price_bars`
+4. `market_snapshots`
+5. `company_financials`
+6. `news_items`
+7. `research_documents`
+8. `agent_runs`
+9. `agent_outputs`
+10. `investment_committee_reviews`
+11. `strategy_recommendations`
+12. `paper_portfolios`
+13. `paper_orders`
+14. `paper_positions`
+15. `portfolio_snapshots`
+16. `trade_reviews`
+17. `learning_proposals`
+18. `audit_events`
 
 ## Storage Principles
 
@@ -14,13 +27,7 @@
 - Preserve timestamps and authorship/agent attribution.
 - Favor append-only event logs for auditable workflows.
 
-## Access & Safety Considerations
+## Contract Alignment
 
-- Role-based access controls for sensitive notes.
-- Clear labels for simulated vs real-world records.
-- Backup and retention policy to be defined in implementation phase.
-
-## Next Step
-
-Detailed schema design is tracked in:
-- `codex-tasks/002-design-supabase-schema.md`
+- API contracts must use the exact MVP endpoint set in `docs/09-api-and-agent-contracts.md`.
+- All endpoint responses must use the exact required response envelope in `docs/09-api-and-agent-contracts.md`.
