@@ -13,10 +13,11 @@ A PR is considered **large** when any of the following are true:
 Large PR handling rules:
 
 1. Prefer splitting into smaller PRs when dependency order allows.
-2. If splitting is not practical, provide a review map in the PR body:
-   - change groups
-   - file-by-file intent
+2. If splitting is not practical, PR body must include:
+   - review map
+   - grouped file changes
    - explicit risk areas
+   - explicit out-of-scope confirmation
 3. Require explicit scope confirmation and out-of-scope list in PR body.
 4. Require at least one checkpoint for boundary compliance (advisory-only, no execution integration).
 
@@ -42,6 +43,7 @@ Large PR handling rules:
 - [ ] `docs/progress-log.md` updated when meaningful progress changed.
 - [ ] `docs/decision-log.md` updated when governance/design decisions changed.
 - [ ] `docs/11-project-status.md` updated when task/milestone state changed.
+- [ ] Post-merge status update plan is included when status changes are expected after merge.
 
 ## D. Consistency Audit Trigger
 
@@ -61,7 +63,13 @@ If `docs/09-api-and-agent-contracts.md` changed:
 - [ ] No unintended implementation artifacts were added for documentation-only tasks.
 - [ ] Commit and PR description explain what changed and what remains out of scope.
 
-## F. Completion Gate
+## F. Implementation PR Validation Evidence
+
+For implementation PRs:
+
+- [ ] Tests were run and reported (or explicit rationale for no tests).
+- [ ] Validation evidence is included (commands, outputs, or artifact checks).
+
+## G. Completion Gate
 
 - [ ] PR is mergeable (required for completion).
-

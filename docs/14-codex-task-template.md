@@ -10,6 +10,17 @@ Use this template for future Codex task prompts to preserve consistency, scope c
 
 [Describe current repository state, prerequisites, and what just merged.]
 
+### Required Reading (Before Making Changes)
+
+- `AGENTS.md`
+- `README.md`
+- `docs/08-supabase-schema-design.md`
+- `docs/09-api-and-agent-contracts.md`
+- `docs/10-mvp-implementation-plan.md`
+- `docs/11-project-status.md`
+- `docs/decision-log.md`
+- `docs/progress-log.md`
+
 ### Goal
 
 [State exactly what this PR must accomplish.]
@@ -31,6 +42,18 @@ Do not rename (unless explicitly approved with same-PR decision-log entry):
 - Investment Strategy Office required fields
 
 Follow `AGENTS.md`.
+
+### Git Sync / Rebase Guidance
+
+Use:
+
+```bash
+git fetch origin main
+git status --short
+git rebase origin/main
+```
+
+Do **not** use `git rebase main` unless local `main` exists.
 
 ### Required Files to Add
 
@@ -92,4 +115,3 @@ Include sections:
 - Keep PRs coherent and auditable.
 - Prefer explicit checklists over implicit expectations.
 - If requirements conflict, prioritize direct user request, then AGENTS governance, then prior convention.
-

@@ -101,6 +101,10 @@ Preferred strategy labels:
 - `docs/09-api-and-agent-contracts.md` — required API and agent contracts.
 - `docs/10-mvp-implementation-plan.md` — requested phase model plan.
 - `docs/11-project-status.md` — task status and merge readiness.
+- `docs/12-initial-conversation-brief.md` — original intent and boundary continuity brief.
+- `docs/13-pr-review-checklist.md` — reusable PR checklist and large PR review policy.
+- `docs/14-codex-task-template.md` — reusable Codex task prompt template.
+- `codex-tasks/005-create-supabase-migration-draft.md` — Task 005 phase-entry card for migration draft planning.
 - `docs/decision-log.md` — key project decisions.
 - `docs/progress-log.md` — milestone progress tracking.
 - `docs/lessons-learned.md` — retrospective notes and operational learning.
