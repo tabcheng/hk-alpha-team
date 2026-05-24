@@ -1,6 +1,8 @@
--- HK Alpha Team v1 core schema migration draft
+-- DRAFT migration for HK Alpha Team v1.
+-- Do not apply to production Supabase without Harness Engineering review.
+-- Generated from docs/08-supabase-schema-design.md.
+-- This PR does not connect to production Supabase.
 -- Date: 2026-05-24
--- Scope: Draft-only schema creation for local review; no production connection/deployment.
 
 create extension if not exists "pgcrypto";
 
@@ -117,7 +119,7 @@ create table if not exists strategy_recommendations (
   stock_id uuid not null references stocks(id),
   symbol text not null,
   company_name text not null,
-  strategy_recommendation text not null,
+  strategy_recommendation text not null check (strategy_recommendation in ('STRONG_WATCH', 'WAIT_FOR_PULLBACK', 'SMALL_POSITION', 'ACCUMULATE', 'HOLD', 'REDUCE_RISK', 'AVOID')),
   summary text not null,
   confidence_level integer not null check (confidence_level between 0 and 100),
   market_score numeric(6,2),

@@ -45,7 +45,10 @@
 
 ## Scope Compliance Check
 
-- Documentation-only changes in current PR: **Yes**
+- Implementation-limited changes in current PR: **Yes**
+- Production deployment added: **No**
+- Production Supabase connection added: **No**
+- Backend/frontend runtime implementation added: **No**
 - Real-money trading automation added: **No**
 - Brokerage API integration added: **No**
 - Secrets committed: **No**
