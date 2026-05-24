@@ -52,3 +52,12 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Added strict governance rules and source-of-truth map in `AGENTS.md`.
 - Added MVP acceptance criteria in `docs/10-mvp-implementation-plan.md`.
 - Added schema migration planning note in `docs/08-supabase-schema-design.md`.
+
+## 2026-05-22 — PR #3 Governance Hardening and Task 005 Preparation
+
+- Added initial intent capture in `docs/12-initial-conversation-brief.md`.
+- Added reusable PR checklist and large PR policy in `docs/13-pr-review-checklist.md`.
+- Added reusable Codex prompt template in `docs/14-codex-task-template.md`.
+- Added Task 005 card in `codex-tasks/005-create-supabase-migration-draft.md`.
+- Updated `docs/11-project-status.md` to reflect PR #2 merged and Task 005 ready-to-start.
+- Maintained documentation-only scope and contract lock compliance.
