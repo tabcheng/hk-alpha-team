@@ -88,6 +88,12 @@ ALLOWED_PATTERN_PATHS = {
     Path("docs/15-migration-assumptions.md"),
 }
 
+
+MIGRATION_REQUIRED_SNIPPETS = [
+    "investment_committee_review_id uuid references investment_committee_reviews(id)",
+    "idx_strategy_recommendations_committee_review_created_at",
+]
+
 BINARY_EXTENSIONS = {
     ".png", ".jpg", ".jpeg", ".gif", ".pdf", ".zip", ".gz", ".tar", ".sqlite", ".db", ".ico"
 }
@@ -147,6 +153,7 @@ def main() -> int:
     errors += must_contain(api_text, "API doc endpoint names", EXPECTED_ENDPOINTS)
     errors += must_contain(api_text, "API doc envelope keys", EXPECTED_ENVELOPE_KEYS)
     errors += must_contain(migration_text, "Migration SQL table names", EXPECTED_TABLES)
+    errors += must_contain(migration_text, "Migration SQL lineage snippets", MIGRATION_REQUIRED_SNIPPETS)
 
     errors += scan_sensitive_assignments()
 

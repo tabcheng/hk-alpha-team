@@ -21,6 +21,7 @@ Capture explicit schema interpretation assumptions for the first migration draft
 9. Paper trading and learning/audit tables are included as append-first records to preserve simulation traceability.
 10. RLS policies are intentionally deferred to a dedicated follow-up implementation PR after schema baseline review.
 11. Enum-like fields are partially constrained in this draft (`strategy_recommendations.strategy_recommendation`, `agent_runs.status`, `paper_orders.quantity`, `price_bars` high/low + volume checks); additional enumerated constraints (for example `paper_orders.side`, `paper_orders.order_type`, `paper_orders.status`, `paper_positions.status`, `trade_reviews.outcome_label`) are deferred pending implementation-level lifecycle policy finalization.
+12. `strategy_recommendations` includes `investment_committee_review_id` (FK to `investment_committee_reviews.id`) to preserve review-to-recommendation lineage for governance traceability.
 
 ## Out-of-Scope in this PR
 

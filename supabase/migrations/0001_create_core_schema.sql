@@ -117,6 +117,7 @@ create index if not exists idx_research_documents_status on research_documents (
 create table if not exists strategy_recommendations (
   id uuid primary key default gen_random_uuid(),
   stock_id uuid not null references stocks(id),
+  investment_committee_review_id uuid references investment_committee_reviews(id),
   symbol text not null,
   company_name text not null,
   strategy_recommendation text not null check (strategy_recommendation in ('STRONG_WATCH', 'WAIT_FOR_PULLBACK', 'SMALL_POSITION', 'ACCUMULATE', 'HOLD', 'REDUCE_RISK', 'AVOID')),
@@ -139,6 +140,7 @@ create table if not exists strategy_recommendations (
 );
 
 create index if not exists idx_strategy_recommendations_symbol_created_at_desc on strategy_recommendations (symbol, created_at desc);
+create index if not exists idx_strategy_recommendations_committee_review_created_at on strategy_recommendations (investment_committee_review_id, created_at desc);
 create index if not exists idx_strategy_recommendations_next_review_date on strategy_recommendations (next_review_date);
 
 create table if not exists agent_runs (
