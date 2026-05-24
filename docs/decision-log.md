@@ -93,3 +93,17 @@
 - Improves repeatability and review quality for implementation PRs.
 - Reduces scope drift risk while contract-locked components move into code.
 - Establishes a consistent prompt/review standard for subsequent tasks.
+
+## 2026-05-24 — Decision: Establish Migration Draft Baseline with Automated Contract Checks
+
+**Context:** Phase 2 started with Task 005 and required implementation preparation while preserving canonical schema/API naming locks.
+
+**Decision:**
+- Introduce a first draft Supabase migration file containing the canonical v1 core table set and baseline constraints/indexes.
+- Add a lightweight contract validation script that fails CI if locked table names, endpoint names, response envelope keys, or strategy labels drift from source-of-truth docs.
+- Record migration interpretation assumptions in a dedicated assumptions document for transparent review.
+
+**Implications:**
+- Reduces accidental contract drift as implementation work begins.
+- Provides early CI guardrails before backend feature coding.
+- Keeps production deployment and RLS rollout deferred to dedicated follow-up PRs.

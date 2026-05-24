@@ -2,11 +2,11 @@
 
 ## Snapshot Date
 
-2026-05-22
+2026-05-24
 
 ## Current Phase
 
-**Phase 2 — Database Preparation** (Ready to Start via Task 005).
+**Phase 2 — Database Preparation** (In Progress via PR #4).
 
 ## Tasks 001–010 Status
 
@@ -16,7 +16,7 @@
 | 002 | Design Supabase Schema | Completed | Merged in PR #2 as schema source-of-truth baseline. |
 | 003 | Design API and Agent Contracts | Completed | Merged in PR #2 with fixed MVP contract surfaces. |
 | 004 | Create MVP Implementation Plan | Completed | Merged in PR #2 with seven-phase rollout model. |
-| 005 | Create Supabase Migration Draft | Ready to Start | Task card prepared; next execution step. |
+| 005 | Create Supabase Migration Draft | In Progress | PR #4 adds first migration draft + contract validation baseline. |
 | 006 | Backend Skeleton | Planned | Contract-first backend scaffolding phase. |
 | 007 | First Analysis Workflow | Planned | Analyze-stock flow from required endpoint set. |
 | 008 | Simulation Desk MVP | Planned | Paper-orders and paper-portfolio workflow. |
@@ -29,7 +29,7 @@
 |---|---|---|
 | M0 | Foundation Baseline | Completed |
 | M1 | Documentation and Contracts | Completed |
-| M2 | Database Preparation | Ready to Start |
+| M2 | Database Preparation | In Progress |
 | M3 | Backend Skeleton | Planned |
 | M4 | First Analysis Workflow | Planned |
 | M5 | Simulation Desk MVP | Planned |
@@ -52,5 +52,5 @@
 
 ## Latest Review Update
 
-- PR #2 is merged and baseline design contracts are now the implementation starting point.
-- Governance hardening docs and Task 005 preparation added in current PR.
+- PR #3 is merged and governance/task-prep artifacts are the phase-entry baseline.
+- PR #4 is now implementing the first Supabase migration draft and contract validation workflow.

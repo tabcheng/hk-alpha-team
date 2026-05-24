@@ -61,3 +61,11 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Added Task 005 card in `codex-tasks/005-create-supabase-migration-draft.md`.
 - Updated `docs/11-project-status.md` to reflect PR #2 merged and Task 005 ready-to-start.
 - Maintained documentation-only scope and contract lock compliance.
+
+## 2026-05-24 — PR #4 Supabase Migration Draft and Contract Validation Baseline
+
+- Added initial migration draft SQL at `supabase/migrations/0001_create_core_schema.sql` with canonical v1 tables, key constraints, and baseline indexes.
+- Added `scripts/validate_contracts.py` to validate locked schema names, endpoint names, envelope keys, and strategy labels against source-of-truth docs.
+- Added GitHub Actions workflow `.github/workflows/contract-check.yml` to run contract validation on push/PR.
+- Added `docs/15-migration-assumptions.md` documenting interpretation assumptions and explicit out-of-scope boundaries.
+- Updated `docs/11-project-status.md` to mark Task 005 and Milestone M2 as In Progress.
