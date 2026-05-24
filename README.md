@@ -85,6 +85,15 @@ Preferred strategy labels:
 }
 ```
 
+## Phase 2 Migration/Validation Baseline (PR #4)
+
+- `supabase/migrations/0001_create_core_schema.sql` — **draft-only** core schema migration baseline generated from canonical schema docs.
+- `docs/15-migration-assumptions.md` — explicit schema interpretation assumptions and deferred items for the draft migration.
+- `scripts/validate_contracts.py` — lightweight validator for contract-lock surfaces and sensitive-assignment scanning.
+- `.github/workflows/contract-check.yml` — CI workflow that runs contract validation on PRs and pushes to `main`.
+
+This migration is draft-only and **must not be applied to production Supabase** without Harness Engineering review and explicit approval.
+
 ## Documentation Map
 
 - `PROJECT_BRIEF.md` — concise project charter.
