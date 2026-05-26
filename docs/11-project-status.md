@@ -2,11 +2,11 @@
 
 ## Snapshot Date
 
-2026-05-24
+2026-05-26
 
 ## Current Phase
 
-**Phase 2 — Database Preparation** (In Progress via PR #4).
+**Phase 2 — Database Preparation** (In Progress via PR #5 Phase 2 readiness validation updates).
 
 ## Tasks 001–010 Status
 
@@ -16,7 +16,7 @@
 | 002 | Design Supabase Schema | Completed | Merged in PR #2 as schema source-of-truth baseline. |
 | 003 | Design API and Agent Contracts | Completed | Merged in PR #2 with fixed MVP contract surfaces. |
 | 004 | Create MVP Implementation Plan | Completed | Merged in PR #2 with seven-phase rollout model. |
-| 005 | Create Supabase Migration Draft | In Progress | PR #4 adds first migration draft + contract validation baseline. |
+| 005 | Create Supabase Migration Draft | In Progress | PR #5 adds local/test SQL execution validation and CI migration check workflow. |
 | 006 | Backend Skeleton | Planned | Contract-first backend scaffolding phase. |
 | 007 | First Analysis Workflow | Planned | Analyze-stock flow from required endpoint set. |
 | 008 | Simulation Desk MVP | Planned | Paper-orders and paper-portfolio workflow. |
@@ -55,5 +55,6 @@
 
 ## Latest Review Update
 
-- PR #3 is merged and governance/task-prep artifacts are the phase-entry baseline.
-- PR #4 is now implementing the first Supabase migration draft and contract validation workflow.
+- PR #4 is merged with first migration draft and baseline contract-check CI.
+- PR #5 validates migration execution in local/test PostgreSQL and adds SQL migration CI workflow.
+- Branch-protection-plan upgrade is intentionally deferred during Phase 2; manual governance controls remain active.
