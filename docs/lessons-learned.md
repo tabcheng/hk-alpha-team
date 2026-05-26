@@ -49,3 +49,19 @@
 
 - Treat scope wording in `docs/11-project-status.md` as a required consistency item whenever a PR crosses from documentation-only into implementation-limited work.
 - Prefer adding enum/check-constraint policy notes in migration assumptions at the same time SQL constraints are introduced to reduce follow-up review cycles.
+
+
+## 2026-05-26 — PR #5 Phase 2 SQL Validation Governance Follow-up
+
+### What Worked
+
+- Migration SQL execution checks were formalized for local/test DB usage before backend work.
+- CI and review protocols identified FK/table creation order issues early.
+
+### What to Improve
+
+- Migration SQL must be executed in a local/test database before backend skeleton implementation begins.
+- Foreign key and table creation order must be validated explicitly in migration drafts.
+- Validation checks must assert results (for example counts/expected names), not only run `SELECT` statements.
+- Unresolved review threads must be checked before final approval.
+

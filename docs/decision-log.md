@@ -107,3 +107,8 @@
 - Reduces accidental contract drift as implementation work begins.
 - Provides early CI guardrails before backend feature coding.
 - Keeps production deployment and RLS rollout deferred to dedicated follow-up PRs.
+
+
+## 2026-05-26 — Decision: Defer Branch-Protection Plan Upgrade During Phase 2
+
+We will not upgrade GitHub account/organization immediately. During Phase 2 we will rely on manual governance, PR review protocol, GitHub Actions checks, and unresolved-thread checks. Revisit GitHub Pro / Team / Enterprise organization upgrade during Phase 3 or Phase 4.

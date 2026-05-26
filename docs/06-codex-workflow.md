@@ -75,3 +75,22 @@ When Harness Engineering provides re-review blockers, fix blockers exactly:
 - Explicitly state assumptions.
 - Keep docs easy to skim and audit.
 - Keep tasks documentation-only when requested.
+
+
+## Mandatory Full PR Review Protocol
+
+For every implementation-limited or governance-sensitive PR, reviewers must perform all checks below before approval:
+
+1. Read PR metadata (title, body, scope, and explicit out-of-scope statements).
+2. Check mergeability status.
+3. List changed files and identify high-risk files first.
+4. Check review threads and unresolved comments.
+5. Check workflow/status checks (required and relevant non-required checks).
+6. Inspect key changed files directly (not only summary views).
+7. Check contract drift against source-of-truth docs (`README.md`, `docs/08`, `docs/09`, `docs/10`).
+8. Check advisory-only / no-real-trading boundaries.
+9. Check logs and project status updates (`docs/decision-log.md`, `docs/progress-log.md`, `docs/11-project-status.md`).
+10. Approve only when no known blockers remain.
+
+A PR must not be considered approved if unresolved review threads remain, even if top-level comments are positive.
+

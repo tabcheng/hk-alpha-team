@@ -69,3 +69,12 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Added GitHub Actions workflow `.github/workflows/contract-check.yml` to run contract validation on push/PR.
 - Added `docs/15-migration-assumptions.md` documenting interpretation assumptions and explicit out-of-scope boundaries.
 - Updated `docs/11-project-status.md` to mark Task 005 and Milestone M2 as In Progress.
+
+
+## 2026-05-26 — PR #5 Phase 2 SQL Validation and Review Hardening
+
+- Added `scripts/check_migration_sql.sh` to execute the draft migration against a local/test PostgreSQL database and verify baseline table/constraint checks.
+- Added `.github/workflows/sql-migration-check.yml` to run migration execution validation in CI using `postgres:16`.
+- Added `docs/16-local-sql-validation.md` with local run steps, CI behavior, and scope boundaries.
+- Updated `docs/13-pr-review-checklist.md` with a review-thread closure gate to prevent unresolved review comments/threads from being missed.
+- Recorded decision to defer branch-protection plan upgrade during Phase 2 and continue manual governance controls.

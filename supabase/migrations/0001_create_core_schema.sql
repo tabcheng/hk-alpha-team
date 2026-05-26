@@ -114,6 +114,20 @@ create table if not exists research_documents (
 create index if not exists idx_research_documents_stock_created_at_desc on research_documents (stock_id, created_at desc);
 create index if not exists idx_research_documents_status on research_documents (status);
 
+create table if not exists investment_committee_reviews (
+  id uuid primary key default gen_random_uuid(),
+  research_document_id uuid not null references research_documents(id),
+  review_posture text not null,
+  consensus_score numeric(6,2),
+  dissenting_views_json jsonb not null default '[]'::jsonb,
+  open_questions_json jsonb not null default '[]'::jsonb,
+  reviewed_at timestamptz not null,
+  reviewer_type text not null,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists idx_investment_committee_reviews_doc_reviewed_at_desc on investment_committee_reviews (research_document_id, reviewed_at desc);
+
 create table if not exists strategy_recommendations (
   id uuid primary key default gen_random_uuid(),
   stock_id uuid not null references stocks(id),
@@ -122,7 +136,7 @@ create table if not exists strategy_recommendations (
   company_name text not null,
   strategy_recommendation text not null check (strategy_recommendation in ('STRONG_WATCH', 'WAIT_FOR_PULLBACK', 'SMALL_POSITION', 'ACCUMULATE', 'HOLD', 'REDUCE_RISK', 'AVOID')),
   summary text not null,
-  confidence_level integer not null check (confidence_level between 0 and 100),
+  confidence_level integer not null constraint ck_strategy_recommendations_confidence_level_range check (confidence_level between 0 and 100),
   market_score numeric(6,2),
   fundamental_score numeric(6,2),
   technical_score numeric(6,2),
@@ -150,7 +164,7 @@ create table if not exists agent_runs (
   recommendation_id uuid references strategy_recommendations(id),
   department_name text not null,
   request_payload_json jsonb not null default '{}'::jsonb,
-  status text not null check (status in ('started', 'succeeded', 'failed', 'timeout')),
+  status text not null constraint ck_agent_runs_status check (status in ('started', 'succeeded', 'failed', 'timeout')),
   started_at timestamptz,
   finished_at timestamptz,
   error_code text,
@@ -169,20 +183,6 @@ create table if not exists agent_outputs (
 );
 
 create index if not exists idx_agent_outputs_run_created_at on agent_outputs (agent_run_id, created_at);
-
-create table if not exists investment_committee_reviews (
-  id uuid primary key default gen_random_uuid(),
-  research_document_id uuid not null references research_documents(id),
-  review_posture text not null,
-  consensus_score numeric(6,2),
-  dissenting_views_json jsonb not null default '[]'::jsonb,
-  open_questions_json jsonb not null default '[]'::jsonb,
-  reviewed_at timestamptz not null,
-  reviewer_type text not null,
-  created_at timestamptz not null default now()
-);
-
-create index if not exists idx_investment_committee_reviews_doc_reviewed_at_desc on investment_committee_reviews (research_document_id, reviewed_at desc);
 
 create table if not exists paper_portfolios (
   id uuid primary key default gen_random_uuid(),

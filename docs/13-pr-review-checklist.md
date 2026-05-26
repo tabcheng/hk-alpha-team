@@ -73,3 +73,12 @@ For implementation PRs:
 ## G. Completion Gate
 
 - [ ] PR is mergeable (required for completion).
+
+## H. Review Thread Closure Gate
+
+Before final approval/merge:
+
+- [ ] All PR review comments are resolved or explicitly dispositioned.
+- [ ] All PR review threads are marked resolved (or reopened with an owner/action).
+- [ ] Any deferred follow-up is logged in `docs/progress-log.md` or tracked via linked task.
+
