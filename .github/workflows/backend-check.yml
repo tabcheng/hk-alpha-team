@@ -17,3 +17,6 @@ jobs:
         run: pip install -r backend/requirements.txt
       - name: Run backend tests
         run: PYTHONPATH=backend pytest backend/tests
+
+      - name: Run contract validation
+        run: python scripts/validate_contracts.py
