@@ -24,6 +24,7 @@ def test_project_status_endpoint_returns_required_envelope() -> None:
     payload = response.json()
 
     assert payload["status"] == "success"
-    assert payload["data"]["current_phase"] == "Phase 3 — Backend Skeleton"
+    assert "Phase 3 — Backend Skeleton" in payload["data"]["current_phase"]
+    assert "M3" in payload["data"]["current_milestone"]
     assert payload["data"]["task_status"]["005"] == "Completed"
     assert payload["data"]["task_status"]["006"] == "In Progress"

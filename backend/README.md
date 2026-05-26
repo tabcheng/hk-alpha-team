@@ -8,7 +8,7 @@ Included in this PR:
 
 - FastAPI app entrypoint.
 - `GET /health` endpoint.
-- `GET /api/v1/project-status` endpoint.
+- `GET /api/v1/project-status` endpoint (status sourced from `docs/11-project-status.md`).
 - Shared success/error envelope helpers aligned to `docs/09-api-and-agent-contracts.md`.
 - Pytest coverage for the two implemented endpoints.
 

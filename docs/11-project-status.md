@@ -55,13 +55,6 @@
 
 ## Latest Review Update
 
-- PR #4 is merged with first migration draft and baseline contract-check CI.
-- PR #5 validates migration execution in local/test PostgreSQL and adds SQL migration CI workflow.
-- Branch-protection-plan upgrade is intentionally deferred during Phase 2; manual governance controls remain active.
-
-
-## Latest Review Update (PR #6)
-
 - PR #6 closes Phase 2 status following PR #5 merge and CI validation successes.
 - Added Phase 3 backend skeleton foundation with `GET /health` and `GET /api/v1/project-status`.
 - Added backend response envelope helpers, pytest coverage, and backend CI workflow.
