@@ -59,6 +59,7 @@ Decision for Phase 2:
 - Continue manual governance enforcement through:
   - required PR review checklist usage
   - contract validation CI workflows
+  - unresolved-thread checks before approval/merge
   - mergeability verification before declaring PR complete
 
 Revisit upgrade decision in a dedicated governance/infrastructure PR after Phase 2 readiness stabilization.

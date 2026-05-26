@@ -39,6 +39,10 @@ if [[ "${TABLE_COUNT}" != "18" ]]; then
 fi
 
 echo "[check] validating required critical constraints"
-psql -v ON_ERROR_STOP=1 -d "${PGDATABASE}" -c "select conname from pg_constraint where conname in ('ck_strategy_recommendations_confidence_level_range','ck_agent_runs_status');" >/dev/null
+CONSTRAINT_COUNT="$(psql -v ON_ERROR_STOP=1 -d "${PGDATABASE}" -tAc "select count(*) from pg_constraint where conname in ('ck_strategy_recommendations_confidence_level_range','ck_agent_runs_status');" | tr -d '[:space:]')"
+if [[ "${CONSTRAINT_COUNT}" != "2" ]]; then
+  echo "ERROR: expected 2 required constraints, found ${CONSTRAINT_COUNT}" >&2
+  exit 1
+fi
 
 echo "Migration SQL validation passed."

@@ -114,6 +114,20 @@ create table if not exists research_documents (
 create index if not exists idx_research_documents_stock_created_at_desc on research_documents (stock_id, created_at desc);
 create index if not exists idx_research_documents_status on research_documents (status);
 
+create table if not exists investment_committee_reviews (
+  id uuid primary key default gen_random_uuid(),
+  research_document_id uuid not null references research_documents(id),
+  review_posture text not null,
+  consensus_score numeric(6,2),
+  dissenting_views_json jsonb not null default '[]'::jsonb,
+  open_questions_json jsonb not null default '[]'::jsonb,
+  reviewed_at timestamptz not null,
+  reviewer_type text not null,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists idx_investment_committee_reviews_doc_reviewed_at_desc on investment_committee_reviews (research_document_id, reviewed_at desc);
+
 create table if not exists strategy_recommendations (
   id uuid primary key default gen_random_uuid(),
   stock_id uuid not null references stocks(id),
@@ -169,20 +183,6 @@ create table if not exists agent_outputs (
 );
 
 create index if not exists idx_agent_outputs_run_created_at on agent_outputs (agent_run_id, created_at);
-
-create table if not exists investment_committee_reviews (
-  id uuid primary key default gen_random_uuid(),
-  research_document_id uuid not null references research_documents(id),
-  review_posture text not null,
-  consensus_score numeric(6,2),
-  dissenting_views_json jsonb not null default '[]'::jsonb,
-  open_questions_json jsonb not null default '[]'::jsonb,
-  reviewed_at timestamptz not null,
-  reviewer_type text not null,
-  created_at timestamptz not null default now()
-);
-
-create index if not exists idx_investment_committee_reviews_doc_reviewed_at_desc on investment_committee_reviews (research_document_id, reviewed_at desc);
 
 create table if not exists paper_portfolios (
   id uuid primary key default gen_random_uuid(),

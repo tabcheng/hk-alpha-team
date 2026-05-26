@@ -111,13 +111,4 @@
 
 ## 2026-05-26 — Decision: Defer Branch-Protection Plan Upgrade During Phase 2
 
-**Context:** GitHub indicates protected-branch rules for this private repository are not enforceable under current plan/organization eligibility.
-
-**Decision:**
-- Do not upgrade repository plan/organization settings in PR #5.
-- Continue Phase 2 with manual governance controls (PR checklist discipline, CI contract/migration validation, mergeability gate).
-- Revisit upgrade in a dedicated governance/infrastructure PR after Phase 2 readiness stabilization.
-
-**Implications:**
-- Preserves current scope and avoids infrastructure-billing/process changes during migration readiness work.
-- Increases reviewer responsibility to enforce thread closure, scope boundaries, and mergeability checks manually.
+We will not upgrade GitHub account/organization immediately. During Phase 2 we will rely on manual governance, PR review protocol, GitHub Actions checks, and unresolved-thread checks. Revisit GitHub Pro / Team / Enterprise organization upgrade during Phase 3 or Phase 4.
