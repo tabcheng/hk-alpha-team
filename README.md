@@ -107,6 +107,15 @@ Phase 2 validation is limited to local/test PostgreSQL execution checks. Applyin
 
 The `sql-migration-check` workflow validates that the draft migration executes successfully in local/test PostgreSQL context before backend skeleton work proceeds.
 
+
+## Phase 3 Backend Skeleton Foundation (PR #6)
+
+- `backend/app/main.py` — FastAPI application entrypoint with `GET /health` and `GET /api/v1/project-status`.
+- `backend/app/contracts.py` — shared success/error response envelope helpers aligned to `docs/09-api-and-agent-contracts.md`.
+- `backend/tests/test_api.py` — pytest coverage for implemented endpoints and envelope shape checks.
+- `.github/workflows/backend-check.yml` — CI workflow for backend test execution.
+
+
 ## Documentation Map
 
 - `PROJECT_BRIEF.md` — concise project charter.
