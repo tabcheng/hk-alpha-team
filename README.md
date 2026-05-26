@@ -94,6 +94,19 @@ Preferred strategy labels:
 
 This migration is draft-only and **must not be applied to production Supabase** without Harness Engineering review and explicit approval.
 
+Applying this draft migration to production Supabase remains out of scope during Phase 2.
+
+
+## Phase 2 Local/Test SQL Validation (PR #5)
+
+- `scripts/check_migration_sql.sh` — local/test PostgreSQL migration execution validator.
+- `.github/workflows/sql-migration-check.yml` — CI workflow that runs contract + migration checks.
+- `docs/16-local-sql-validation.md` — runbook and governance notes for local/test validation.
+
+Phase 2 validation is limited to local/test PostgreSQL execution checks. Applying migrations to production Supabase remains out of scope in this phase.
+
+The `sql-migration-check` workflow validates that the draft migration executes successfully in local/test PostgreSQL context before backend skeleton work proceeds.
+
 ## Documentation Map
 
 - `PROJECT_BRIEF.md` — concise project charter.

@@ -31,5 +31,8 @@ jobs:
       - name: Install PostgreSQL client
         run: sudo apt-get update && sudo apt-get install -y postgresql-client
 
+      - name: Validate contracts
+        run: python scripts/validate_contracts.py
+
       - name: Validate migration SQL execution
         run: ./scripts/check_migration_sql.sh
