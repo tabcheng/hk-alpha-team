@@ -116,6 +116,8 @@ The `sql-migration-check` workflow validates that the draft migration executes s
 - `backend/tests/test_api.py` — pytest coverage for implemented endpoints and envelope shape checks.
 - `.github/workflows/backend-check.yml` — CI workflow for backend test execution and contract validation.
 - `docs/17-backend-skeleton.md` — backend skeleton scope, envelope rules, CI behavior, and follow-up guidance.
+- `docs/18-environment-strategy.md` — lightweight mobile-first DEV/UAT-like/PRODUCTION environment model and triggers.
+- `docs/19-first-analysis-workflow-stub.md` — contract-first `POST /api/v1/analyze-stock` stub behavior and boundaries.
 
 
 ## Documentation Map

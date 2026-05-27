@@ -51,16 +51,26 @@ def test_project_status_endpoint_returns_required_envelope() -> None:
 
 
 def test_analyze_stock_stub_returns_contract_aligned_envelope() -> None:
-    response = client.post("/api/v1/analyze-stock", json={"symbol": "0700.hk"})
+    response = client.post("/api/v1/analyze-stock", json={"symbol": "0700.HK"})
     assert response.status_code == 200
     payload = response.json()
 
     assert_success_envelope(payload)
     assert payload["data"]["symbol"] == "0700.HK"
-    assert payload["data"]["workflow_status"] == "stub"
-    assert payload["data"]["strategy_label"] == "WAIT_FOR_PULLBACK"
-    assert payload["data"]["real_money_decision_owner"] == "HUMAN_USER"
+    assert payload["data"]["analysis_mode"] == "stub"
+    assert payload["data"]["human_decision_required"] is True
+    assert payload["data"]["recommendation"]["confidence"] == 0
+    assert "No real investment analysis has been performed" in payload["data"]["summary"]
     assert payload["warnings"]
+
+
+def test_analyze_stock_invalid_symbol_returns_validation_error_envelope() -> None:
+    response = client.post("/api/v1/analyze-stock", json={"symbol": "AAPL"})
+    assert response.status_code == 200
+    payload = response.json()
+
+    assert_error_envelope(payload, code="VALIDATION_ERROR")
+    assert payload["error"]["details"]["rule"] == "hk_symbol"
 
 
 def test_analyze_stock_empty_symbol_returns_validation_error_envelope() -> None:
@@ -75,3 +85,12 @@ def test_analyze_stock_empty_symbol_returns_validation_error_envelope() -> None:
 def test_analyze_stock_missing_symbol_is_rejected_by_request_validation() -> None:
     response = client.post("/api/v1/analyze-stock", json={})
     assert response.status_code == 422
+
+
+def test_analyze_stock_stub_has_no_database_dependency() -> None:
+    response = client.post("/api/v1/analyze-stock", json={"symbol": "0005.HK"})
+    assert response.status_code == 200
+    payload = response.json()
+
+    assert_success_envelope(payload)
+    assert payload["data"]["analysis_mode"] == "stub"

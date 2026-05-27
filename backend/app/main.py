@@ -31,27 +31,26 @@ def analyze_stock(payload: AnalyzeStockRequest) -> dict:
             details={"field": "symbol", "rule": "non_empty"},
         )
 
+    if not symbol.endswith(".HK"):
+        return error_envelope(
+            code="VALIDATION_ERROR",
+            message="symbol must be a supported HK symbol format",
+            details={"field": "symbol", "rule": "hk_symbol", "example": "0700.HK"},
+        )
+
     return success_envelope(
         {
             "symbol": symbol,
-            "workflow_status": "stub",
-            "strategy_label": "WAIT_FOR_PULLBACK",
-            "summary": "Stub response only. Real analysis is not implemented yet.",
-            "key_reasons": [
-                "Contract-first endpoint is active for Phase 3 readiness.",
-                "No market, fundamental, or technical analysis has been executed.",
-            ],
-            "main_risks": [
-                "Do not use this stub payload as an investment recommendation.",
-            ],
-            "invalidation_conditions": [
-                "Phase 4 implementation replaces stub with real analysis workflow.",
-            ],
-            "suggested_user_action": "Review stub status and wait for Phase 4 implementation.",
-            "paper_trading_action": "No paper order suggested from stub output.",
+            "analysis_mode": "stub",
+            "human_decision_required": True,
+            "recommendation": {
+                "confidence": 0,
+                "summary": "No real investment analysis has been performed. This is a stub contract response.",
+            },
+            "summary": "Contract test stub only. No real investment analysis has been performed.",
             "real_money_decision_owner": "HUMAN_USER",
         },
         warnings=[
-            "analyze-stock is a contract stub and returns non-actionable placeholder data.",
+            "Stub response for contract testing only; not an investment recommendation.",
         ],
     )

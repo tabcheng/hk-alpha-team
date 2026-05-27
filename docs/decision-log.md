@@ -140,3 +140,17 @@ We will not upgrade GitHub account/organization immediately. During Phase 2 we w
 **Implications:**
 - Reduces API contract risk before Phase 4 implementation details are introduced.
 - Allows solo mobile-first operation to continue through CI/test-driven validation without infra prerequisites.
+
+
+## 2026-05-27 — Decision: Lightweight PR/Main/No-Production Environment Model
+
+**Context:** Solo mobile-first operation needs explicit environment boundaries during Phase 3/4 preparation.
+
+**Decision:**
+- DEV is PR branch + Codex + GitHub Actions.
+- UAT-like is `main` + green CI + Harness Engineering review.
+- PRODUCTION remains disabled until explicit approval with same-PR decision-log authorization.
+
+**Implications:**
+- Prevents premature hosted infrastructure and secret management overhead.
+- Keeps validation centered on repository tests and CI while contracts are hardened.

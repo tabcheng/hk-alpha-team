@@ -17,8 +17,8 @@
 | 003 | Design API and Agent Contracts | Completed | Merged in PR #2 with fixed MVP contract surfaces. |
 | 004 | Create MVP Implementation Plan | Completed | Merged in PR #2 with seven-phase rollout model. |
 | 005 | Create Supabase Migration Draft | Completed | Completed by PR #5 with local/test SQL execution validation and CI migration check workflow. |
-| 006 | Backend Skeleton | In Progress | PR #7 expands Phase 3 with analyze-stock stub and contract hardening tests. |
-| 007 | First Analysis Workflow | In Progress | PR #7 adds contract-first analyze-stock stub and mobile-first environment strategy. |
+| 006 | Backend Skeleton | In Progress | PR #7 revision strengthens contract stub readiness and mobile-first environment documentation. |
+| 007 | First Analysis Workflow | Preparing | Contract-first analyze-stock stub documented while real analysis remains pending. |
 | 008 | Simulation Desk MVP | Planned | Paper-orders and paper-portfolio workflow. |
 | 009 | Simple UI or Report Output | Planned | Minimal output layer for strategy reports. |
 | 010 | Review and Learning Loop | Planned | Trade reviews, proposals, and audit continuity. |

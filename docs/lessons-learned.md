@@ -103,3 +103,5 @@
 
 - Add explicit symbol-format policy tests once canonical validation regex is approved.
 - Add shared backend fixtures as endpoint count grows to reduce repeated assertion logic.
+
+- Mobile-first execution benefits from explicit PR/main/no-production environment contracts to avoid accidental infrastructure scope drift.
