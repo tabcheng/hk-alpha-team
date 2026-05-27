@@ -87,3 +87,11 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Added two required endpoints for this phase start: `GET /health` and `GET /api/v1/project-status`.
 - Added shared success/error response envelope helpers aligned to `docs/09-api-and-agent-contracts.md`.
 - Added backend pytest coverage and GitHub Actions backend test workflow.
+
+
+## 2026-05-27 — PR #7 Analyze-Stock Stub and Contract Hardening
+
+- Added `POST /api/v1/analyze-stock` as a contract-first stub endpoint in backend skeleton scope.
+- Added backend envelope helper tests with reusable success/error envelope assertions and analyze-stock validation coverage.
+- Updated backend skeleton documentation with stub behavior and a mobile-first local/test environment strategy.
+- Updated project status to mark Task 007 and Milestone M4 as In Progress.

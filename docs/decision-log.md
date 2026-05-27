@@ -126,3 +126,17 @@ We will not upgrade GitHub account/organization immediately. During Phase 2 we w
 **Implications:**
 - Backend implementation can proceed incrementally while preserving locked contract surfaces.
 - Project status can be queried from a stable contract-aligned endpoint early in Phase 3.
+
+
+## 2026-05-27 — Decision: Use a Contract-First Analyze-Stock Stub Before Real Analysis Wiring
+
+**Context:** Phase 3 must progress toward First Analysis Workflow readiness while remaining mobile-first and avoiding production setup dependencies.
+
+**Decision:**
+- Implement `POST /api/v1/analyze-stock` as a deterministic stub endpoint with contract-aligned success/error envelopes.
+- Require explicit non-actionable framing, warning signals, and human decision ownership fields in stub payloads.
+- Harden backend tests around envelope integrity and validation behavior before adding real analysis orchestration.
+
+**Implications:**
+- Reduces API contract risk before Phase 4 implementation details are introduced.
+- Allows solo mobile-first operation to continue through CI/test-driven validation without infra prerequisites.

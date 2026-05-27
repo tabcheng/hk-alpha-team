@@ -22,6 +22,7 @@ Current implemented endpoints:
 
 - `GET /health`
 - `GET /api/v1/project-status`
+- `POST /api/v1/analyze-stock` (stub)
 
 These endpoints are intentionally minimal and are used to validate envelope consistency, routing, and test/CI flow before broader endpoint implementation.
 
@@ -116,7 +117,7 @@ Related unchanged workflows:
 - Market data ingestion.
 - Brokerage execution integration.
 - Real-money trading automation.
-- `POST /api/v1/analyze-stock` implementation logic.
+- `POST /api/v1/analyze-stock` real analysis implementation logic.
 
 ## Follow-up Tasks for `POST /api/v1/analyze-stock`
 
@@ -125,3 +126,29 @@ Related unchanged workflows:
 3. Add deterministic test fixtures for strategy envelope shape.
 4. Add contract tests for error mapping (`VALIDATION_ERROR`, `NOT_FOUND`, `AGENT_CONTRACT_VIOLATION`, `INTERNAL_ERROR`).
 5. Add explicit human-decision framing checks in response payload tests.
+
+## Analyze-Stock Stub Contract (PR #7)
+
+`POST /api/v1/analyze-stock` is now implemented as a **contract stub** for local/test readiness.
+
+- Request body: `{ "symbol": "0700.HK" }`
+- Behavior: normalizes symbol, returns contract-aligned success envelope with explicit `workflow_status = "stub"`.
+- Boundary: no market data fetch, no agent execution, no production dependency, no actionable recommendation generation.
+- Warning behavior: response `warnings` includes a non-actionable stub warning to prevent misuse.
+
+Validation behavior in this phase:
+
+1. Missing `symbol` key is rejected by FastAPI request validation (`422`).
+2. Blank `symbol` value returns contract error envelope with `VALIDATION_ERROR`.
+3. Stub success payload includes explicit human-decision ownership (`real_money_decision_owner = "HUMAN_USER"`).
+
+## Mobile-First Environment Strategy (Local/Test Only)
+
+Harness Engineering primarily operates from mobile and lightweight cloud tooling. For this phase, environment strategy is intentionally minimal:
+
+1. Keep backend development runnable through repository CI and Codex execution without local desktop Python setup.
+2. Avoid requiring Railway deployment or hosted Supabase project configuration during endpoint contract hardening.
+3. Keep endpoint outputs deterministic and reviewable from test logs and PR diffs.
+4. Defer production secrets, runtime infra, and external service wiring to later phase-specific PRs.
+
+This strategy keeps Phase 3 focused on contract correctness and reviewability while enabling progress from mobile-first workflows.

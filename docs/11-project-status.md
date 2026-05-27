@@ -2,7 +2,7 @@
 
 ## Snapshot Date
 
-2026-05-26
+2026-05-27
 
 ## Current Phase
 
@@ -17,8 +17,8 @@
 | 003 | Design API and Agent Contracts | Completed | Merged in PR #2 with fixed MVP contract surfaces. |
 | 004 | Create MVP Implementation Plan | Completed | Merged in PR #2 with seven-phase rollout model. |
 | 005 | Create Supabase Migration Draft | Completed | Completed by PR #5 with local/test SQL execution validation and CI migration check workflow. |
-| 006 | Backend Skeleton | In Progress | PR #6 starts contract-first FastAPI backend scaffolding and tests. |
-| 007 | First Analysis Workflow | Planned | Analyze-stock flow from required endpoint set. |
+| 006 | Backend Skeleton | In Progress | PR #7 expands Phase 3 with analyze-stock stub and contract hardening tests. |
+| 007 | First Analysis Workflow | In Progress | PR #7 adds contract-first analyze-stock stub and mobile-first environment strategy. |
 | 008 | Simulation Desk MVP | Planned | Paper-orders and paper-portfolio workflow. |
 | 009 | Simple UI or Report Output | Planned | Minimal output layer for strategy reports. |
 | 010 | Review and Learning Loop | Planned | Trade reviews, proposals, and audit continuity. |
@@ -31,7 +31,7 @@
 | M1 | Documentation and Contracts | Completed |
 | M2 | Database Preparation | Completed |
 | M3 | Backend Skeleton | In Progress |
-| M4 | First Analysis Workflow | Planned |
+| M4 | First Analysis Workflow | In Progress |
 | M5 | Simulation Desk MVP | Planned |
 | M6 | Simple UI or Report Output | Planned |
 | M7 | Review and Learning Loop | Planned |
@@ -58,3 +58,5 @@
 - PR #6 closes Phase 2 status following PR #5 merge and CI validation successes.
 - Added Phase 3 backend skeleton foundation with `GET /health` and `GET /api/v1/project-status`.
 - Added backend response envelope helpers, pytest coverage, and backend CI workflow.
+
+- PR #7 adds `POST /api/v1/analyze-stock` stub, contract-hardening tests, and mobile-first local/test environment strategy notes.

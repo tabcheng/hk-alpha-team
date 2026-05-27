@@ -90,3 +90,16 @@
 
 - PR body metadata updates must be applied by Harness Engineering / ChatGPT reviewer directly in GitHub when needed.
 - Codex should treat PR body metadata blockers as guidance for draft content, not as repository-file-only completion blockers.
+
+
+## 2026-05-27 — PR #7 Analyze-Stock Stub Hardening
+
+### What Worked
+
+- Stub-first endpoint delivery allowed contract progress without production integrations.
+- Reusable envelope assertions made contract checks clearer and easier to extend for upcoming endpoints.
+
+### What to Improve
+
+- Add explicit symbol-format policy tests once canonical validation regex is approved.
+- Add shared backend fixtures as endpoint count grows to reduce repeated assertion logic.
