@@ -31,7 +31,7 @@
 | M1 | Documentation and Contracts | Completed |
 | M2 | Database Preparation | Completed |
 | M3 | Backend Skeleton | In Progress |
-| M4 | First Analysis Workflow | In Progress |
+| M4 | First Analysis Workflow | Preparing |
 | M5 | Simulation Desk MVP | Planned |
 | M6 | Simple UI or Report Output | Planned |
 | M7 | Review and Learning Loop | Planned |

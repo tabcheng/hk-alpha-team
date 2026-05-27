@@ -94,6 +94,6 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Added `POST /api/v1/analyze-stock` as a contract-first stub endpoint in backend skeleton scope.
 - Added backend envelope helper tests with reusable success/error envelope assertions and analyze-stock validation coverage.
 - Updated backend skeleton documentation with stub behavior and a mobile-first local/test environment strategy.
-- Updated project status to mark Task 007 and Milestone M4 as In Progress.
+- Updated project status to keep Task 007 and Milestone M4 in Preparing state while real analysis remains pending.
 
 - PR #7 revision goal: align analyze-stock stub fields/validation coverage and document lightweight environment strategy without hosted environments.
