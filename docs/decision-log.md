@@ -112,3 +112,17 @@
 ## 2026-05-26 — Decision: Defer Branch-Protection Plan Upgrade During Phase 2
 
 We will not upgrade GitHub account/organization immediately. During Phase 2 we will rely on manual governance, PR review protocol, GitHub Actions checks, and unresolved-thread checks. Revisit GitHub Pro / Team / Enterprise organization upgrade during Phase 3 or Phase 4.
+
+
+## 2026-05-26 — Decision: Start Phase 3 with Contract-First Backend Skeleton
+
+**Context:** PR #5 completed local/test migration validation and CI checks, allowing Phase 2 closeout and Phase 3 start.
+
+**Decision:**
+- Mark Phase 2 Database Preparation as completed in project status tracking.
+- Start Backend Skeleton with only `GET /health` and `GET /api/v1/project-status` implemented first.
+- Enforce required success/error envelope helpers in backend code before adding broader endpoint implementations.
+
+**Implications:**
+- Backend implementation can proceed incrementally while preserving locked contract surfaces.
+- Project status can be queried from a stable contract-aligned endpoint early in Phase 3.

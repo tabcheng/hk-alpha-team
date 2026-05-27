@@ -65,3 +65,28 @@
 - Validation checks must assert results (for example counts/expected names), not only run `SELECT` statements.
 - Unresolved review threads must be checked before final approval.
 
+
+
+## 2026-05-26 — PR #6 Backend Skeleton Foundation
+
+### What Worked
+
+- Contract-first endpoint scaffolding reduced ambiguity before analysis-feature implementation.
+- Adding backend CI coverage early improves confidence for subsequent Phase 3 endpoint work.
+
+### What to Improve
+
+- Add structured fixture-based contract tests for envelope shape reuse across future endpoints.
+- Add consistent backend dependency management strategy (`requirements.txt` vs lockfile) in a follow-up infra task.
+
+
+## 2026-05-26 — PR #6 Full Protocol Follow-up
+
+### What Worked
+
+- Full-protocol review surfaced repository-file fixes and governance gaps before merge.
+
+### What to Improve
+
+- PR body metadata updates must be applied by Harness Engineering / ChatGPT reviewer directly in GitHub when needed.
+- Codex should treat PR body metadata blockers as guidance for draft content, not as repository-file-only completion blockers.

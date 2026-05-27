@@ -6,7 +6,7 @@
 
 ## Current Phase
 
-**Phase 2 — Database Preparation** (In Progress via PR #5 Phase 2 readiness validation updates).
+**Phase 3 — Backend Skeleton** (In Progress via PR #6 backend foundation start).
 
 ## Tasks 001–010 Status
 
@@ -16,8 +16,8 @@
 | 002 | Design Supabase Schema | Completed | Merged in PR #2 as schema source-of-truth baseline. |
 | 003 | Design API and Agent Contracts | Completed | Merged in PR #2 with fixed MVP contract surfaces. |
 | 004 | Create MVP Implementation Plan | Completed | Merged in PR #2 with seven-phase rollout model. |
-| 005 | Create Supabase Migration Draft | In Progress | PR #5 adds local/test SQL execution validation and CI migration check workflow. |
-| 006 | Backend Skeleton | Planned | Contract-first backend scaffolding phase. |
+| 005 | Create Supabase Migration Draft | Completed | Completed by PR #5 with local/test SQL execution validation and CI migration check workflow. |
+| 006 | Backend Skeleton | In Progress | PR #6 starts contract-first FastAPI backend scaffolding and tests. |
 | 007 | First Analysis Workflow | Planned | Analyze-stock flow from required endpoint set. |
 | 008 | Simulation Desk MVP | Planned | Paper-orders and paper-portfolio workflow. |
 | 009 | Simple UI or Report Output | Planned | Minimal output layer for strategy reports. |
@@ -29,8 +29,8 @@
 |---|---|---|
 | M0 | Foundation Baseline | Completed |
 | M1 | Documentation and Contracts | Completed |
-| M2 | Database Preparation | In Progress |
-| M3 | Backend Skeleton | Planned |
+| M2 | Database Preparation | Completed |
+| M3 | Backend Skeleton | In Progress |
 | M4 | First Analysis Workflow | Planned |
 | M5 | Simulation Desk MVP | Planned |
 | M6 | Simple UI or Report Output | Planned |
@@ -55,6 +55,6 @@
 
 ## Latest Review Update
 
-- PR #4 is merged with first migration draft and baseline contract-check CI.
-- PR #5 validates migration execution in local/test PostgreSQL and adds SQL migration CI workflow.
-- Branch-protection-plan upgrade is intentionally deferred during Phase 2; manual governance controls remain active.
+- PR #6 closes Phase 2 status following PR #5 merge and CI validation successes.
+- Added Phase 3 backend skeleton foundation with `GET /health` and `GET /api/v1/project-status`.
+- Added backend response envelope helpers, pytest coverage, and backend CI workflow.

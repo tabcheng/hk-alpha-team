@@ -78,3 +78,12 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Added `docs/16-local-sql-validation.md` with local run steps, CI behavior, and scope boundaries.
 - Updated `docs/13-pr-review-checklist.md` with a review-thread closure gate to prevent unresolved review comments/threads from being missed.
 - Recorded decision to defer branch-protection plan upgrade during Phase 2 and continue manual governance controls.
+
+
+## 2026-05-26 — PR #6 Phase 2 Closeout and Backend Skeleton Foundation
+
+- Closed Task 005 and Milestone M2 after PR #5 merge validation results (`contract-check` and `sql-migration-check` passing).
+- Started Task 006 / Milestone M3 with FastAPI backend skeleton implementation.
+- Added two required endpoints for this phase start: `GET /health` and `GET /api/v1/project-status`.
+- Added shared success/error response envelope helpers aligned to `docs/09-api-and-agent-contracts.md`.
+- Added backend pytest coverage and GitHub Actions backend test workflow.

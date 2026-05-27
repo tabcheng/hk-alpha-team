@@ -99,14 +99,27 @@ Examples:
 - `docs: add PR review checklist and task template`
 - `governance: update project status after PR #2 merge`
 
+
+### PR Body Metadata Limitation Rule
+
+Codex should draft desired PR body content in its final response or PR notes.
+
+Harness Engineering / ChatGPT reviewer must update GitHub PR body metadata directly when needed.
+
+A PR body metadata blocker should not be assigned to Codex as a repository-file-only fix.
+
 ### PR Body Requirements
 
 Include sections:
 
-1. Summary of changes
-2. Scope compliance check
-3. Out-of-scope confirmation
-4. Follow-up task linkage
+1. Summary
+2. Review map
+3. Grouped file changes
+4. Risk areas
+5. Scope compliance check
+6. Out-of-scope confirmation
+7. Validation commands and results
+8. Follow-up tasks
 
 ---
 
