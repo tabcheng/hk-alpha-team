@@ -147,10 +147,14 @@ We will not upgrade GitHub account/organization immediately. During Phase 2 we w
 **Context:** Solo mobile-first operation needs explicit environment boundaries during Phase 3/4 preparation.
 
 **Decision:**
+Adopt a lightweight PR/main/no-production environment model during Phase 3:
+
 - DEV is PR branch + Codex + GitHub Actions.
 - UAT-like is `main` + green CI + Harness Engineering review.
-- PRODUCTION remains disabled until explicit approval with same-PR decision-log authorization.
+- PRODUCTION is not created / disabled until explicit Harness Engineering approval with same-PR decision-log authorization.
 
-**Implications:**
-- Prevents premature hosted infrastructure and secret management overhead.
-- Keeps validation centered on repository tests and CI while contracts are hardened.
+**Rationale:**
+Harness Engineering is solo and mobile-first. GitHub Actions is the primary validation surface. Hosted DEV/UAT/PRODUCTION environments will be introduced only when explicitly approved.
+
+**Impact:**
+No Railway deployment, hosted Supabase setup, production secrets, or production database wiring should be added until a later approved PR. This prevents premature hosted infrastructure and secret management overhead while keeping validation centered on repository tests and CI.

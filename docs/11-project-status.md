@@ -6,7 +6,7 @@
 
 ## Current Phase
 
-**Phase 3 — Backend Skeleton** (In Progress via PR #6 backend foundation start).
+**Phase 3 — Backend Skeleton** (In Progress via PR #6 backend foundation start and PR #7 contract-stub readiness work).
 
 ## Tasks 001–010 Status
 
@@ -59,4 +59,6 @@
 - Added Phase 3 backend skeleton foundation with `GET /health` and `GET /api/v1/project-status`.
 - Added backend response envelope helpers, pytest coverage, and backend CI workflow.
 
-- PR #7 adds `POST /api/v1/analyze-stock` stub, contract-hardening tests, and mobile-first local/test environment strategy notes.
+- PR #7 adds `POST /api/v1/analyze-stock` as a stub-only endpoint for contract hardening and Phase 4 preparation.
+- PR #7 does not perform real investment analysis, live recommendation generation, persistent writes, hosted Supabase setup, Railway deployment, or production wiring.
+- Task 007 / Phase 4 remains Preparing because real First Analysis Workflow implementation is not yet started.

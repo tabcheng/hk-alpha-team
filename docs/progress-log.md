@@ -97,3 +97,7 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Updated project status to keep Task 007 and Milestone M4 in Preparing state while real analysis remains pending.
 
 - PR #7 revision goal: align analyze-stock stub fields/validation coverage and document lightweight environment strategy without hosted environments.
+
+- PR #7 goal is to prepare the First Analysis Workflow through a contract-first stub before real analysis logic.
+- Mobile-first development should rely on PR branches, `main`, and GitHub Actions before hosted DEV/UAT/PRODUCTION environments.
+- Advisory-only warnings must be embedded before live analysis starts so stub or future outputs are not mistaken for investment recommendations.

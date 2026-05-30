@@ -104,4 +104,14 @@
 - Add explicit symbol-format policy tests once canonical validation regex is approved.
 - Add shared backend fixtures as endpoint count grows to reduce repeated assertion logic.
 
+## 2026-05-30 — PR #7 Mobile-First Stub Review Follow-up
+
+### What Worked
+
+- Contract-first stubbing before real analysis clarified endpoint shape while preserving advisory-only boundaries.
 - Mobile-first execution benefits from explicit PR/main/no-production environment contracts to avoid accidental infrastructure scope drift.
+
+### What to Improve
+
+- Advisory-only warnings should be embedded before live analysis starts so future outputs cannot be confused with investment recommendations.
+- Keep hosted environment triggers explicit before adding Supabase, Railway, secrets, or production database wiring.

@@ -119,6 +119,12 @@ The `sql-migration-check` workflow validates that the draft migration executes s
 - `docs/18-environment-strategy.md` — lightweight mobile-first DEV/UAT-like/PRODUCTION environment model and triggers.
 - `docs/19-first-analysis-workflow-stub.md` — contract-first `POST /api/v1/analyze-stock` stub behavior and boundaries.
 
+Current PR #7 boundary notes:
+
+- `POST /api/v1/analyze-stock` is **stub-only** for contract validation and Phase 4 readiness.
+- No real investment analysis, live recommendation generation, or buy/sell/hold advice is performed by the stub.
+- No hosted Supabase setup, Railway deployment, production secrets, or production database wiring is introduced.
+
 
 ## Documentation Map
 

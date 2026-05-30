@@ -14,8 +14,9 @@ Define the minimal environment model for current HK Alpha Team implementation wo
 
 1. Harness Engineering is a solo operator and mobile-first.
 2. GitHub Actions is the primary validation surface for implementation quality.
-3. Hosted DEV/UAT/PRODUCTION environments are deferred in current phases.
-4. No Railway deployment, hosted Supabase setup, production secrets, or production database wiring may be added until explicitly approved.
+3. Full DEV / UAT / PRODUCTION hosted environments are deferred in current phases.
+4. Hosted Supabase, Railway, secrets, and production database wiring remain out of scope.
+5. No Railway deployment, hosted Supabase setup, production secrets, or production database wiring may be added until explicitly approved.
 
 ## Trigger Conditions for Future Hosted Environments
 
@@ -42,3 +43,8 @@ Only create PRODUCTION when both conditions are met:
 - Production database connection wiring
 
 These remain out of scope until trigger conditions are satisfied and approved.
+
+
+## Validation Surface
+
+GitHub Actions remains the primary validation surface. PR branches and `main` branch status checks are the expected way to validate contract, backend, and migration readiness until hosted environments are explicitly approved.
