@@ -90,3 +90,16 @@
 
 - PR body metadata updates must be applied by Harness Engineering / ChatGPT reviewer directly in GitHub when needed.
 - Codex should treat PR body metadata blockers as guidance for draft content, not as repository-file-only completion blockers.
+
+## 2026-06-01 — PR #8 Analyze-Stock Stub and Mobile-First Strategy
+
+### What Worked
+
+- Adding the analyze-stock endpoint as a stub allowed backend contract testing to progress without pretending real research exists.
+- Explicit stub warnings and human-decision framing preserved investment-system boundaries while enabling client integration.
+- Documenting mobile-first environment tiers clarified which checks can be completed from GitHub/Codex CI and which infrastructure remains future scope.
+
+### What to Improve
+
+- Future Phase 4 work should replace stub internals with fixture-backed agent workflow tests before adding live data dependencies.
+- Environment promotion should remain explicit so production Supabase, Railway, and secrets are not introduced as hidden prerequisites.

@@ -8,10 +8,14 @@ SCHEMA_VERSION = "v0.1"
 SOURCE = "HK_ALPHA_TEAM"
 
 
+def utc_timestamp() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
 def _metadata() -> dict[str, str]:
     return {
         "schema_version": SCHEMA_VERSION,
-        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "generated_at": utc_timestamp(),
         "source": SOURCE,
     }
 

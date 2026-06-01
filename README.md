@@ -116,7 +116,18 @@ The `sql-migration-check` workflow validates that the draft migration executes s
 - `backend/tests/test_api.py` — pytest coverage for implemented endpoints and envelope shape checks.
 - `.github/workflows/backend-check.yml` — CI workflow for backend test execution and contract validation.
 - `docs/17-backend-skeleton.md` — backend skeleton scope, envelope rules, CI behavior, and follow-up guidance.
+- `docs/18-mobile-first-environment-strategy.md` — mobile-first, CI-first environment strategy before production setup.
 
+
+## Phase 3 Analyze-Stock Stub and Mobile-First Strategy (PR #8)
+
+- `POST /api/v1/analyze-stock` is implemented as a contract-first stub for Phase 4 readiness.
+- The stub returns advisory-shaped placeholder fields, warnings, and human-decision framing, but performs no real stock analysis.
+- The backend now includes validation/error-envelope coverage for malformed analyze-stock requests.
+- `docs/18-mobile-first-environment-strategy.md` documents the CI-first, mobile-review operating model for Harness Engineering.
+- `docs/19-first-analysis-workflow-stub.md` documents the implemented first-analysis stub behavior and Phase 4 follow-up path.
+
+PR #8 does **not** add production Supabase setup, Railway deployment, live market data integration, brokerage execution integration, secrets, or real-money trading automation.
 
 ## Documentation Map
 
@@ -137,6 +148,9 @@ The `sql-migration-check` workflow validates that the draft migration executes s
 - `docs/12-initial-conversation-brief.md` — original intent and boundary continuity brief.
 - `docs/13-pr-review-checklist.md` — reusable PR checklist and large PR review policy.
 - `docs/14-codex-task-template.md` — reusable Codex task prompt template.
+- `docs/17-backend-skeleton.md` — Phase 3 backend skeleton and analyze-stock stub boundaries.
+- `docs/18-mobile-first-environment-strategy.md` — mobile-first, CI-first environment strategy before hosted infrastructure.
+- `docs/19-first-analysis-workflow-stub.md` — dedicated first-analysis workflow stub runbook and Phase 4 follow-up path.
 - `codex-tasks/005-create-supabase-migration-draft.md` — Task 005 phase-entry card for migration draft planning.
 - `docs/decision-log.md` — key project decisions.
 - `docs/progress-log.md` — milestone progress tracking.

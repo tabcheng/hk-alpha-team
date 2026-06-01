@@ -126,3 +126,16 @@ We will not upgrade GitHub account/organization immediately. During Phase 2 we w
 **Implications:**
 - Backend implementation can proceed incrementally while preserving locked contract surfaces.
 - Project status can be queried from a stable contract-aligned endpoint early in Phase 3.
+
+## 2026-06-01 — Decision: Add Analyze-Stock as a Stub Before Real Analysis
+
+**Context:** Phase 3 needs to prepare the first analysis workflow contract while Harness Engineering remains a solo, mobile-first operator without production Supabase, Railway, or desktop-local setup requirements.
+
+**Decision:** Implement `POST /api/v1/analyze-stock` as a contract-first FastAPI stub with request validation, required success/error envelopes, advisory-style placeholder fields, and explicit warnings. Document a mobile-first environment strategy that keeps PR #8 verifiable through repository tests and CI.
+
+**Rationale:**
+
+- Enables client and test integration against the locked MVP endpoint before Phase 4 real analysis logic.
+- Reduces contract drift by exercising response shape and validation behavior in code.
+- Preserves advisory-only and human-in-the-loop boundaries.
+- Avoids requiring production secrets, hosted Supabase, Railway deployment, live market data, or brokerage execution APIs.

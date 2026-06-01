@@ -37,3 +37,9 @@ Define service contracts between application layers and agent departments using 
 - Contract specification document.
 - Example payloads for all eight agent departments.
 - Versioning and backward-compatibility policy draft.
+
+## Implementation Notes Added After PR #8
+
+- `POST /api/v1/analyze-stock` now has a Phase 3 contract-first stub implementation.
+- The stub preserves the locked endpoint name and response envelope while avoiding real analysis, persistence, production Supabase, Railway deployment, and trading execution.
+- Future Phase 4 work should replace stub internals without renaming the endpoint, envelope fields, or preferred strategy labels unless the contract lock process is followed.
