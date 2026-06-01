@@ -47,8 +47,9 @@ Define the exact required MVP endpoint set, exact required response envelope, an
 - **Purpose:** Trigger first-pass analysis for one stock symbol.
 - **Path parameters:** None.
 - **Request body:** `{ "symbol": "0700.HK" }`.
-- **Response shape:** Required success envelope with strategy/analysis payload in `data`.
-- **Validation notes:** `symbol` required; must match supported symbol format.
+- **Current Phase 3 behavior:** Contract-first stub only; no live analysis, persistence, production Supabase, market data provider, or trade execution.
+- **Response shape:** Required success envelope with strategy/analysis payload in `data`. During the stub phase, `data` must include `symbol`, `analysis_status`, `workflow_phase`, `strategy_recommendation`, `summary`, `confidence_level`, `scores`, `key_reasons`, `main_risks`, `invalidation_conditions`, `paper_trading_action`, `real_money_decision`, `agent_trace`, `generated_at`, and `schema_version`.
+- **Validation notes:** `symbol` required; Phase 3 stub accepts canonical four-digit Hong Kong equity symbols matching `0000.HK` format, for example `0700.HK`.
 - **Error cases:** `VALIDATION_ERROR`, `NOT_FOUND`, `AGENT_CONTRACT_VIOLATION`, `INTERNAL_ERROR`.
 
 ### `GET /api/v1/stocks/{symbol}`
@@ -106,6 +107,22 @@ Define the exact required MVP endpoint set, exact required response envelope, an
 - **Response shape:** Required success envelope with phase, milestone, and task statuses in `data`.
 - **Validation notes:** read-only endpoint.
 - **Error cases:** `INTERNAL_ERROR`.
+
+
+## Analyze-Stock Stub Contract (Phase 3)
+
+The Phase 3 implementation of `POST /api/v1/analyze-stock` is intentionally a stub that prepares client, test, and workflow integration for Phase 4. It must not claim to perform investment research or produce a real recommendation.
+
+Required stub characteristics:
+
+- Return the exact success envelope.
+- Return `analysis_status = "stub_only"`.
+- Return one preferred strategy label so downstream clients can validate enum handling.
+- Include reasoning, risks, invalidation conditions, and human-decision framing even though the content is placeholder.
+- Include warnings that no live analysis, persistence, production Supabase, or trading execution occurred.
+- Include `agent_trace` flags showing that agent runs, agent outputs, persistence, and production Supabase are not active.
+
+Stub output is not investment advice and must be replaced by the Phase 4 first analysis workflow before real research conclusions are presented.
 
 ## Explicit Error Envelope
 

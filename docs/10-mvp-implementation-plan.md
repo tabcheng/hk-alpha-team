@@ -32,6 +32,7 @@ Define execution roadmap from documentation design to a testable MVP without vio
 
 - Prepare backend module skeleton planning for required endpoints.
 - Define request handling, tracing, and error mapping approach.
+- Add contract-first `POST /api/v1/analyze-stock` stub before real Phase 4 analysis logic.
 
 ## Phase 4 — First Analysis Workflow
 

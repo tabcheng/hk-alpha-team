@@ -2,11 +2,11 @@
 
 ## Snapshot Date
 
-2026-05-26
+2026-06-01
 
 ## Current Phase
 
-**Phase 3 — Backend Skeleton** (In Progress via PR #6 backend foundation start).
+**Phase 3 — Backend Skeleton** (In Progress via PR #7 analyze-stock stub and contract hardening).
 
 ## Tasks 001–010 Status
 
@@ -17,8 +17,8 @@
 | 003 | Design API and Agent Contracts | Completed | Merged in PR #2 with fixed MVP contract surfaces. |
 | 004 | Create MVP Implementation Plan | Completed | Merged in PR #2 with seven-phase rollout model. |
 | 005 | Create Supabase Migration Draft | Completed | Completed by PR #5 with local/test SQL execution validation and CI migration check workflow. |
-| 006 | Backend Skeleton | In Progress | PR #6 starts contract-first FastAPI backend scaffolding and tests. |
-| 007 | First Analysis Workflow | Planned | Analyze-stock flow from required endpoint set. |
+| 006 | Backend Skeleton | In Progress | PR #7 extends the skeleton with an analyze-stock stub, validation envelope handling, and stronger backend tests. |
+| 007 | First Analysis Workflow | Planned | PR #7 prepares the endpoint contract with a stub; real analysis workflow remains future Phase 4 scope. |
 | 008 | Simulation Desk MVP | Planned | Paper-orders and paper-portfolio workflow. |
 | 009 | Simple UI or Report Output | Planned | Minimal output layer for strategy reports. |
 | 010 | Review and Learning Loop | Planned | Trade reviews, proposals, and audit continuity. |
@@ -48,13 +48,14 @@
 - Implementation-limited changes in current PR: **Yes**
 - Production deployment added: **No**
 - Production Supabase connection added: **No**
-- Backend/frontend runtime implementation added: **No**
+- Backend/frontend runtime implementation added: **Limited backend stub only**
 - Real-money trading automation added: **No**
 - Brokerage API integration added: **No**
 - Secrets committed: **No**
 
 ## Latest Review Update
 
-- PR #6 closes Phase 2 status following PR #5 merge and CI validation successes.
-- Added Phase 3 backend skeleton foundation with `GET /health` and `GET /api/v1/project-status`.
-- Added backend response envelope helpers, pytest coverage, and backend CI workflow.
+- PR #6 closed Phase 2 status following PR #5 merge and CI validation successes.
+- PR #7 adds a contract-first `POST /api/v1/analyze-stock` stub for Phase 4 readiness.
+- PR #7 strengthens backend envelope/validation tests and documents the mobile-first CI verification strategy.
+- Real stock analysis, production Supabase, Railway deployment, live market data, brokerage integration, and secrets remain out of scope.

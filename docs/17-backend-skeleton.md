@@ -1,33 +1,64 @@
-# 17 — Backend Skeleton (Phase 3 Foundation)
+# 17 — Backend Skeleton
 
 ## Purpose
 
-Define the Phase 3 contract-first backend skeleton baseline for HK Alpha Team.
+Document the Phase 3 FastAPI backend skeleton and its contract boundaries.
 
-This artifact documents what is implemented now, how it is validated, and what remains explicitly out of scope.
-
-## Scope Boundary
-
-This backend skeleton is **local/test only**.
-
-- No production Supabase connection.
-- No Railway deployment.
-- No real stock analysis logic.
-- No broker integration.
-- No real-money trading logic.
+The backend skeleton exists to make the locked API contracts testable before full data, agent, simulation, or deployment infrastructure is introduced.
 
 ## Implemented Endpoints
 
-Current implemented endpoints:
+### `GET /health`
 
-- `GET /health`
-- `GET /api/v1/project-status`
+Returns the required success envelope with:
 
-These endpoints are intentionally minimal and are used to validate envelope consistency, routing, and test/CI flow before broader endpoint implementation.
+```json
+{ "service": "ok" }
+```
 
-## Success Response Envelope Rules
+### `GET /api/v1/project-status`
 
-Success responses must use the required envelope from `docs/09-api-and-agent-contracts.md`:
+Returns the required success envelope with project phase, milestone, and task status fields derived from `docs/11-project-status.md`.
+
+### `POST /api/v1/analyze-stock`
+
+Returns the required success envelope with a Phase 3 stub payload for a canonical Hong Kong symbol such as:
+
+```json
+{ "symbol": "0700.HK" }
+```
+
+The stub validates the request shape, returns advisory-style placeholder fields, and includes explicit warnings that no live analysis or execution occurred.
+
+## Analyze-Stock Stub Boundary
+
+The analyze-stock stub is contract-first only. It is designed to prepare clients, tests, and future agent workflow integration for Phase 4.
+
+It does not:
+
+- fetch market data
+- read or write Supabase data
+- create `agent_runs` or `agent_outputs`
+- create strategy recommendation records
+- create paper orders
+- call external data providers
+- deploy to Railway
+- connect to brokerage APIs
+- execute or recommend real-money trades as an automated action
+
+The stub must continue to include:
+
+- preferred strategy label field
+- reasoning placeholder
+- main risks
+- invalidation conditions
+- paper-trading non-action statement
+- real-money human decision framing
+- warnings describing stub-only behavior
+
+## Response Envelope Rules
+
+Successful endpoint responses use:
 
 ```json
 {
@@ -43,85 +74,28 @@ Success responses must use the required envelope from `docs/09-api-and-agent-con
 }
 ```
 
-Rules:
+Validation failures use the documented error envelope with `VALIDATION_ERROR` and details for review/debugging.
 
-1. `status` must be `success`.
-2. `metadata.schema_version` must remain contract-aligned (`v0.1` currently).
-3. `metadata.generated_at` must be generated at response time in ISO-8601 format.
-4. `metadata.source` must be `HK_ALPHA_TEAM`.
-5. `warnings` must be present as an array (empty when no warnings).
-
-## Error Envelope Rules
-
-Error responses must use the explicit error envelope contract:
-
-```json
-{
-  "request_id": "uuid",
-  "status": "error",
-  "error": {
-    "code": "VALIDATION_ERROR",
-    "message": "Human readable error message",
-    "details": {}
-  }
-}
-```
-
-Rules:
-
-1. `status` must be `error`.
-2. `error.code` must use a contract-approved code.
-3. `error.message` must be human readable.
-4. `error.details` must be an object (empty object allowed).
-
-## Local Test Instructions
-
-Install backend dependencies:
+## Local/Test Commands
 
 ```bash
 pip install -r backend/requirements.txt
-```
-
-Run backend tests:
-
-```bash
 PYTHONPATH=backend pytest backend/tests
+PYTHONPATH=backend uvicorn app.main:app --reload
 ```
 
-Run contract validation:
+## CI Scope
 
-```bash
-python scripts/validate_contracts.py
-```
+Backend CI should remain lightweight and mobile-review friendly:
 
-## CI Behavior
+- install backend Python dependencies
+- run backend pytest coverage
+- run contract validation
 
-`backend-check` workflow runs:
+CI must not require production Supabase, Railway, secrets, broker credentials, or live market data.
 
-1. dependency installation (`backend/requirements.txt`)
-2. backend tests (`PYTHONPATH=backend pytest backend/tests`)
-3. contract validation (`python scripts/validate_contracts.py`)
+## Follow-Up Guidance
 
-Related unchanged workflows:
+Future Phase 4 work may replace the stub internals with real first analysis workflow components only after contracts and tests are updated in the same PR.
 
-- `contract-check` (contract lock validation)
-- `sql-migration-check` (local/test migration execution validation)
-
-## Out-of-Scope Items (This Phase Slice)
-
-- Production Supabase runtime/database wiring.
-- Production secrets.
-- Railway deployment/runtime operations.
-- Frontend/UI implementation.
-- Market data ingestion.
-- Brokerage execution integration.
-- Real-money trading automation.
-- `POST /api/v1/analyze-stock` implementation logic.
-
-## Follow-up Tasks for `POST /api/v1/analyze-stock`
-
-1. Define request model validation and symbol-format policy.
-2. Define initial stub flow for advisory-only analysis orchestration.
-3. Add deterministic test fixtures for strategy envelope shape.
-4. Add contract tests for error mapping (`VALIDATION_ERROR`, `NOT_FOUND`, `AGENT_CONTRACT_VIOLATION`, `INTERNAL_ERROR`).
-5. Add explicit human-decision framing checks in response payload tests.
+Any move toward hosted infrastructure must follow `docs/18-mobile-first-environment-strategy.md` and be authorized by an explicit future task/decision.

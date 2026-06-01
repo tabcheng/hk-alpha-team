@@ -9,15 +9,19 @@ Included in this PR:
 - FastAPI app entrypoint.
 - `GET /health` endpoint.
 - `GET /api/v1/project-status` endpoint (status sourced from `docs/11-project-status.md`).
+- `POST /api/v1/analyze-stock` contract-first stub endpoint.
 - Shared success/error envelope helpers aligned to `docs/09-api-and-agent-contracts.md`.
-- Pytest coverage for the two implemented endpoints.
+- Validation error handling through the documented error envelope.
+- Pytest coverage for implemented endpoints, analyze-stock validation, and envelope shape.
 
 Out of scope:
 
 - Production Supabase/database integration.
-- Analyze-stock workflow implementation.
+- Real analyze-stock workflow implementation.
 - Market data ingestion.
 - Brokerage execution integration.
+- Railway deployment or hosted runtime setup.
+- Secrets or production credentials.
 
 ## Run locally
 
