@@ -131,7 +131,7 @@ We will not upgrade GitHub account/organization immediately. During Phase 2 we w
 
 **Context:** Phase 3 needs to prepare the first analysis workflow contract while Harness Engineering remains a solo, mobile-first operator without production Supabase, Railway, or desktop-local setup requirements.
 
-**Decision:** Implement `POST /api/v1/analyze-stock` as a contract-first FastAPI stub with request validation, required success/error envelopes, advisory-style placeholder fields, and explicit warnings. Document a mobile-first environment strategy that keeps PR #7 verifiable through repository tests and CI.
+**Decision:** Implement `POST /api/v1/analyze-stock` as a contract-first FastAPI stub with request validation, required success/error envelopes, advisory-style placeholder fields, and explicit warnings. Document a mobile-first environment strategy that keeps PR #8 verifiable through repository tests and CI.
 
 **Rationale:**
 

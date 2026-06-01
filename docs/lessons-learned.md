@@ -91,7 +91,7 @@
 - PR body metadata updates must be applied by Harness Engineering / ChatGPT reviewer directly in GitHub when needed.
 - Codex should treat PR body metadata blockers as guidance for draft content, not as repository-file-only completion blockers.
 
-## 2026-06-01 — PR #7 Analyze-Stock Stub and Mobile-First Strategy
+## 2026-06-01 — PR #8 Analyze-Stock Stub and Mobile-First Strategy
 
 ### What Worked
 

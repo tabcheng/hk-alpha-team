@@ -28,7 +28,7 @@ Returns the required success envelope with a Phase 3 stub payload for a canonica
 { "symbol": "0700.HK" }
 ```
 
-The stub validates the request shape, returns advisory-style placeholder fields, and includes explicit warnings that no live analysis or execution occurred.
+The stub validates the request shape, returns advisory-style placeholder fields, and includes explicit warnings that no live analysis or execution occurred. Detailed stub runbook coverage lives in `docs/19-first-analysis-workflow-stub.md`.
 
 ## Analyze-Stock Stub Boundary
 

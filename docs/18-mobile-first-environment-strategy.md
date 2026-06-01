@@ -74,7 +74,7 @@ Therefore, near-term implementation should optimize for:
 - run backend locally for manual endpoint checks
 - test persistence adapters before production setup
 
-**Not required for PR #7:**
+**Not required for PR #8:**
 
 - production Supabase project
 - Railway service
@@ -89,9 +89,9 @@ Therefore, near-term implementation should optimize for:
 
 **Entry gate:** a future explicit task/decision must authorize hosted setup and define secret handling.
 
-**Out of scope now:** PR #7 must not require or configure hosted runtime infrastructure.
+**Out of scope now:** PR #8 must not require or configure hosted runtime infrastructure.
 
-## PR #7 Environment Rule
+## PR #8 Environment Rule
 
 For the analyze-stock stub, the backend must remain usable through tests and CI only:
 

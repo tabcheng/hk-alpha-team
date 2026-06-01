@@ -88,10 +88,10 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Added shared success/error response envelope helpers aligned to `docs/09-api-and-agent-contracts.md`.
 - Added backend pytest coverage and GitHub Actions backend test workflow.
 
-## 2026-06-01 — PR #7 Analyze-Stock Stub, Contract Hardening, and Mobile-First Strategy
+## 2026-06-01 — PR #8 Analyze-Stock Stub, Contract Hardening, and Mobile-First Strategy
 
 - Added `POST /api/v1/analyze-stock` as a contract-first FastAPI stub for Phase 4 readiness.
 - Added validation error envelope handling and backend tests for analyze-stock success and invalid requests.
-- Documented the analyze-stock stub contract in `docs/09-api-and-agent-contracts.md` and `docs/17-backend-skeleton.md`.
+- Documented the analyze-stock stub contract in `docs/09-api-and-agent-contracts.md`, `docs/17-backend-skeleton.md`, and `docs/19-first-analysis-workflow-stub.md`.
 - Added `docs/18-mobile-first-environment-strategy.md` to formalize CI-first, mobile-review operation without production Supabase, Railway, secrets, or desktop setup requirements.
 - Updated project status and contract-related governance artifacts while preserving advisory-only and no-real-money-execution boundaries.
