@@ -17,11 +17,17 @@ Before starting a non-trivial Codex task, read at minimum:
 - `docs/decision-log.md`
 - `docs/progress-log.md`
 
+## Codex PR Factory
+
+For recurring task-to-PR execution, use the Codex PR Factory governance workflow in `docs/20-codex-pr-factory.md`. The Factory defines task classes, role permissions, required gates, PR body expectations, evidence language, and source-of-truth-based follow-up handling.
+
+The workflow below remains the compact execution model; the Factory document is the detailed review and governance layer for documentation-only, implementation-limited, and governance-sensitive / production-impacting PRs.
+
 ## Workflow Stages
 
 1. **Task Definition**: document objective, scope, required outputs.
 2. **Execution**: implement only what task scope permits.
-3. **Validation**: check artifacts for coherence and boundary compliance.
+3. **Validation**: check artifacts for coherence, Codex PR Factory gates, and boundary compliance.
 4. **Commit & PR**: create traceable change sets.
 5. **Log Update**: record decision/progress/lessons as needed.
 
@@ -32,7 +38,7 @@ A PR is considered large when review quality may degrade due to size, cross-cont
 Large PR handling:
 
 1. Split into smaller PRs where feasible.
-2. If not feasible, PR body must include review map, grouped file changes, risk areas, and out-of-scope confirmation.
+2. If not feasible, PR body must include the Factory PR body elements: summary, review map, grouped file changes, risk areas, validation evidence, scope compliance check, out-of-scope confirmation, and follow-up tasks.
 3. Keep explicit scope/boundary checkpoint in the PR body.
 
 ## Mergeability Rule
@@ -75,6 +81,8 @@ When Harness Engineering provides re-review blockers, fix blockers exactly:
 - Explicitly state assumptions.
 - Keep docs easy to skim and audit.
 - Keep tasks documentation-only when requested.
+- Do not claim 100% certainty; use "no known blockers" only when supported by review and validation evidence.
+- Base next-task recommendations on current GitHub/repository source-of-truth review, not hard-coded temporary ChatGPT Project Instruction text.
 
 
 ## Mandatory Full PR Review Protocol

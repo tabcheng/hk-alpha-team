@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from fastapi.testclient import TestClient
 
 from app.main import app
@@ -35,16 +37,49 @@ def test_health_endpoint_returns_required_envelope() -> None:
     assert payload["warnings"] == []
 
 
+def _project_status_doc_lines() -> list[str]:
+    status_path = Path(__file__).resolve().parents[2] / "docs" / "11-project-status.md"
+    return status_path.read_text(encoding="utf-8").splitlines()
+
+
+def _extract_table_status(lines: list[str], row_id: str) -> str:
+    for line in lines:
+        row = line.strip()
+        if row.startswith(f"| {row_id} |"):
+            parts = [part.strip() for part in row.split("|") if part.strip()]
+            return parts[2]
+    raise AssertionError(f"Missing status row for {row_id}")
+
+
+def test_project_status_current_phase_line_is_parser_safe() -> None:
+    lines = _project_status_doc_lines()
+    current_phase_idx = lines.index("## Current Phase")
+    current_phase_line = lines[current_phase_idx + 2].strip()
+
+    assert current_phase_line == "**Phase 3 — Backend Skeleton**"
+    assert current_phase_line.startswith("**")
+    assert current_phase_line.endswith("**")
+    assert current_phase_line.count("**") == 2
+    assert "(" not in current_phase_line
+    assert ")" not in current_phase_line
+
+
 def test_project_status_endpoint_returns_required_envelope() -> None:
     response = client.get("/api/v1/project-status")
     assert response.status_code == 200
     payload = response.json()
 
     assert_success_envelope(payload)
+
+    status_doc_lines = _project_status_doc_lines()
+    assert _extract_table_status(status_doc_lines, "M3") == "Completed"
+    assert _extract_table_status(status_doc_lines, "005") == "Completed"
+    assert _extract_table_status(status_doc_lines, "006") == "Completed"
+
     assert payload["data"]["current_phase"] == "Phase 3 — Backend Skeleton"
-    assert "M3" in payload["data"]["current_milestone"]
+    assert payload["data"]["current_milestone"] == "M3 (Completed)"
     assert payload["data"]["task_status"]["005"] == "Completed"
-    assert payload["data"]["task_status"]["006"] == "In Progress"
+    assert payload["data"]["task_status"]["006"] == "Completed"
 
 
 def test_analyze_stock_stub_returns_contract_first_payload() -> None:

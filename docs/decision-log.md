@@ -139,3 +139,17 @@ We will not upgrade GitHub account/organization immediately. During Phase 2 we w
 - Reduces contract drift by exercising response shape and validation behavior in code.
 - Preserves advisory-only and human-in-the-loop boundaries.
 - Avoids requiring production secrets, hosted Supabase, Railway deployment, live market data, or brokerage execution APIs.
+
+## 2026-06-02 — Decision: Establish Codex PR Factory Governance Workflow
+
+**Context:** After PR #8 completed the backend skeleton milestone, Harness Engineering needed a repeatable governance workflow for ChatGPT + Codex + GitHub PR + GitHub Actions collaboration before Phase 4 work begins.
+
+**Decision:**
+- Add `docs/20-codex-pr-factory.md` as the canonical Codex PR Factory workflow for task classes, role permissions, required gates, PR body expectations, evidence language, and source-of-truth-based follow-up handling.
+- Treat Claude Code as not assumed unless Harness Engineering explicitly approves it later.
+- Require Factory PRs to separate read-only planning/review roles from file-modifying implementation/log-update roles, and confirm Codex must not self-approve.
+
+**Implications:**
+- Improves repeatability and auditability for documentation-only, implementation-limited, and governance-sensitive / production-impacting PRs.
+- Reduces stale-instruction risk by requiring next task recommendations to come from current GitHub/repository source-of-truth review.
+- Strengthens review gates before Phase 4 analysis workflow work begins while preserving advisory-only and no-real-money-execution boundaries.

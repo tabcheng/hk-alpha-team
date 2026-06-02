@@ -95,3 +95,12 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Documented the analyze-stock stub contract in `docs/09-api-and-agent-contracts.md`, `docs/17-backend-skeleton.md`, and `docs/19-first-analysis-workflow-stub.md`.
 - Added `docs/18-mobile-first-environment-strategy.md` to formalize CI-first, mobile-review operation without production Supabase, Railway, secrets, or desktop setup requirements.
 - Updated project status and contract-related governance artifacts while preserving advisory-only and no-real-money-execution boundaries.
+
+## 2026-06-02 — Codex PR Factory Governance and PR #8 Status Sync
+
+- Added `docs/20-codex-pr-factory.md` to define the Codex PR Factory governance workflow, task classes, workflow roles, required gates, PR body expectations, evidence language, and source-of-truth-based next-step handling.
+- Updated `docs/06-codex-workflow.md` to reference the Codex PR Factory as the detailed governance layer for task-to-PR execution.
+- Updated `README.md` documentation map entries so the new Factory workflow and existing migration/SQL validation docs are discoverable from the source-of-truth map.
+- Synchronized `docs/11-project-status.md` after PR #8 merge by marking Task 006 / Milestone M3 completed, keeping the Current Phase parser-safe at Phase 3, and leaving Phase 4 planned for a dedicated task opened from current GitHub source-of-truth review.
+- Preserved the parser-safe `## Current Phase` format by keeping the line after the heading as only the bold phase name and moving explanatory details into status notes and Latest Review Update.
+- Maintained governance documentation plus backend test alignment scope: no runtime backend implementation, frontend implementation, Phase 4 analysis logic, market data integration, production Supabase, Railway deployment, broker API integration, secrets, or real-money trading automation. Backend project-status test coverage was strengthened to assert parser-safe current-phase formatting and synchronized project-status expectations without mirroring `status_reader.py` parsing behavior.
