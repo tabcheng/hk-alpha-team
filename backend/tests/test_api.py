@@ -42,9 +42,9 @@ def test_project_status_endpoint_returns_required_envelope() -> None:
 
     assert_success_envelope(payload)
     assert payload["data"]["current_phase"] == "Phase 3 — Backend Skeleton"
-    assert "M3" in payload["data"]["current_milestone"]
+    assert payload["data"]["current_milestone"] == "M3 (Completed)"
     assert payload["data"]["task_status"]["005"] == "Completed"
-    assert payload["data"]["task_status"]["006"] == "In Progress"
+    assert payload["data"]["task_status"]["006"] == "Completed"
 
 
 def test_analyze_stock_stub_returns_contract_first_payload() -> None:
