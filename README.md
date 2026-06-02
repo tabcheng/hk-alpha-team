@@ -148,6 +148,9 @@ PR #8 does **not** add production Supabase setup, Railway deployment, live marke
 - `docs/12-initial-conversation-brief.md` — original intent and boundary continuity brief.
 - `docs/13-pr-review-checklist.md` — reusable PR checklist and large PR review policy.
 - `docs/14-codex-task-template.md` — reusable Codex task prompt template.
+- `docs/15-codex-pr-factory.md` — Codex PR Factory governance workflow for task-to-PR execution.
+- `docs/15-migration-assumptions.md` — migration draft assumptions and deferred schema items.
+- `docs/16-local-sql-validation.md` — local/test SQL validation runbook and CI behavior.
 - `docs/17-backend-skeleton.md` — Phase 3 backend skeleton and analyze-stock stub boundaries.
 - `docs/18-mobile-first-environment-strategy.md` — mobile-first, CI-first environment strategy before hosted infrastructure.
 - `docs/19-first-analysis-workflow-stub.md` — dedicated first-analysis workflow stub runbook and Phase 4 follow-up path.

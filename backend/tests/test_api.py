@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from fastapi.testclient import TestClient
 
 from app.main import app
@@ -35,16 +37,38 @@ def test_health_endpoint_returns_required_envelope() -> None:
     assert payload["warnings"] == []
 
 
+def _project_status_doc_lines() -> list[str]:
+    status_path = Path(__file__).resolve().parents[2] / "docs" / "11-project-status.md"
+    return status_path.read_text(encoding="utf-8").splitlines()
+
+
+def _extract_table_status(lines: list[str], row_id: str) -> str:
+    for line in lines:
+        row = line.strip()
+        if row.startswith(f"| {row_id} |"):
+            parts = [part.strip() for part in row.split("|") if part.strip()]
+            return parts[2]
+    raise AssertionError(f"Missing status row for {row_id}")
+
+
 def test_project_status_endpoint_returns_required_envelope() -> None:
     response = client.get("/api/v1/project-status")
     assert response.status_code == 200
     payload = response.json()
 
     assert_success_envelope(payload)
-    assert payload["data"]["current_phase"] == "Phase 3 — Backend Skeleton"
-    assert payload["data"]["current_milestone"] == "M3 (Completed)"
-    assert payload["data"]["task_status"]["005"] == "Completed"
-    assert payload["data"]["task_status"]["006"] == "Completed"
+
+    status_doc_lines = _project_status_doc_lines()
+    current_phase_idx = status_doc_lines.index("## Current Phase")
+    expected_current_phase = status_doc_lines[current_phase_idx + 2].strip().strip("*")
+    expected_m3_status = _extract_table_status(status_doc_lines, "M3")
+    expected_task_005_status = _extract_table_status(status_doc_lines, "005")
+    expected_task_006_status = _extract_table_status(status_doc_lines, "006")
+
+    assert payload["data"]["current_phase"] == expected_current_phase
+    assert payload["data"]["current_milestone"] == f"M3 ({expected_m3_status})"
+    assert payload["data"]["task_status"]["005"] == expected_task_005_status
+    assert payload["data"]["task_status"]["006"] == expected_task_006_status
 
 
 def test_analyze_stock_stub_returns_contract_first_payload() -> None:
