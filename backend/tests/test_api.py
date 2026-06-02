@@ -51,6 +51,19 @@ def _extract_table_status(lines: list[str], row_id: str) -> str:
     raise AssertionError(f"Missing status row for {row_id}")
 
 
+def test_project_status_current_phase_line_is_parser_safe() -> None:
+    lines = _project_status_doc_lines()
+    current_phase_idx = lines.index("## Current Phase")
+    current_phase_line = lines[current_phase_idx + 2].strip()
+
+    assert current_phase_line == "**Phase 3 — Backend Skeleton**"
+    assert current_phase_line.startswith("**")
+    assert current_phase_line.endswith("**")
+    assert current_phase_line.count("**") == 2
+    assert "(" not in current_phase_line
+    assert ")" not in current_phase_line
+
+
 def test_project_status_endpoint_returns_required_envelope() -> None:
     response = client.get("/api/v1/project-status")
     assert response.status_code == 200
@@ -59,16 +72,14 @@ def test_project_status_endpoint_returns_required_envelope() -> None:
     assert_success_envelope(payload)
 
     status_doc_lines = _project_status_doc_lines()
-    current_phase_idx = status_doc_lines.index("## Current Phase")
-    expected_current_phase = status_doc_lines[current_phase_idx + 2].strip().strip("*")
-    expected_m3_status = _extract_table_status(status_doc_lines, "M3")
-    expected_task_005_status = _extract_table_status(status_doc_lines, "005")
-    expected_task_006_status = _extract_table_status(status_doc_lines, "006")
+    assert _extract_table_status(status_doc_lines, "M3") == "Completed"
+    assert _extract_table_status(status_doc_lines, "005") == "Completed"
+    assert _extract_table_status(status_doc_lines, "006") == "Completed"
 
-    assert payload["data"]["current_phase"] == expected_current_phase
-    assert payload["data"]["current_milestone"] == f"M3 ({expected_m3_status})"
-    assert payload["data"]["task_status"]["005"] == expected_task_005_status
-    assert payload["data"]["task_status"]["006"] == expected_task_006_status
+    assert payload["data"]["current_phase"] == "Phase 3 — Backend Skeleton"
+    assert payload["data"]["current_milestone"] == "M3 (Completed)"
+    assert payload["data"]["task_status"]["005"] == "Completed"
+    assert payload["data"]["task_status"]["006"] == "Completed"
 
 
 def test_analyze_stock_stub_returns_contract_first_payload() -> None:

@@ -18,7 +18,7 @@
 | 004 | Create MVP Implementation Plan | Completed | Merged in PR #2 with seven-phase rollout model. |
 | 005 | Create Supabase Migration Draft | Completed | Completed by PR #5 with local/test SQL execution validation and CI migration check workflow. |
 | 006 | Backend Skeleton | Completed | PR #8 merged the analyze-stock stub, validation envelope handling, backend tests, and mobile-first strategy notes, completing M3 readiness for Phase 4. |
-| 007 | First Analysis Workflow | Planned | M3 is completed, but Phase 4 has not started until this Factory governance/status-sync PR is merged and the next Phase 4 task is opened from current source-of-truth review. |
+| 007 | First Analysis Workflow | Planned | M3 is completed. Phase 4 remains planned and should begin through a dedicated Phase 4 task opened from current GitHub source-of-truth review. |
 | 008 | Simulation Desk MVP | Planned | Paper-orders and paper-portfolio workflow. |
 | 009 | Simple UI or Report Output | Planned | Minimal output layer for strategy reports. |
 | 010 | Review and Learning Loop | Planned | Trade reviews, proposals, and audit continuity. |
@@ -44,9 +44,9 @@
 - Real-money execution and brokerage API integration remain explicitly out of scope.
 - Codex PR Factory governance defines role separation, gates, PR body evidence expectations, and source-of-truth-based follow-up handling.
 
-## Scope Compliance Check
+## Scope Compliance Snapshot
 
-- Implementation-limited changes in current PR: **No**
+- Governance documentation plus backend test alignment recorded: **Yes**
 - Production deployment added: **No**
 - Production Supabase connection added: **No**
 - Backend/frontend runtime implementation added: **No**
@@ -56,7 +56,7 @@
 
 ## Latest Review Update
 
-- PR #8 is present in repository history as merged commit `d42666e`, completing Task 006 / Milestone M3 after adding the contract-first `POST /api/v1/analyze-stock` stub, validation envelope handling, backend tests, and mobile-first strategy documentation.
-- PR #8 completion makes Phase 4 the next implementation phase under `docs/10-mvp-implementation-plan.md`: Phase 3 includes adding the analyze-stock stub before real Phase 4 analysis logic, and Phase 4 is the first analysis workflow.
-- This status-sync PR keeps the Current Phase at Phase 3 because it is a documentation-only transition/governance PR; Phase 4 should start only after this Factory workflow is merged and a dedicated Phase 4 task is opened from current GitHub source-of-truth review.
+- PR #8 completed Task 006 / Milestone M3 by adding the contract-first `POST /api/v1/analyze-stock` stub, validation envelope handling, backend tests, and mobile-first strategy documentation.
+- Phase 4 is the next planned implementation phase under `docs/10-mvp-implementation-plan.md` and should begin through a dedicated Phase 4 task opened from current GitHub source-of-truth review.
+- The Codex PR Factory governance workflow is recorded in `docs/20-codex-pr-factory.md`.
 - Real stock analysis, production Supabase, Railway deployment, live market data, brokerage integration, secrets, and real-money trading automation remain out of scope.

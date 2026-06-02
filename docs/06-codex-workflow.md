@@ -19,7 +19,7 @@ Before starting a non-trivial Codex task, read at minimum:
 
 ## Codex PR Factory
 
-For recurring task-to-PR execution, use the Codex PR Factory governance workflow in `docs/15-codex-pr-factory.md`. The Factory defines task classes, role permissions, required gates, PR body expectations, evidence language, and source-of-truth-based follow-up handling.
+For recurring task-to-PR execution, use the Codex PR Factory governance workflow in `docs/20-codex-pr-factory.md`. The Factory defines task classes, role permissions, required gates, PR body expectations, evidence language, and source-of-truth-based follow-up handling.
 
 The workflow below remains the compact execution model; the Factory document is the detailed review and governance layer for documentation-only, implementation-limited, and governance-sensitive / production-impacting PRs.
 

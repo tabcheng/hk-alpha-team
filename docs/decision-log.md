@@ -145,7 +145,7 @@ We will not upgrade GitHub account/organization immediately. During Phase 2 we w
 **Context:** After PR #8 completed the backend skeleton milestone, Harness Engineering needed a repeatable governance workflow for ChatGPT + Codex + GitHub PR + GitHub Actions collaboration before Phase 4 work begins.
 
 **Decision:**
-- Add `docs/15-codex-pr-factory.md` as the canonical Codex PR Factory workflow for task classes, role permissions, required gates, PR body expectations, evidence language, and source-of-truth-based follow-up handling.
+- Add `docs/20-codex-pr-factory.md` as the canonical Codex PR Factory workflow for task classes, role permissions, required gates, PR body expectations, evidence language, and source-of-truth-based follow-up handling.
 - Treat Claude Code as not assumed unless Harness Engineering explicitly approves it later.
 - Require Factory PRs to separate read-only planning/review roles from file-modifying implementation/log-update roles, and confirm Codex must not self-approve.
 

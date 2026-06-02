@@ -1,4 +1,4 @@
-# 15 — Codex PR Factory Governance Workflow
+# 20 — Codex PR Factory Governance Workflow
 
 ## Purpose
 
@@ -184,7 +184,7 @@ Use evidence-based language such as:
 
 - "validated by `python scripts/validate_contracts.py`";
 - "no known blockers based on changed-file review and passing checks";
-- "no code checks were required because this PR is documentation-only; lightweight contract validation was run."
+- "no runtime code checks were required for documentation-only changes; lightweight contract validation was run."
 
 Do not claim **100% certainty**. Use **"no known blockers"** only when supported by specific review evidence.
 
