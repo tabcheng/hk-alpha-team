@@ -22,17 +22,17 @@ Returns the required success envelope with project phase, milestone, and task st
 
 ### `POST /api/v1/analyze-stock`
 
-Returns the required success envelope with a Phase 3 stub payload for a canonical Hong Kong symbol such as:
+Returns the required success envelope with a Phase 4A deterministic local-only workflow skeleton payload for a canonical Hong Kong symbol such as:
 
 ```json
 { "symbol": "0700.HK" }
 ```
 
-The stub validates the request shape, returns advisory-style placeholder fields, and includes explicit warnings that no live analysis or execution occurred. Detailed stub runbook coverage lives in `docs/19-first-analysis-workflow-stub.md`.
+The endpoint validates the request shape, delegates to local deterministic workflow stages, returns advisory-style placeholder fields, and includes explicit warnings that no live analysis or execution occurred. Phase 3 stub history lives in `docs/19-first-analysis-workflow-stub.md`; Phase 4A skeleton coverage lives in `docs/21-first-analysis-workflow-skeleton.md`.
 
-## Analyze-Stock Stub Boundary
+## Analyze-Stock Phase 4A Boundary
 
-The analyze-stock stub is contract-first only. It is designed to prepare clients, tests, and future agent workflow integration for Phase 4.
+The analyze-stock workflow skeleton is contract-first and local-only. It is designed to make first analysis workflow stages reviewable before live data, persistence, production Supabase, agent record storage, simulation, or broker integrations are introduced.
 
 It does not:
 
@@ -46,7 +46,7 @@ It does not:
 - connect to brokerage APIs
 - execute or recommend real-money trades as an automated action
 
-The stub must continue to include:
+The skeleton must continue to include:
 
 - preferred strategy label field
 - reasoning placeholder
@@ -54,7 +54,7 @@ The stub must continue to include:
 - invalidation conditions
 - paper-trading non-action statement
 - real-money human decision framing
-- warnings describing stub-only behavior
+- warnings describing deterministic Phase 4A skeleton behavior
 
 ## Response Envelope Rules
 
@@ -96,6 +96,6 @@ CI must not require production Supabase, Railway, secrets, broker credentials, o
 
 ## Follow-Up Guidance
 
-Future Phase 4 work may replace the stub internals with real first analysis workflow components only after contracts and tests are updated in the same PR.
+Future Phase 4B work may extend the deterministic skeleton with richer reviewed workflow adapters only after contracts and tests are updated in the same PR.
 
 Any move toward hosted infrastructure must follow `docs/18-mobile-first-environment-strategy.md` and be authorized by an explicit future task/decision.

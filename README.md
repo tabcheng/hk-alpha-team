@@ -129,6 +129,14 @@ The `sql-migration-check` workflow validates that the draft migration executes s
 
 PR #8 does **not** add production Supabase setup, Railway deployment, live market data integration, brokerage execution integration, secrets, or real-money trading automation.
 
+## Phase 4A First Analysis Workflow Skeleton (PR #10)
+
+- `POST /api/v1/analyze-stock` now delegates to a deterministic local-only Phase 4A workflow skeleton.
+- The current canonical analyze-stock contract uses `analysis_status = "phase4a_skeleton"` and `workflow_phase = "Phase 4A — Deterministic First Analysis Workflow Skeleton"`.
+- The Phase 4A skeleton preserves advisory-only human-decision framing, required success/error envelopes, preferred strategy labels, and explicit warnings.
+- The skeleton performs no live market data access, external API calls, persistence writes, production Supabase connection, broker execution, paper order creation, secrets usage, or real-money trading automation.
+- `docs/21-first-analysis-workflow-skeleton.md` documents the current Phase 4A workflow stages, output fields, boundaries, and validation path.
+
 ## Documentation Map
 
 - `PROJECT_BRIEF.md` — concise project charter.
@@ -150,10 +158,11 @@ PR #8 does **not** add production Supabase setup, Railway deployment, live marke
 - `docs/14-codex-task-template.md` — reusable Codex task prompt template.
 - `docs/15-migration-assumptions.md` — migration draft assumptions and deferred schema items.
 - `docs/16-local-sql-validation.md` — local/test SQL validation runbook and CI behavior.
-- `docs/17-backend-skeleton.md` — Phase 3 backend skeleton and analyze-stock stub boundaries.
+- `docs/17-backend-skeleton.md` — backend skeleton and analyze-stock Phase 4A boundary notes.
 - `docs/18-mobile-first-environment-strategy.md` — mobile-first, CI-first environment strategy before hosted infrastructure.
 - `docs/19-first-analysis-workflow-stub.md` — dedicated first-analysis workflow stub runbook and Phase 4 follow-up path.
 - `docs/20-codex-pr-factory.md` — Codex PR Factory governance workflow for task-to-PR execution.
+- `docs/21-first-analysis-workflow-skeleton.md` — Phase 4A deterministic local-only first-analysis workflow skeleton runbook.
 - `codex-tasks/005-create-supabase-migration-draft.md` — Task 005 phase-entry card for migration draft planning.
 - `docs/decision-log.md` — key project decisions.
 - `docs/progress-log.md` — milestone progress tracking.

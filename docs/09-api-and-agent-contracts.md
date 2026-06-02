@@ -44,12 +44,18 @@ Define the exact required MVP endpoint set, exact required response envelope, an
 - **Error cases:** `INTERNAL_ERROR`.
 
 ### `POST /api/v1/analyze-stock`
-- **Purpose:** Trigger first-pass analysis for one stock symbol.
+- **Purpose:** Trigger first-pass analysis workflow scaffolding for one stock symbol.
 - **Path parameters:** None.
 - **Request body:** `{ "symbol": "0700.HK" }`.
-- **Current Phase 3 behavior:** Contract-first stub only; no live analysis, persistence, production Supabase, market data provider, or trade execution.
-- **Response shape:** Required success envelope with strategy/analysis payload in `data`. During the stub phase, `data` must include `symbol`, `analysis_status`, `workflow_phase`, `strategy_recommendation`, `summary`, `confidence_level`, `scores`, `key_reasons`, `main_risks`, `invalidation_conditions`, `paper_trading_action`, `real_money_decision`, `agent_trace`, `generated_at`, and `schema_version`.
-- **Validation notes:** `symbol` required; Phase 3 stub accepts canonical four-digit Hong Kong equity symbols matching `0000.HK` format, for example `0700.HK`.
+- **Current Phase 4A behavior:** Deterministic local-only First Analysis Workflow Skeleton. It provides contract-compatible advisory scaffolding only and does not perform live investment research.
+- **Current behavior boundaries:** No live market data, no external APIs, no network services, no persistence writes, no production Supabase, no broker execution, no paper order creation, no real-money order placement, no real-money trading automation, and no secrets required.
+- **Response shape:** Required success envelope with strategy/analysis payload in `data`. The current Phase 4A payload must include `symbol`, `analysis_status`, `workflow_phase`, `strategy_recommendation`, `summary`, `confidence_level`, `scores`, `key_reasons`, `main_risks`, `invalidation_conditions`, `paper_trading_action`, `real_money_decision`, `agent_trace`, `generated_at`, and `schema_version`.
+- **Current response semantics:** `analysis_status = "phase4a_skeleton"`; `workflow_phase = "Phase 4A — Deterministic First Analysis Workflow Skeleton"`; strategy labels remain limited to the preferred strategy label set; confidence remains conservative because scores are local placeholders and not market-data-derived.
+- **Additional Phase 4A metadata:** Local-only metadata may be included when it does not rename or remove required fields, for example `score_confidence`, `stock_context`, `stage_rationales`, and `next_review_date`.
+- **Required warnings:** Responses must warn that the output is a deterministic Phase 4A skeleton only, is not live investment research, uses no live market data, uses no persistence, requires no production Supabase, performs no broker execution, and performs no real-money trading.
+- **Required `agent_trace` boundary flags:** `agent_runs_created = false`, `agent_outputs_created = false`, `persistence_enabled = false`, `production_supabase_required = false`, `production_supabase_connected = false`, `recommendation_record_created = false`, `paper_order_created = false`, `broker_execution_enabled = false`, `broker_api_called = false`, `real_money_order_placed = false`, `network_services_called = false`, and `secrets_required = false`.
+- **Advisory framing:** Output must include key reasons, main risks, invalidation conditions, paper-trading non-action framing, and explicit Harness Engineering human-decision framing for any real-money decision.
+- **Validation notes:** `symbol` required; current Phase 4A skeleton accepts canonical four-digit Hong Kong equity symbols matching `0000.HK` format, for example `0700.HK`.
 - **Error cases:** `VALIDATION_ERROR`, `NOT_FOUND`, `AGENT_CONTRACT_VIOLATION`, `INTERNAL_ERROR`.
 
 ### `GET /api/v1/stocks/{symbol}`
@@ -109,20 +115,20 @@ Define the exact required MVP endpoint set, exact required response envelope, an
 - **Error cases:** `INTERNAL_ERROR`.
 
 
-## Analyze-Stock Stub Contract (Phase 3)
+## Analyze-Stock Stub Contract (Phase 3 History)
 
-The Phase 3 implementation of `POST /api/v1/analyze-stock` is intentionally a stub that prepares client, test, and workflow integration for Phase 4. It must not claim to perform investment research or produce a real recommendation.
+The Phase 3 implementation of `POST /api/v1/analyze-stock` was intentionally a contract-first stub that prepared client, test, and workflow integration for Phase 4. It did not claim to perform investment research or produce a real recommendation.
 
-Required stub characteristics:
+Historical Phase 3 stub characteristics:
 
-- Return the exact success envelope.
-- Return `analysis_status = "stub_only"`.
-- Return one preferred strategy label so downstream clients can validate enum handling.
-- Include reasoning, risks, invalidation conditions, and human-decision framing even though the content is placeholder.
-- Include warnings that no live analysis, persistence, production Supabase, or trading execution occurred.
-- Include `agent_trace` flags showing that agent runs, agent outputs, persistence, and production Supabase are not active.
+- Returned the exact success envelope.
+- Returned `analysis_status = "stub_only"`.
+- Returned one preferred strategy label so downstream clients could validate enum handling.
+- Included reasoning, risks, invalidation conditions, and human-decision framing even though the content was placeholder.
+- Included warnings that no live analysis, persistence, production Supabase, or trading execution occurred.
+- Included `agent_trace` flags showing that agent runs, agent outputs, persistence, and production Supabase were not active.
 
-Stub output is not investment advice and must be replaced by the Phase 4 first analysis workflow before real research conclusions are presented.
+PR #10 / Phase 4A replaces the current runtime behavior with the deterministic local-only `phase4a_skeleton` workflow described in the endpoint specification above. This Phase 3 section is historical and must not be used as the current runtime contract after Phase 4A.
 
 ## Explicit Error Envelope
 

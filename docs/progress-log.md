@@ -104,3 +104,18 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Synchronized `docs/11-project-status.md` after PR #8 merge by marking Task 006 / Milestone M3 completed, keeping the Current Phase parser-safe at Phase 3, and leaving Phase 4 planned for a dedicated task opened from current GitHub source-of-truth review.
 - Preserved the parser-safe `## Current Phase` format by keeping the line after the heading as only the bold phase name and moving explanatory details into status notes and Latest Review Update.
 - Maintained governance documentation plus backend test alignment scope: no runtime backend implementation, frontend implementation, Phase 4 analysis logic, market data integration, production Supabase, Railway deployment, broker API integration, secrets, or real-money trading automation. Backend project-status test coverage was strengthened to assert parser-safe current-phase formatting and synchronized project-status expectations without mirroring `status_reader.py` parsing behavior.
+
+
+## 2026-06-02 — Phase 4A First Analysis Workflow Skeleton Start
+
+- Started Task 007 / Milestone M4 with a deterministic local-only First Analysis Workflow Skeleton for `POST /api/v1/analyze-stock`.
+- Replaced Phase 3 stub-only endpoint internals with explicit local workflow stages for normalization, static stock context, placeholder scoring, advisory summary, reasons, risks, invalidation conditions, human decision framing, and workflow trace metadata.
+- Added backend workflow unit coverage and updated API tests while preserving the locked endpoint name and required success/error response envelopes.
+- Kept Phase 4A implementation-limited: no live market data, external APIs, production Supabase, persistence writes, paper order creation, broker integration, secrets, or real-money trading automation.
+
+
+## 2026-06-02 — PR #10 Contract Documentation Alignment
+
+- Updated `docs/09-api-and-agent-contracts.md` so the canonical `POST /api/v1/analyze-stock` contract reflects current Phase 4A `phase4a_skeleton` runtime behavior.
+- Kept the Phase 3 `stub_only` analyze-stock contract as historical context only, not current canonical behavior.
+- Updated related README, task, status, and decision artifacts while preserving the locked endpoint name, required response envelopes, advisory-only framing, and no-production-integration boundaries.
