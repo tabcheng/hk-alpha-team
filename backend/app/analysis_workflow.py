@@ -24,7 +24,7 @@ WORKFLOW_PHASE = "Phase 4A — Deterministic First Analysis Workflow Skeleton"
 ANALYSIS_STATUS = "phase4a_skeleton"
 
 PHASE_4A_WARNINGS = [
-    "Phase 4A deterministic skeleton only; this is not live investment research.",
+    "Phase 4A deterministic skeleton with Phase 4B department adapter previews only; this is not live investment research.",
     "No live market data, external data provider, or network service is used.",
     "No persistence writes, recommendation records, paper orders, or production Supabase connection are used.",
     "No broker execution, brokerage API integration, real-money order placement, or autonomous trading is performed.",

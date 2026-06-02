@@ -133,6 +133,7 @@ def test_analyze_stock_returns_phase4a_deterministic_workflow_payload() -> None:
     assert_success_envelope(payload)
     warning_text = " ".join(payload["warnings"])
     assert "Phase 4A deterministic skeleton" in warning_text
+    assert "Phase 4B department adapter previews" in warning_text
     assert "No live market data" in warning_text
     assert "No persistence" in warning_text
     assert "production Supabase" in warning_text

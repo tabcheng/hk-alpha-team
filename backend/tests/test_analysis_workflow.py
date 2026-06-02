@@ -124,6 +124,7 @@ def test_phase4a_warnings_are_explicit() -> None:
     warning_text = " ".join(PHASE_4A_WARNINGS)
 
     assert "deterministic skeleton" in warning_text
+    assert "Phase 4B department adapter previews" in warning_text
     assert "No live market data" in warning_text
     assert "No persistence" in warning_text
     assert "production Supabase" in warning_text
