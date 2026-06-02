@@ -119,3 +119,11 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Updated `docs/09-api-and-agent-contracts.md` so the canonical `POST /api/v1/analyze-stock` contract reflects current Phase 4A `phase4a_skeleton` runtime behavior.
 - Kept the Phase 3 `stub_only` analyze-stock contract as historical context only, not current canonical behavior.
 - Updated related README, task, status, and decision artifacts while preserving the locked endpoint name, required response envelopes, advisory-only framing, and no-production-integration boundaries.
+
+
+## 2026-06-02 — Phase 4B Department Adapter Start
+
+- Started Phase 4B inside Task 007 / Milestone M4 by adding deterministic local-only department scoring adapters for all eight HK Alpha Team departments.
+- Refactored the analyze-stock workflow to consume adapter outputs that mirror the locked common agent output shape, while preserving the locked endpoint name, required success/error response envelope, `analysis_status`, and `workflow_phase`.
+- Added local-only `department_outputs` review metadata and documented that it is non-persistent adapter preview output, not database-backed `agent_outputs` records or live investment research.
+- Kept Phase 4B implementation-limited: no live market data, external APIs, production Supabase, persistence writes, paper order creation, broker integration, secrets, or real-money trading automation.

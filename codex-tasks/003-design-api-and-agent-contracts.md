@@ -41,6 +41,7 @@ Define service contracts between application layers and agent departments using 
 ## Implementation Notes Added After PR #10
 
 - `POST /api/v1/analyze-stock` now has a Phase 4A deterministic local-only workflow skeleton implementation.
-- The Phase 4A skeleton preserves the locked endpoint name and response envelope while avoiding live market data, external APIs, persistence, production Supabase, Railway deployment, broker execution, paper order creation, secrets, and real-money trading automation.
+- Phase 4B adds deterministic local-only department adapter preview outputs that mirror the locked common agent output shape while preserving the locked endpoint name, required response envelope, `analysis_status`, and `workflow_phase`.
+- The Phase 4A/4B skeleton preserves the locked endpoint name and response envelope while avoiding live market data, external APIs, persistence, production Supabase, Railway deployment, broker execution, paper order creation, secrets, and real-money trading automation.
 - The historical Phase 3 contract-first stub used `analysis_status = "stub_only"`; the current canonical runtime contract uses `analysis_status = "phase4a_skeleton"`.
 - Future Phase 4 work should extend the skeleton without renaming the endpoint, envelope fields, or preferred strategy labels unless the contract lock process is followed.

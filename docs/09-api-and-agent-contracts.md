@@ -47,12 +47,12 @@ Define the exact required MVP endpoint set, exact required response envelope, an
 - **Purpose:** Trigger first-pass analysis workflow scaffolding for one stock symbol.
 - **Path parameters:** None.
 - **Request body:** `{ "symbol": "0700.HK" }`.
-- **Current Phase 4A behavior:** Deterministic local-only First Analysis Workflow Skeleton. It provides contract-compatible advisory scaffolding only and does not perform live investment research.
+- **Current Phase 4A behavior:** Deterministic local-only First Analysis Workflow Skeleton. Phase 4B adds deterministic department scoring adapters behind the same current runtime semantics. The endpoint provides contract-compatible advisory scaffolding only and does not perform live investment research.
 - **Current behavior boundaries:** No live market data, no external APIs, no network services, no persistence writes, no production Supabase, no broker execution, no paper order creation, no real-money order placement, no real-money trading automation, and no secrets required.
-- **Response shape:** Required success envelope with strategy/analysis payload in `data`. The current Phase 4A payload must include `symbol`, `analysis_status`, `workflow_phase`, `strategy_recommendation`, `summary`, `confidence_level`, `scores`, `key_reasons`, `main_risks`, `invalidation_conditions`, `paper_trading_action`, `real_money_decision`, `agent_trace`, `generated_at`, and `schema_version`.
-- **Current response semantics:** `analysis_status = "phase4a_skeleton"`; `workflow_phase = "Phase 4A — Deterministic First Analysis Workflow Skeleton"`; strategy labels remain limited to the preferred strategy label set; confidence remains conservative because scores are local placeholders and not market-data-derived.
-- **Additional Phase 4A metadata:** Local-only metadata may be included when it does not rename or remove required fields, for example `score_confidence`, `stock_context`, `stage_rationales`, and `next_review_date`.
-- **Required warnings:** Responses must warn that the output is a deterministic Phase 4A skeleton only, is not live investment research, uses no live market data, uses no persistence, requires no production Supabase, performs no broker execution, and performs no real-money trading.
+- **Response shape:** Required success envelope with strategy/analysis payload in `data`. The current Phase 4A/4B payload must include `symbol`, `analysis_status`, `workflow_phase`, `strategy_recommendation`, `summary`, `confidence_level`, `scores`, `key_reasons`, `main_risks`, `invalidation_conditions`, `paper_trading_action`, `real_money_decision`, `agent_trace`, `generated_at`, and `schema_version`. Phase 4B also exposes local-only `department_outputs` adapter preview metadata for reviewability without changing the required envelope.
+- **Current response semantics:** `analysis_status = "phase4a_skeleton"`; `workflow_phase = "Phase 4A — Deterministic First Analysis Workflow Skeleton"`; strategy labels remain limited to the preferred strategy label set; confidence remains conservative because scores are local adapter placeholders and not market-data-derived. Phase 4B intentionally preserves these values to avoid a canonical runtime semantic rename in this PR.
+- **Additional Phase 4B adapter metadata:** Local-only metadata may be included when it does not rename or remove required fields, for example `score_confidence`, `stock_context`, `stage_rationales`, `department_outputs`, `department_output_note`, and `next_review_date`. `department_outputs` is deterministic adapter preview metadata using the locked common agent output shape; it is not a persisted `agent_outputs` database record, not evidence that `agent_runs` were created, and not live investment research.
+- **Required warnings:** Responses must warn that the output is a deterministic Phase 4A skeleton with Phase 4B adapter previews only, is not live investment research, uses no live market data, uses no persistence, requires no production Supabase, performs no broker execution, and performs no real-money trading.
 - **Required `agent_trace` boundary flags:** `agent_runs_created = false`, `agent_outputs_created = false`, `persistence_enabled = false`, `production_supabase_required = false`, `production_supabase_connected = false`, `recommendation_record_created = false`, `paper_order_created = false`, `broker_execution_enabled = false`, `broker_api_called = false`, `real_money_order_placed = false`, `network_services_called = false`, and `secrets_required = false`.
 - **Advisory framing:** Output must include key reasons, main risks, invalidation conditions, paper-trading non-action framing, and explicit Harness Engineering human-decision framing for any real-money decision.
 - **Validation notes:** `symbol` required; current Phase 4A skeleton accepts canonical four-digit Hong Kong equity symbols matching `0000.HK` format, for example `0700.HK`.
@@ -174,20 +174,30 @@ All eight agent outputs use this exact field set:
 
 ## Agent Department JSON Examples (All 8, Common Shape)
 
+These examples show the current Phase 4B local-only adapter preview semantics. They demonstrate the common shape without claiming live data, filings, news feeds, OHLCV bars, portfolio records, simulation records, broker commentary, production Supabase reads, persistence writes, paper orders, or real-money orders.
+
 ### 1) Market Intelligence Agent
 ```json
 {
   "agent_name": "Market Intelligence Agent",
   "agent_version": "v0.1",
   "stock_symbol": "0700.HK",
-  "input_summary": "Macro and liquidity context check for Hong Kong internet leaders.",
-  "evidence": ["USD index trend", "HKD liquidity indicators"],
-  "score": 64,
-  "confidence": 71,
-  "key_findings": ["Risk-off tone persists", "Funding conditions tighter"],
-  "risks": ["Global growth slowdown"],
-  "invalidation_conditions": ["Liquidity re-expansion and risk-on reversal"],
-  "generated_at": "2026-05-22T00:00:00Z",
+  "input_summary": "Local deterministic market-context adapter preview for a Hong Kong equity symbol.",
+  "evidence": [
+    "Local placeholder only: normalized symbol and static HKEX/HKD context; no live index, macro, liquidity, filing, news, OHLCV, portfolio, simulation, or broker data was fetched."
+  ],
+  "score": 54,
+  "confidence": 20,
+  "key_findings": [
+    "Market-context score is deterministic scaffolding and is not live market research."
+  ],
+  "risks": [
+    "Do not interpret the placeholder market-context score as live macro, liquidity, or index analysis."
+  ],
+  "invalidation_conditions": [
+    "Invalidate if market data, macro data, liquidity data, or network services are claimed or introduced without reviewed authorization."
+  ],
+  "generated_at": "2026-06-02T00:00:00Z",
   "schema_version": "v0.1"
 }
 ```
@@ -198,14 +208,22 @@ All eight agent outputs use this exact field set:
   "agent_name": "Company Research Agent",
   "agent_version": "v0.1",
   "stock_symbol": "0700.HK",
-  "input_summary": "Fundamental quality and earnings durability review.",
-  "evidence": ["Latest annual report", "Margin trend analysis"],
-  "score": 70,
-  "confidence": 68,
-  "key_findings": ["Margin quality improving", "Cash generation resilient"],
-  "risks": ["Regulatory uncertainty"],
-  "invalidation_conditions": ["Sustained margin compression"],
-  "generated_at": "2026-05-22T00:00:00Z",
+  "input_summary": "Local deterministic company-research adapter preview for a Hong Kong equity symbol.",
+  "evidence": [
+    "Local placeholder only: normalized symbol and static HKEX/HKD context; no financial statements, filings, research documents, or broker commentary were fetched."
+  ],
+  "score": 48,
+  "confidence": 20,
+  "key_findings": [
+    "Company-research score is deterministic scaffolding and is not financial-statement analysis."
+  ],
+  "risks": [
+    "Do not interpret the placeholder company score as valuation, filings, or earnings research."
+  ],
+  "invalidation_conditions": [
+    "Invalidate if filings, financial statements, research documents, or broker commentary are claimed or introduced without reviewed authorization."
+  ],
+  "generated_at": "2026-06-02T00:00:00Z",
   "schema_version": "v0.1"
 }
 ```
@@ -216,14 +234,22 @@ All eight agent outputs use this exact field set:
   "agent_name": "News & Sentiment Agent",
   "agent_version": "v0.1",
   "stock_symbol": "0700.HK",
-  "input_summary": "Recent news-flow impact assessment.",
-  "evidence": ["Earnings guidance headlines", "Sector sentiment feed"],
-  "score": 58,
-  "confidence": 62,
-  "key_findings": ["Headline tone neutral", "Event risk still elevated"],
-  "risks": ["Negative surprise headlines"],
-  "invalidation_conditions": ["Consistent positive guidance revisions"],
-  "generated_at": "2026-05-22T00:00:00Z",
+  "input_summary": "Local deterministic news-and-sentiment adapter preview for a Hong Kong equity symbol.",
+  "evidence": [
+    "Local placeholder only: normalized symbol and static HKEX/HKD context; no news feeds, social feeds, headlines, filings, or broker commentary were fetched."
+  ],
+  "score": 46,
+  "confidence": 20,
+  "key_findings": [
+    "News-and-sentiment score is deterministic scaffolding and is not headline or feed analysis."
+  ],
+  "risks": [
+    "Do not interpret the placeholder sentiment score as live news, social, or broker-commentary analysis."
+  ],
+  "invalidation_conditions": [
+    "Invalidate if news feeds, social sentiment, headlines, or broker commentary are claimed or introduced without reviewed authorization."
+  ],
+  "generated_at": "2026-06-02T00:00:00Z",
   "schema_version": "v0.1"
 }
 ```
@@ -234,14 +260,22 @@ All eight agent outputs use this exact field set:
   "agent_name": "Technical Analysis Agent",
   "agent_version": "v0.1",
   "stock_symbol": "0700.HK",
-  "input_summary": "Trend and support/resistance profile review.",
-  "evidence": ["Daily OHLCV bars", "Momentum indicators"],
-  "score": 63,
-  "confidence": 66,
-  "key_findings": ["Uptrend intact", "Momentum flattening"],
-  "risks": ["Break below support"],
-  "invalidation_conditions": ["Close below 352.0"],
-  "generated_at": "2026-05-22T00:00:00Z",
+  "input_summary": "Local deterministic technical-analysis adapter preview for a Hong Kong equity symbol.",
+  "evidence": [
+    "Local placeholder only: normalized symbol and static HKEX/HKD context; no prices, OHLCV bars, volume, indicators, or broker data were fetched."
+  ],
+  "score": 44,
+  "confidence": 20,
+  "key_findings": [
+    "Technical score is deterministic scaffolding and is not OHLCV-derived analysis."
+  ],
+  "risks": [
+    "Do not interpret the placeholder technical score as chart, price, volume, or indicator analysis."
+  ],
+  "invalidation_conditions": [
+    "Invalidate if prices, OHLCV bars, volume, or indicators are claimed or introduced without reviewed authorization."
+  ],
+  "generated_at": "2026-06-02T00:00:00Z",
   "schema_version": "v0.1"
 }
 ```
@@ -252,14 +286,22 @@ All eight agent outputs use this exact field set:
   "agent_name": "Risk Manager Agent",
   "agent_version": "v0.1",
   "stock_symbol": "0700.HK",
-  "input_summary": "Portfolio concentration and downside profile check.",
-  "evidence": ["Sector exposure report", "Drawdown scenarios"],
-  "score": 60,
-  "confidence": 74,
-  "key_findings": ["Moderate risk level", "Sector concentration notable"],
-  "risks": ["Concentration drawdown"],
-  "invalidation_conditions": ["Exposure reduced below guardrail threshold"],
-  "generated_at": "2026-05-22T00:00:00Z",
+  "input_summary": "Local deterministic risk-manager adapter preview for a Hong Kong equity symbol.",
+  "evidence": [
+    "Local placeholder only: normalized symbol and static HKEX/HKD context; no portfolio holdings, exposure records, volatility feeds, or production database data were fetched."
+  ],
+  "score": 42,
+  "confidence": 25,
+  "key_findings": [
+    "Risk score is deterministic scaffolding and is not portfolio or live volatility analysis."
+  ],
+  "risks": [
+    "Do not interpret the placeholder risk score as portfolio sizing, exposure, or volatility guidance."
+  ],
+  "invalidation_conditions": [
+    "Invalidate if portfolio holdings, exposure records, live volatility, persistence, or production Supabase are claimed or introduced without reviewed authorization."
+  ],
+  "generated_at": "2026-06-02T00:00:00Z",
   "schema_version": "v0.1"
 }
 ```
@@ -270,14 +312,22 @@ All eight agent outputs use this exact field set:
   "agent_name": "Investment Committee Agent",
   "agent_version": "v0.1",
   "stock_symbol": "0700.HK",
-  "input_summary": "Cross-agent synthesis and dissent capture.",
-  "evidence": ["Research memo", "Risk and technical briefs"],
-  "score": 64,
-  "confidence": 70,
-  "key_findings": ["Consensus favors patience", "Valuation concerns remain"],
-  "risks": ["Late-cycle volatility"],
-  "invalidation_conditions": ["Material earnings beat with risk compression"],
-  "generated_at": "2026-05-22T00:00:00Z",
+  "input_summary": "Local deterministic investment-committee synthesis adapter preview for a Hong Kong equity symbol.",
+  "evidence": [
+    "Local placeholder only: deterministic adapter previews; no persisted agent_runs, agent_outputs, research memos, filings, or live research records were fetched."
+  ],
+  "score": 52,
+  "confidence": 20,
+  "key_findings": [
+    "Committee synthesis is deterministic scaffolding and is not a persisted committee review."
+  ],
+  "risks": [
+    "Do not interpret the placeholder committee score as a reviewed investment committee decision."
+  ],
+  "invalidation_conditions": [
+    "Invalidate if persisted agent runs, agent outputs, committee review records, or production database writes occur."
+  ],
+  "generated_at": "2026-06-02T00:00:00Z",
   "schema_version": "v0.1"
 }
 ```
@@ -288,14 +338,22 @@ All eight agent outputs use this exact field set:
   "agent_name": "Simulation Investment Desk",
   "agent_version": "v0.1",
   "stock_symbol": "0700.HK",
-  "input_summary": "Paper-order outcomes and simulation behavior review.",
-  "evidence": ["Paper order log", "Portfolio snapshots"],
-  "score": 66,
-  "confidence": 73,
-  "key_findings": ["Execution discipline improved", "Stops triggered in volatility"],
-  "risks": ["Gap risk in adverse sessions"],
-  "invalidation_conditions": ["Repeated stop-out pattern without setup changes"],
-  "generated_at": "2026-05-22T00:00:00Z",
+  "input_summary": "Local deterministic simulation-desk adapter preview with no paper order creation.",
+  "evidence": [
+    "Local placeholder only: normalized symbol and static HKEX/HKD context; no simulation records, paper orders, portfolio snapshots, or trade reviews were fetched or created."
+  ],
+  "score": 49,
+  "confidence": 15,
+  "key_findings": [
+    "Simulation score is deterministic scaffolding and does not create or inspect paper orders."
+  ],
+  "risks": [
+    "Do not interpret the placeholder simulation score as paper-trading performance or order guidance."
+  ],
+  "invalidation_conditions": [
+    "Invalidate if simulation records are fetched, paper orders are created, or paper-trading behavior is implied."
+  ],
+  "generated_at": "2026-06-02T00:00:00Z",
   "schema_version": "v0.1"
 }
 ```
@@ -306,18 +364,25 @@ All eight agent outputs use this exact field set:
   "agent_name": "Investment Strategy Office",
   "agent_version": "v0.1",
   "stock_symbol": "0700.HK",
-  "input_summary": "Final recommendation synthesis for human decision support.",
-  "evidence": ["Committee review", "Simulation review", "Risk memo"],
-  "score": 67,
-  "confidence": 72,
-  "key_findings": ["Quality remains intact", "Entry still extended"],
-  "risks": ["Macro shock", "Policy uncertainty"],
-  "invalidation_conditions": ["Earnings surprise with rerating"],
-  "generated_at": "2026-05-22T00:00:00Z",
+  "input_summary": "Local deterministic strategy-office adapter preview for human decision support.",
+  "evidence": [
+    "Local placeholder only: deterministic department adapter previews; no strategy recommendation record, production Supabase data, or broker execution data was fetched or created."
+  ],
+  "score": 44,
+  "confidence": 20,
+  "key_findings": [
+    "Strategy-office output is deterministic scaffolding for human review and is not a persisted recommendation."
+  ],
+  "risks": [
+    "Do not interpret the placeholder strategy score as live investment research or real-money direction."
+  ],
+  "invalidation_conditions": [
+    "Invalidate if a strategy recommendation is persisted, a broker API is called, or any real-money order is placed."
+  ],
+  "generated_at": "2026-06-02T00:00:00Z",
   "schema_version": "v0.1"
 }
 ```
-
 ## Final Strategy Recommendation JSON Example
 
 ```json

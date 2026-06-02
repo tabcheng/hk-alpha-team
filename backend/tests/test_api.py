@@ -96,6 +96,7 @@ def test_analyze_stock_contract_doc_matches_phase4a_runtime() -> None:
     ].split("## Explicit Error Envelope", maxsplit=1)[0]
 
     assert "Current Phase 4A behavior" in endpoint_section
+    assert "Phase 4B adapter metadata" in endpoint_section
     assert 'analysis_status = "phase4a_skeleton"' in endpoint_section
     assert 'workflow_phase = "Phase 4A — Deterministic First Analysis Workflow Skeleton"' in endpoint_section
     assert "Current Phase 3 behavior" not in endpoint_section
@@ -108,6 +109,21 @@ def test_analyze_stock_contract_doc_matches_phase4a_runtime() -> None:
     assert 'analysis_status = "stub_only"' in historical_section
     assert "historical" in historical_section.lower()
     assert "must not be used as the current runtime contract after Phase 4A" in historical_section
+
+    common_examples_section = contract_text.split("## Agent Department JSON Examples (All 8, Common Shape)", maxsplit=1)[
+        1
+    ].split("## Final Strategy Recommendation JSON Example", maxsplit=1)[0]
+    assert "current Phase 4B local-only adapter preview semantics" in common_examples_section
+    for forbidden_example in [
+        "Latest annual report",
+        "Sector sentiment feed",
+        "Daily OHLCV bars",
+        "Paper order log",
+        '"confidence": 71',
+        '"confidence": 73',
+    ]:
+        assert forbidden_example not in common_examples_section
+
 
 def test_analyze_stock_returns_phase4a_deterministic_workflow_payload() -> None:
     response = client.post("/api/v1/analyze-stock", json={"symbol": "0700.HK"})
@@ -138,6 +154,8 @@ def test_analyze_stock_returns_phase4a_deterministic_workflow_payload() -> None:
         "paper_trading_action",
         "real_money_decision",
         "agent_trace",
+        "department_outputs",
+        "department_output_note",
         "generated_at",
         "schema_version",
     }
@@ -156,7 +174,9 @@ def test_analyze_stock_returns_phase4a_deterministic_workflow_payload() -> None:
         "AVOID",
     }
     assert data["confidence_level"] == 20
-    assert data["scores"]["score_basis"] == "deterministic_phase4a_placeholders_not_market_data_derived"
+    assert data["scores"]["score_basis"] == "deterministic_phase4b_department_adapters_not_market_data_derived"
+    assert len(data["department_outputs"]) == 8
+    assert "not persisted agent_outputs records" in data["department_output_note"]
     assert data["key_reasons"]
     assert data["main_risks"]
     assert data["invalidation_conditions"]
@@ -167,7 +187,12 @@ def test_analyze_stock_returns_phase4a_deterministic_workflow_payload() -> None:
     assert data["agent_trace"]["persistence_enabled"] is False
     assert data["agent_trace"]["production_supabase_required"] is False
     assert data["agent_trace"]["broker_execution_enabled"] is False
+    assert data["agent_trace"]["recommendation_record_created"] is False
+    assert data["agent_trace"]["paper_order_created"] is False
+    assert data["agent_trace"]["broker_api_called"] is False
     assert data["agent_trace"]["real_money_order_placed"] is False
+    assert data["agent_trace"]["network_services_called"] is False
+    assert data["agent_trace"]["secrets_required"] is False
     assert data["schema_version"] == "v0.1"
 
 

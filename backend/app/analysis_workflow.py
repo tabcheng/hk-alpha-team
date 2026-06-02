@@ -4,6 +4,11 @@ from dataclasses import dataclass
 from typing import Literal
 
 from app.contracts import SCHEMA_VERSION, utc_timestamp
+from app.department_adapters import (
+    build_department_outputs,
+    build_score_buckets,
+    build_score_confidence,
+)
 
 StrategyLabel = Literal[
     "STRONG_WATCH",
@@ -35,14 +40,6 @@ class StockContext:
     context_source: str
     live_data_used: bool
 
-
-@dataclass(frozen=True)
-class StageScore:
-    score: int
-    confidence: int
-    rationale: str
-
-
 def normalize_symbol(symbol: str) -> str:
     """Normalize internal workflow input without changing API validation rules."""
 
@@ -54,62 +51,13 @@ def build_static_stock_context(symbol: str) -> StockContext:
         symbol=symbol,
         exchange="HKEX",
         currency="HKD",
-        context_source="static_phase4a_placeholder",
+        context_source="static_phase4a_department_adapter_placeholder",
         live_data_used=False,
     )
 
-
-def _symbol_seed(symbol: str) -> int:
-    return sum((idx + 1) * ord(char) for idx, char in enumerate(symbol))
-
-
-def score_market_placeholder(context: StockContext) -> StageScore:
-    seed = _symbol_seed(context.symbol)
-    return StageScore(
-        score=45 + (seed % 11),
-        confidence=20,
-        rationale="Local deterministic market placeholder; not derived from live index, liquidity, or macro data.",
-    )
-
-
-def score_fundamental_placeholder(context: StockContext) -> StageScore:
-    seed = _symbol_seed(context.symbol)
-    return StageScore(
-        score=48 + ((seed // 3) % 10),
-        confidence=20,
-        rationale="Local deterministic fundamental placeholder; not derived from financial statements or filings.",
-    )
-
-
-def score_technical_placeholder(context: StockContext) -> StageScore:
-    seed = _symbol_seed(context.symbol)
-    return StageScore(
-        score=44 + ((seed // 5) % 12),
-        confidence=20,
-        rationale="Local deterministic technical placeholder; not derived from OHLCV bars, volume, or indicators.",
-    )
-
-
-def score_sentiment_placeholder(context: StockContext) -> StageScore:
-    seed = _symbol_seed(context.symbol)
-    return StageScore(
-        score=46 + ((seed // 7) % 10),
-        confidence=20,
-        rationale="Local deterministic sentiment placeholder; not derived from news, social, or broker commentary.",
-    )
-
-
-def score_risk_placeholder(context: StockContext) -> StageScore:
-    seed = _symbol_seed(context.symbol)
-    return StageScore(
-        score=40 + ((seed // 11) % 15),
-        confidence=25,
-        rationale="Local deterministic risk placeholder; not derived from portfolio holdings or live volatility data.",
-    )
-
-
 def _strategy_from_scores(scores: dict[str, int]) -> StrategyLabel:
-    average_score = sum(scores.values()) / len(scores)
+    scored_values = [value for value in scores.values() if isinstance(value, int)]
+    average_score = sum(scored_values) / len(scored_values)
     risk_score = scores["risk"]
 
     if average_score >= 58 and risk_score >= 50:
@@ -142,29 +90,26 @@ def build_agent_trace(stage_names: list[str]) -> dict[str, object]:
 
 
 def build_first_analysis_workflow(symbol: str) -> dict[str, object]:
-    """Build a deterministic, local-only Phase 4A analyze-stock response payload."""
+    """Build a deterministic, local-only Phase 4A analyze-stock response payload backed by Phase 4B adapters."""
 
     normalized_symbol = normalize_symbol(symbol)
     context = build_static_stock_context(normalized_symbol)
 
-    stage_scores = {
-        "market": score_market_placeholder(context),
-        "fundamental": score_fundamental_placeholder(context),
-        "technical": score_technical_placeholder(context),
-        "sentiment": score_sentiment_placeholder(context),
-        "risk": score_risk_placeholder(context),
-    }
-    numeric_scores = {name: score.score for name, score in stage_scores.items()}
+    department_outputs = build_department_outputs(normalized_symbol)
+    numeric_scores = build_score_buckets(department_outputs)
+    score_confidence = build_score_confidence(department_outputs)
     recommendation = _strategy_from_scores(numeric_scores)
 
     stage_names = [
         "input_normalization",
         "static_stock_context_placeholder",
-        "deterministic_market_placeholder_scoring",
-        "deterministic_fundamental_placeholder_scoring",
-        "deterministic_technical_placeholder_scoring",
-        "deterministic_sentiment_placeholder_scoring",
-        "deterministic_risk_placeholder_scoring",
+        "phase4b_department_adapter_output_generation",
+        "adapter_backed_market_scoring",
+        "adapter_backed_fundamental_scoring",
+        "adapter_backed_technical_scoring",
+        "adapter_backed_sentiment_scoring",
+        "adapter_backed_risk_scoring",
+        "adapter_backed_simulation_scoring",
         "advisory_summary_generation",
         "key_reasons_generation",
         "main_risks_generation",
@@ -179,34 +124,35 @@ def build_first_analysis_workflow(symbol: str) -> dict[str, object]:
         "workflow_phase": WORKFLOW_PHASE,
         "strategy_recommendation": recommendation,
         "summary": (
-            f"Phase 4A deterministic local-only skeleton for {normalized_symbol}. "
-            "This is not live investment research and uses placeholder scoring only."
+            f"Phase 4A deterministic local-only skeleton for {normalized_symbol} now backed by Phase 4B "
+            "department adapter previews. This is not live investment research and uses placeholder scoring only."
         ),
         "confidence_level": 20,
         "scores": {
-            "market": stage_scores["market"].score,
-            "fundamental": stage_scores["fundamental"].score,
-            "technical": stage_scores["technical"].score,
-            "sentiment": stage_scores["sentiment"].score,
-            "risk": stage_scores["risk"].score,
-            "simulation": None,
-            "score_basis": "deterministic_phase4a_placeholders_not_market_data_derived",
+            "market": numeric_scores["market"],
+            "fundamental": numeric_scores["fundamental"],
+            "technical": numeric_scores["technical"],
+            "sentiment": numeric_scores["sentiment"],
+            "risk": numeric_scores["risk"],
+            "simulation": numeric_scores["simulation"],
+            "score_basis": "deterministic_phase4b_department_adapters_not_market_data_derived",
         },
-        "score_confidence": {name: score.confidence for name, score in stage_scores.items()},
+        "score_confidence": score_confidence,
         "key_reasons": [
-            "The endpoint now delegates to explicit local workflow stages instead of returning a Phase 3 static stub.",
+            "The endpoint delegates to deterministic local department adapters instead of inline placeholder scoring.",
+            "Adapter outputs mirror the locked common agent output shape but are not persisted agent_outputs records.",
             "Placeholder scores are deterministic for the normalized symbol and are not derived from live market data.",
             "The recommendation label is conservative and contract-compatible for downstream validation only.",
         ],
         "main_risks": [
             "Do not treat this skeleton as investment advice or complete equity research.",
-            "No live prices, fundamentals, news, portfolio state, or simulation performance were evaluated.",
+            "No live prices, fundamentals, news, portfolio state, or simulation performance were evaluated or fetched.",
             "Future production-quality analysis requires validated data sources, persistence design, and reviewed agent outputs.",
         ],
         "invalidation_conditions": [
             "Invalidate this output if it is presented as live investment research.",
             "Invalidate this output if any persistence, production Supabase, broker execution, or real-money order placement occurs.",
-            "Replace or extend this skeleton only through reviewed Phase 4 follow-up work with tests and updated docs.",
+            "Replace or extend these adapters only through reviewed Phase 4 follow-up work with tests and updated docs.",
         ],
         "paper_trading_action": "No paper order is created by this Phase 4A skeleton.",
         "real_money_decision": "Harness Engineering human decision required; no real-money trade is executed or placed.",
@@ -217,7 +163,13 @@ def build_first_analysis_workflow(symbol: str) -> dict[str, object]:
             "context_source": context.context_source,
             "live_data_used": context.live_data_used,
         },
-        "stage_rationales": {name: score.rationale for name, score in stage_scores.items()},
+        "stage_rationales": {
+            output["agent_name"]: output["evidence"][0] for output in department_outputs
+        },
+        "department_outputs": department_outputs,
+        "department_output_note": (
+            "Local-only deterministic adapter preview metadata; not persisted agent_outputs records and not live research."
+        ),
         "agent_trace": build_agent_trace(stage_names),
         "generated_at": utc_timestamp(),
         "schema_version": SCHEMA_VERSION,
