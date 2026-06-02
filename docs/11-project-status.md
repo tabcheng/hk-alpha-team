@@ -6,7 +6,7 @@
 
 ## Current Phase
 
-**Phase 3 — Backend Skeleton**
+**Phase 4 — First Analysis Workflow**
 
 ## Tasks 001–010 Status
 
@@ -18,7 +18,7 @@
 | 004 | Create MVP Implementation Plan | Completed | Merged in PR #2 with seven-phase rollout model. |
 | 005 | Create Supabase Migration Draft | Completed | Completed by PR #5 with local/test SQL execution validation and CI migration check workflow. |
 | 006 | Backend Skeleton | Completed | PR #8 merged the analyze-stock stub, validation envelope handling, backend tests, and mobile-first strategy notes, completing M3 readiness for Phase 4. |
-| 007 | First Analysis Workflow | Planned | M3 is completed. Phase 4 remains planned and should begin through a dedicated Phase 4 task opened from current GitHub source-of-truth review. |
+| 007 | First Analysis Workflow | In Progress | Phase 4A deterministic local-only workflow skeleton has started for `POST /api/v1/analyze-stock`; live research, persistence, production Supabase, broker execution, and real-money trading remain out of scope. |
 | 008 | Simulation Desk MVP | Planned | Paper-orders and paper-portfolio workflow. |
 | 009 | Simple UI or Report Output | Planned | Minimal output layer for strategy reports. |
 | 010 | Review and Learning Loop | Planned | Trade reviews, proposals, and audit continuity. |
@@ -31,7 +31,7 @@
 | M1 | Documentation and Contracts | Completed |
 | M2 | Database Preparation | Completed |
 | M3 | Backend Skeleton | Completed |
-| M4 | First Analysis Workflow | Planned |
+| M4 | First Analysis Workflow | In Progress |
 | M5 | Simulation Desk MVP | Planned |
 | M6 | Simple UI or Report Output | Planned |
 | M7 | Review and Learning Loop | Planned |
@@ -49,14 +49,15 @@
 - Governance documentation plus backend test alignment recorded: **Yes**
 - Production deployment added: **No**
 - Production Supabase connection added: **No**
-- Backend/frontend runtime implementation added: **No**
+- Backend Phase 4A deterministic workflow skeleton added: **Yes**
+- Frontend runtime implementation added: **No**
 - Real-money trading automation added: **No**
 - Brokerage API integration added: **No**
 - Secrets committed: **No**
 
 ## Latest Review Update
 
-- PR #8 completed Task 006 / Milestone M3 by adding the contract-first `POST /api/v1/analyze-stock` stub, validation envelope handling, backend tests, and mobile-first strategy documentation.
-- Phase 4 is the next planned implementation phase under `docs/10-mvp-implementation-plan.md` and should begin through a dedicated Phase 4 task opened from current GitHub source-of-truth review.
+- Task 007 / Milestone M4 has started with Phase 4A deterministic local-only workflow skeleton work for `POST /api/v1/analyze-stock`.
+- The analyze-stock endpoint now targets a deterministic skeleton workflow rather than Phase 3 stub-only behavior, while preserving the locked endpoint name and success/error envelope.
 - The Codex PR Factory governance workflow is recorded in `docs/20-codex-pr-factory.md`.
-- Real stock analysis, production Supabase, Railway deployment, live market data, brokerage integration, secrets, and real-money trading automation remain out of scope.
+- Live investment research, production Supabase, Railway deployment, live market data, persistence writes, brokerage integration, secrets, paper order creation, and real-money trading automation remain out of scope.

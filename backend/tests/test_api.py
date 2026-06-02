@@ -56,7 +56,7 @@ def test_project_status_current_phase_line_is_parser_safe() -> None:
     current_phase_idx = lines.index("## Current Phase")
     current_phase_line = lines[current_phase_idx + 2].strip()
 
-    assert current_phase_line == "**Phase 3 — Backend Skeleton**"
+    assert current_phase_line == "**Phase 4 — First Analysis Workflow**"
     assert current_phase_line.startswith("**")
     assert current_phase_line.endswith("**")
     assert current_phase_line.count("**") == 2
@@ -73,50 +73,77 @@ def test_project_status_endpoint_returns_required_envelope() -> None:
 
     status_doc_lines = _project_status_doc_lines()
     assert _extract_table_status(status_doc_lines, "M3") == "Completed"
+    assert _extract_table_status(status_doc_lines, "M4") == "In Progress"
     assert _extract_table_status(status_doc_lines, "005") == "Completed"
     assert _extract_table_status(status_doc_lines, "006") == "Completed"
+    assert _extract_table_status(status_doc_lines, "007") == "In Progress"
 
-    assert payload["data"]["current_phase"] == "Phase 3 — Backend Skeleton"
-    assert payload["data"]["current_milestone"] == "M3 (Completed)"
+    assert payload["data"]["current_phase"] == "Phase 4 — First Analysis Workflow"
+    assert payload["data"]["current_milestone"] == "M4 (In Progress)"
     assert payload["data"]["task_status"]["005"] == "Completed"
     assert payload["data"]["task_status"]["006"] == "Completed"
+    assert payload["data"]["task_status"]["007"] == "In Progress"
 
 
-def test_analyze_stock_stub_returns_contract_first_payload() -> None:
+def test_analyze_stock_returns_phase4a_deterministic_workflow_payload() -> None:
     response = client.post("/api/v1/analyze-stock", json={"symbol": "0700.HK"})
     assert response.status_code == 200
     payload = response.json()
 
     assert_success_envelope(payload)
-    assert payload["warnings"] == [
-        "Stub response only; no live analysis, persistence, production Supabase, or trading execution performed."
-    ]
+    warning_text = " ".join(payload["warnings"])
+    assert "Phase 4A deterministic skeleton" in warning_text
+    assert "No live market data" in warning_text
+    assert "No persistence" in warning_text
+    assert "production Supabase" in warning_text
+    assert "No broker execution" in warning_text
+    assert "real-money" in warning_text
 
     data = payload["data"]
-    assert data["symbol"] == "0700.HK"
-    assert data["analysis_status"] == "stub_only"
-    assert data["workflow_phase"] == "Phase 3 — Backend Skeleton"
-    assert data["strategy_recommendation"] == "STRONG_WATCH"
-    assert data["confidence_level"] == 0
-    assert data["scores"] == {
-        "market": None,
-        "fundamental": None,
-        "technical": None,
-        "sentiment": None,
-        "risk": None,
-        "simulation": None,
+    required_fields = {
+        "symbol",
+        "analysis_status",
+        "workflow_phase",
+        "strategy_recommendation",
+        "summary",
+        "confidence_level",
+        "scores",
+        "key_reasons",
+        "main_risks",
+        "invalidation_conditions",
+        "paper_trading_action",
+        "real_money_decision",
+        "agent_trace",
+        "generated_at",
+        "schema_version",
     }
+    assert required_fields.issubset(data)
+    assert data["symbol"] == "0700.HK"
+    assert data["analysis_status"] == "phase4a_skeleton"
+    assert data["analysis_status"] != "stub_only"
+    assert data["workflow_phase"] == "Phase 4A — Deterministic First Analysis Workflow Skeleton"
+    assert data["strategy_recommendation"] in {
+        "STRONG_WATCH",
+        "WAIT_FOR_PULLBACK",
+        "SMALL_POSITION",
+        "ACCUMULATE",
+        "HOLD",
+        "REDUCE_RISK",
+        "AVOID",
+    }
+    assert data["confidence_level"] == 20
+    assert data["scores"]["score_basis"] == "deterministic_phase4a_placeholders_not_market_data_derived"
     assert data["key_reasons"]
     assert data["main_risks"]
     assert data["invalidation_conditions"]
-    assert data["paper_trading_action"] == "No paper order is created by this stub."
-    assert data["real_money_decision"] == "Human decision required by Harness Engineering; no real-money trade is executed."
-    assert data["agent_trace"] == {
-        "agent_runs_created": False,
-        "agent_outputs_created": False,
-        "persistence_enabled": False,
-        "production_supabase_required": False,
-    }
+    assert data["paper_trading_action"] == "No paper order is created by this Phase 4A skeleton."
+    assert data["real_money_decision"] == "Harness Engineering human decision required; no real-money trade is executed or placed."
+    assert data["agent_trace"]["agent_runs_created"] is False
+    assert data["agent_trace"]["agent_outputs_created"] is False
+    assert data["agent_trace"]["persistence_enabled"] is False
+    assert data["agent_trace"]["production_supabase_required"] is False
+    assert data["agent_trace"]["broker_execution_enabled"] is False
+    assert data["agent_trace"]["real_money_order_placed"] is False
     assert data["schema_version"] == "v0.1"
 
 
