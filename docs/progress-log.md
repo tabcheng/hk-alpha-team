@@ -112,3 +112,10 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Replaced Phase 3 stub-only endpoint internals with explicit local workflow stages for normalization, static stock context, placeholder scoring, advisory summary, reasons, risks, invalidation conditions, human decision framing, and workflow trace metadata.
 - Added backend workflow unit coverage and updated API tests while preserving the locked endpoint name and required success/error response envelopes.
 - Kept Phase 4A implementation-limited: no live market data, external APIs, production Supabase, persistence writes, paper order creation, broker integration, secrets, or real-money trading automation.
+
+
+## 2026-06-02 — PR #10 Contract Documentation Alignment
+
+- Updated `docs/09-api-and-agent-contracts.md` so the canonical `POST /api/v1/analyze-stock` contract reflects current Phase 4A `phase4a_skeleton` runtime behavior.
+- Kept the Phase 3 `stub_only` analyze-stock contract as historical context only, not current canonical behavior.
+- Updated related README, task, status, and decision artifacts while preserving the locked endpoint name, required response envelopes, advisory-only framing, and no-production-integration boundaries.

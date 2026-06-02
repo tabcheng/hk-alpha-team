@@ -153,3 +153,15 @@ We will not upgrade GitHub account/organization immediately. During Phase 2 we w
 - Improves repeatability and auditability for documentation-only, implementation-limited, and governance-sensitive / production-impacting PRs.
 - Reduces stale-instruction risk by requiring next task recommendations to come from current GitHub/repository source-of-truth review.
 - Strengthens review gates before Phase 4 analysis workflow work begins while preserving advisory-only and no-real-money-execution boundaries.
+
+
+## 2026-06-02 — Decision: Align Analyze-Stock Current Contract to Phase 4A Skeleton
+
+**Context:** PR #10 starts Task 007 / Milestone M4 by replacing the Phase 3 static analyze-stock stub internals with a deterministic local-only workflow skeleton. A review found that `docs/09-api-and-agent-contracts.md` still described the current runtime as Phase 3 `stub_only` behavior.
+
+**Decision:** Update the canonical analyze-stock API contract so current behavior is `analysis_status = "phase4a_skeleton"` and `workflow_phase = "Phase 4A — Deterministic First Analysis Workflow Skeleton"`, while preserving the Phase 3 `stub_only` section as historical context only.
+
+**Implications:**
+- Runtime, tests, and canonical docs are aligned for Phase 4A.
+- The endpoint name, success/error envelopes, preferred strategy labels, advisory-only framing, and no-real-money-execution boundaries remain locked.
+- Phase 4A remains deterministic and local-only: no live market data, external APIs, persistence writes, production Supabase, broker integration, secrets, paper order creation, or real-money trading automation.

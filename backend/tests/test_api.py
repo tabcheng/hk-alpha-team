@@ -85,6 +85,30 @@ def test_project_status_endpoint_returns_required_envelope() -> None:
     assert payload["data"]["task_status"]["007"] == "In Progress"
 
 
+def test_analyze_stock_contract_doc_matches_phase4a_runtime() -> None:
+    contract_path = Path(__file__).resolve().parents[2] / "docs" / "09-api-and-agent-contracts.md"
+    contract_text = contract_path.read_text(encoding="utf-8")
+    endpoint_section = contract_text.split("### `POST /api/v1/analyze-stock`", maxsplit=1)[1].split(
+        "### `GET /api/v1/stocks/{symbol}`", maxsplit=1
+    )[0]
+    historical_section = contract_text.split("## Analyze-Stock Stub Contract (Phase 3 History)", maxsplit=1)[
+        1
+    ].split("## Explicit Error Envelope", maxsplit=1)[0]
+
+    assert "Current Phase 4A behavior" in endpoint_section
+    assert 'analysis_status = "phase4a_skeleton"' in endpoint_section
+    assert 'workflow_phase = "Phase 4A — Deterministic First Analysis Workflow Skeleton"' in endpoint_section
+    assert "Current Phase 3 behavior" not in endpoint_section
+    assert 'analysis_status = "stub_only"' not in endpoint_section
+    assert "Required `agent_trace` boundary flags" in endpoint_section
+    assert "real_money_order_placed = false" in endpoint_section
+    assert "network_services_called = false" in endpoint_section
+    assert "secrets_required = false" in endpoint_section
+
+    assert 'analysis_status = "stub_only"' in historical_section
+    assert "historical" in historical_section.lower()
+    assert "must not be used as the current runtime contract after Phase 4A" in historical_section
+
 def test_analyze_stock_returns_phase4a_deterministic_workflow_payload() -> None:
     response = client.post("/api/v1/analyze-stock", json={"symbol": "0700.HK"})
     assert response.status_code == 200

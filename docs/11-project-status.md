@@ -58,6 +58,6 @@
 ## Latest Review Update
 
 - Task 007 / Milestone M4 has started with Phase 4A deterministic local-only workflow skeleton work for `POST /api/v1/analyze-stock`.
-- The analyze-stock endpoint now targets a deterministic skeleton workflow rather than Phase 3 stub-only behavior, while preserving the locked endpoint name and success/error envelope.
+- The analyze-stock endpoint now targets a deterministic skeleton workflow rather than Phase 3 stub-only behavior, while preserving the locked endpoint name and success/error envelope; `docs/09-api-and-agent-contracts.md` is aligned to the current Phase 4A runtime contract.
 - The Codex PR Factory governance workflow is recorded in `docs/20-codex-pr-factory.md`.
 - Live investment research, production Supabase, Railway deployment, live market data, persistence writes, brokerage integration, secrets, paper order creation, and real-money trading automation remain out of scope.
