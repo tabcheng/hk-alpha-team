@@ -195,6 +195,13 @@ def test_analyze_stock_returns_phase4a_deterministic_workflow_payload() -> None:
     assert data["agent_trace"]["network_services_called"] is False
     assert data["agent_trace"]["secrets_required"] is False
     assert data["schema_version"] == "v0.1"
+    for forbidden_handoff_key in {
+        "agent_handoff_preview",
+        "agent_handoff_previews",
+        "handoff_preview",
+        "handoff_previews",
+    }:
+        assert forbidden_handoff_key not in data
 
 
 def test_analyze_stock_requires_symbol() -> None:
