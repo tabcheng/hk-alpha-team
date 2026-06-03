@@ -177,3 +177,15 @@ We will not upgrade GitHub account/organization immediately. During Phase 2 we w
 - Runtime, tests, and canonical docs are aligned for Phase 4B adapter preview metadata.
 - `department_outputs` mirrors the common agent output shape but is not a persisted `agent_outputs` record and does not mean `agent_runs` were created.
 - Phase 4B remains deterministic and local-only: no live market data, external APIs, persistence writes, production Supabase, broker integration, secrets, paper order creation, or real-money trading automation.
+
+## 2026-06-03 — Decision: Keep Phase 4C Handoff Previews Internal-Only for Now
+
+**Context:** Phase 4C added deterministic local-only adapter-to-agent-run handoff mapping that creates preview-only future `agent_runs` / `agent_outputs` shapes for internal planning and validation. Those previews resemble future persistence records, but there is no persistence layer, production Supabase connection, or implemented `GET /api/v1/agent-runs/{agent_run_id}` runtime.
+
+**Decision:** Phase 4C handoff previews remain internal-only for now. Public exposure through `POST /api/v1/analyze-stock` is deferred until Harness Engineering explicitly approves it in a future contract-changing PR.
+
+**Implications:**
+- This decision does not change public API payloads or runtime behavior.
+- A future public exposure PR must update `docs/09-api-and-agent-contracts.md`, runtime response code, and API tests in the same PR.
+- Future exposure must clearly warn that previews are preview-only and non-persistent, not `agent_runs` / `agent_outputs` database rows and not a `GET /api/v1/agent-runs/{agent_run_id}` response.
+- No persistence writes, production Supabase, broker integration, paper orders, secrets, or real-money trading automation are authorized by this decision.
