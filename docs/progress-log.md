@@ -139,3 +139,9 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 
 - Strengthened Phase 4C handoff mapping validation so local-only previews require exactly one adapter output for each of the eight HK Alpha Team departments.
 - Added duplicate, missing, extra, and unknown department collection tests while preserving the internal-only no-persistence boundary and unchanged public analyze-stock response.
+
+## 2026-06-03 — Phase 4D Handoff Preview Exposure Decision Start
+
+- Started Phase 4D inside Task 007 / Milestone M4 as documentation-only governance work for Phase 4C handoff preview exposure.
+- Documented that Phase 4C handoff previews remain internal-only for now and public exposure through `POST /api/v1/analyze-stock` is deferred until Harness Engineering explicitly approves a future contract-changing PR.
+- Preserved the current public analyze-stock payload and avoided changes to `docs/09-api-and-agent-contracts.md`, runtime code, API tests, persistence behavior, production Supabase, endpoint runtime, broker integration, secrets, paper orders, and real-money trading automation.
