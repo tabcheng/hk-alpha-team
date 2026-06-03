@@ -131,6 +131,33 @@ def test_stable_handoff_mapping_fields_are_deterministic_for_same_inputs() -> No
     assert first == second
 
 
+def test_default_timestamps_are_derived_from_adapter_outputs_for_stable_remapping() -> None:
+    outputs = build_department_outputs("0700.HK")
+    first = build_agent_handoff_previews("0700.HK", outputs)
+    second = build_agent_handoff_previews("0700.HK", outputs)
+
+    assert first == second
+    for output, preview in zip(outputs, first):
+        run_preview = preview["future_agent_run_preview"]
+        output_preview = preview["future_agent_output_preview"]
+
+        assert run_preview["started_at_preview"] == output["generated_at"]
+        assert run_preview["finished_at_preview"] == output["generated_at"]
+        assert output_preview["created_at_preview"] == output["generated_at"]
+
+
+def test_output_json_preview_is_a_snapshot_of_adapter_output() -> None:
+    outputs = build_department_outputs("0700.HK")
+    previews = build_agent_handoff_previews("0700.HK", outputs, generated_at=FIXED_TIMESTAMP)
+
+    outputs[0]["evidence"].append("mutated after handoff mapping")
+    outputs[0]["key_findings"].append("mutated finding")
+
+    output_json = previews[0]["future_agent_output_preview"]["output_json_preview"]
+    assert "mutated after handoff mapping" not in output_json["evidence"]
+    assert "mutated finding" not in output_json["key_findings"]
+
+
 def test_malformed_adapter_output_raises_local_contract_violation() -> None:
     malformed = build_department_outputs("0700.HK")[0]
     malformed.pop("agent_name")

@@ -38,7 +38,7 @@ Each handoff preview includes a `future_agent_run_preview` object with these fie
 - `persistence_status`
 - `persistence_allowed`
 
-`run_uuid_preview` is a deterministic preview-only identifier derived locally from the normalized stock symbol and department name. It is not a database primary key and must not be interpreted as a persisted `agent_runs.id` value.
+`run_uuid_preview` is a deterministic preview-only identifier derived locally from the normalized stock symbol and department name. It is not a database primary key and must not be interpreted as a persisted `agent_runs.id` value. When no explicit test timestamp is supplied, run-level preview timestamps are copied from the already-built adapter output timestamps so remapping the same local adapter outputs remains stable and does not introduce a separate runtime clock dependency.
 
 ## Future `agent_outputs` Preview Fields
 

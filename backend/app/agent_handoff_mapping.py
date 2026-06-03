@@ -1,10 +1,10 @@
 from __future__ import annotations
 
+from copy import deepcopy
 from dataclasses import asdict, dataclass
 from typing import Any
 from uuid import NAMESPACE_URL, uuid5
 
-from app.contracts import utc_timestamp
 from app.department_adapters import COMMON_AGENT_OUTPUT_FIELDS, DEPARTMENT_NAMES
 
 NOT_PERSISTED = "NOT_PERSISTED"
@@ -100,13 +100,14 @@ def build_agent_handoff_previews(
 ) -> list[dict[str, Any]]:
     """Map Phase 4B adapter outputs to local-only future agent run/output handoff previews.
 
-    This function creates deterministic preview metadata only. It does not create database
-    records, connect to production Supabase, persist agent runs or agent outputs, create
-    strategy recommendations, write audit events, create paper orders, or call broker APIs.
+    This function creates deterministic preview metadata only. When ``generated_at`` is not
+    provided, preview timestamps are copied from each validated adapter output so repeated
+    mapping of the same inputs remains stable. It does not create database records, connect
+    to production Supabase, persist agent runs or agent outputs, create strategy
+    recommendations, write audit events, create paper orders, or call broker APIs.
     """
 
     normalized_symbol = _normalize_symbol(symbol)
-    preview_timestamp = generated_at or utc_timestamp()
     previews: list[dict[str, Any]] = []
 
     for output in department_outputs:
@@ -118,6 +119,8 @@ def build_agent_handoff_previews(
                 "Department output contract violation: "
                 f"stock_symbol={output_symbol!r} does not match requested symbol={normalized_symbol!r}"
             )
+
+        preview_timestamp = generated_at or str(output["generated_at"])
 
         run_preview = AgentRunPreview(
             run_uuid_preview=_run_uuid_preview(normalized_symbol, department_name),
@@ -142,7 +145,7 @@ def build_agent_handoff_previews(
         output_preview = AgentOutputPreview(
             agent_run_id_preview=None,
             department_name=department_name,
-            output_json_preview=dict(output),
+            output_json_preview=deepcopy(output),
             confidence=int(output["confidence"]),
             created_at_preview=preview_timestamp,
             agent_output_persistence_status=NOT_PERSISTED,
