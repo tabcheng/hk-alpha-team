@@ -134,3 +134,8 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Added internal preview mapping coverage for all eight HK Alpha Team departments, including future run-level intent, future output-level payload, and current non-persistent runtime state.
 - Kept the public analyze-stock response unchanged while preserving the locked endpoint name, required success/error response envelope, `analysis_status = "phase4a_skeleton"`, and `workflow_phase = "Phase 4A — Deterministic First Analysis Workflow Skeleton"`.
 - Kept Phase 4C implementation-limited: no production Supabase connection, no persistence writes, no schema migration, no agent-runs retrieval endpoint runtime, no strategy recommendation persistence, no broker integration, no paper orders, no secrets, and no real-money trading automation.
+
+## 2026-06-03 — Phase 4C Coverage Validation Correction
+
+- Strengthened Phase 4C handoff mapping validation so local-only previews require exactly one adapter output for each of the eight HK Alpha Team departments.
+- Added duplicate, missing, extra, and unknown department collection tests while preserving the internal-only no-persistence boundary and unchanged public analyze-stock response.

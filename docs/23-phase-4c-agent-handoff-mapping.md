@@ -149,6 +149,7 @@ All real-money decisions remain manual Harness Engineering decisions outside the
 Phase 4C validation covers:
 
 - all eight Phase 4B department outputs produce eight handoff previews;
+- aggregate collection validation requires exactly one output for each expected HK Alpha Team department, with no missing, duplicate, extra, or unknown departments;
 - future run-level preview fields are present;
 - future output-level preview fields are present;
 - `output_json_preview` preserves the locked common agent output shape;

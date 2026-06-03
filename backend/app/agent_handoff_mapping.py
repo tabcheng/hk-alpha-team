@@ -92,6 +92,40 @@ def validate_department_output_shape(output: dict[str, Any]) -> None:
         raise ValueError("Department output contract violation: confidence must be an integer")
 
 
+def validate_department_output_collection(department_outputs: list[dict[str, Any]]) -> None:
+    """Validate exact all-eight department coverage before handoff preview mapping."""
+
+    department_names: list[str] = []
+    for output in department_outputs:
+        validate_department_output_shape(output)
+        department_names.append(str(output["agent_name"]))
+
+    expected_departments = set(DEPARTMENT_NAMES)
+    seen_departments = set(department_names)
+    missing_departments = [department for department in DEPARTMENT_NAMES if department not in seen_departments]
+    duplicate_departments = [
+        department
+        for department in DEPARTMENT_NAMES
+        if department_names.count(department) > 1
+    ]
+
+    if (
+        len(department_outputs) != len(DEPARTMENT_NAMES)
+        or missing_departments
+        or duplicate_departments
+        or seen_departments != expected_departments
+    ):
+        unexpected_departments = sorted(seen_departments - expected_departments)
+        raise ValueError(
+            "Department output collection contract violation: "
+            f"expected exactly one output for each of {len(DEPARTMENT_NAMES)} departments; "
+            f"received={len(department_outputs)}; "
+            f"missing departments={missing_departments}; "
+            f"duplicate departments={duplicate_departments}; "
+            f"unexpected departments={unexpected_departments}"
+        )
+
+
 def build_agent_handoff_previews(
     symbol: str,
     department_outputs: list[dict[str, Any]],
@@ -107,11 +141,12 @@ def build_agent_handoff_previews(
     recommendations, write audit events, create paper orders, or call broker APIs.
     """
 
+    validate_department_output_collection(department_outputs)
+
     normalized_symbol = _normalize_symbol(symbol)
     previews: list[dict[str, Any]] = []
 
     for output in department_outputs:
-        validate_department_output_shape(output)
         department_name = str(output["agent_name"])
         output_symbol = _normalize_symbol(str(output["stock_symbol"]))
         if output_symbol != normalized_symbol:

@@ -6,6 +6,7 @@ from app.agent_handoff_mapping import (
     PERSISTENCE_NOT_AUTHORIZED,
     PREVIEW_ONLY,
     build_agent_handoff_previews,
+    validate_department_output_collection,
     validate_department_output_shape,
 )
 from app.department_adapters import COMMON_AGENT_OUTPUT_FIELDS, DEPARTMENT_NAMES, build_department_outputs
@@ -45,6 +46,58 @@ def test_all_eight_department_outputs_produce_eight_handoff_previews() -> None:
 
     assert len(previews) == 8
     assert [preview["future_agent_run_preview"]["department_name"] for preview in previews] == DEPARTMENT_NAMES
+
+
+def test_valid_all_eight_department_collection_passes_aggregate_validation() -> None:
+    outputs = build_department_outputs("0700.HK")
+
+    validate_department_output_collection(outputs)
+
+
+def test_duplicate_department_collection_raises_local_contract_violation() -> None:
+    outputs = build_department_outputs("0700.HK")
+    outputs[-1] = dict(outputs[0])
+
+    with pytest.raises(ValueError, match="duplicate departments") as exc_info:
+        build_agent_handoff_previews("0700.HK", outputs, generated_at=FIXED_TIMESTAMP)
+
+    message = str(exc_info.value)
+    assert "Department output collection contract violation" in message
+    assert outputs[0]["agent_name"] in message
+    assert "missing departments" in message
+
+
+def test_missing_department_collection_raises_local_contract_violation() -> None:
+    outputs = build_department_outputs("0700.HK")[:-1]
+
+    with pytest.raises(ValueError, match="missing departments") as exc_info:
+        build_agent_handoff_previews("0700.HK", outputs, generated_at=FIXED_TIMESTAMP)
+
+    message = str(exc_info.value)
+    assert "received=7" in message
+    assert DEPARTMENT_NAMES[-1] in message
+
+
+def test_extra_duplicated_department_collection_raises_local_contract_violation() -> None:
+    outputs = build_department_outputs("0700.HK")
+    outputs.append(dict(outputs[0]))
+
+    with pytest.raises(ValueError, match="duplicate departments") as exc_info:
+        build_agent_handoff_previews("0700.HK", outputs, generated_at=FIXED_TIMESTAMP)
+
+    message = str(exc_info.value)
+    assert "received=9" in message
+    assert outputs[0]["agent_name"] in message
+
+
+def test_unknown_department_collection_raises_local_contract_violation() -> None:
+    outputs = build_department_outputs("0700.HK")
+    outputs[0]["agent_name"] = "Unknown Department Agent"
+
+    with pytest.raises(ValueError, match="unknown agent_name") as exc_info:
+        build_agent_handoff_previews("0700.HK", outputs, generated_at=FIXED_TIMESTAMP)
+
+    assert "Department output contract violation" in str(exc_info.value)
 
 
 def test_every_preview_contains_future_agent_run_preview_fields() -> None:
