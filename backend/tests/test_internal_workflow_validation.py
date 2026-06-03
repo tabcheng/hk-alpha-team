@@ -85,6 +85,10 @@ def test_explicit_warning_disclosure_regression_fails() -> None:
     )
 
 
+def test_explicit_empty_warning_override_fails() -> None:
+    _expect_validation_error(_payload(), "warning disclosures missing", warnings=[])
+
+
 def test_missing_department_outputs_fails() -> None:
     payload = _payload()
     payload.pop("department_outputs")

@@ -139,7 +139,8 @@ def _validate_public_payload_non_exposure(payload: dict[str, object]) -> None:
 
 
 def _validate_warnings_disclose_boundaries(warnings: Sequence[str] | None = None) -> None:
-    warning_text = " ".join(warnings or PHASE_4A_WARNINGS).lower()
+    warning_source = PHASE_4A_WARNINGS if warnings is None else warnings
+    warning_text = " ".join(warning_source).lower()
     required_disclosures = {
         "deterministic Phase 4A skeleton": ["phase 4a deterministic skeleton", "deterministic skeleton"],
         "Phase 4B department adapter previews": ["phase 4b department adapter previews"],
