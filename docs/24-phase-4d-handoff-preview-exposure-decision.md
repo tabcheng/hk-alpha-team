@@ -14,6 +14,15 @@ Public exposure through `POST /api/v1/analyze-stock` is deferred until Harness E
 
 This Phase 4D decision does not change public API payloads, runtime behavior, persistence behavior, endpoint availability, or strategy recommendation persistence.
 
+
+## Phase 4E Follow-Up Note
+
+The selected next path after Phase 4D is Phase 4E internal workflow validation expansion.
+
+Phase 4E keeps handoff previews internal-only while validating, in local tests and helper code, that the Phase 4A analyze-stock workflow payload, Phase 4B department adapter outputs, and Phase 4C handoff previews remain mutually consistent.
+
+This follow-up does not expose handoff previews publicly, does not change `POST /api/v1/analyze-stock` response semantics, and does not require a `docs/09-api-and-agent-contracts.md` update because the public contract remains unchanged.
+
 ## Why Public Exposure Is Deferred
 
 Public exposure is deferred because:
@@ -160,14 +169,15 @@ Reviewers should also confirm:
 
 ## Phase 4E Follow-Up Path
 
-Phase 4E should proceed as a separately reviewed task from current repository source-of-truth.
+Phase 4E has selected the path of keeping handoff previews internal while expanding local workflow validation.
 
-Possible Phase 4E paths include:
+The Phase 4E validation path may check Phase 4A payloads, Phase 4B department adapter outputs, and Phase 4C handoff previews in local helper code and tests only. It must continue to preserve the Phase 4D internal-only exposure decision.
 
-- keeping handoff previews internal while expanding local workflow validation;
+Future paths after Phase 4E may include:
+
 - drafting a future public metadata contract for review without implementing it;
 - preparing the reviewed design for `GET /api/v1/agent-runs/{agent_run_id}` before runtime work is authorized;
 - preparing persistence-readiness documentation for future `agent_runs` / `agent_outputs` writes without connecting production Supabase;
 - continuing the first analysis workflow in local-only, advisory-only mode.
 
-Any Phase 4E work that changes public API semantics, persistence behavior, production infrastructure, or endpoint runtime must be explicitly approved and must update contracts, runtime code, tests, status, and logs in the same PR.
+Any future work that changes public API semantics, persistence behavior, production infrastructure, or endpoint runtime must be explicitly approved and must update contracts, runtime code, tests, status, and logs in the same PR.
