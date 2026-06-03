@@ -18,7 +18,7 @@
 | 004 | Create MVP Implementation Plan | Completed | Merged in PR #2 with seven-phase rollout model. |
 | 005 | Create Supabase Migration Draft | Completed | Completed by PR #5 with local/test SQL execution validation and CI migration check workflow. |
 | 006 | Backend Skeleton | Completed | PR #8 merged the analyze-stock stub, validation envelope handling, backend tests, and mobile-first strategy notes, completing M3 readiness for Phase 4. |
-| 007 | First Analysis Workflow | In Progress | Phase 4A deterministic local-only workflow skeleton is in progress; Phase 4B deterministic department adapters have started for `POST /api/v1/analyze-stock`; live research, persistence, production Supabase, broker execution, and real-money trading remain out of scope. |
+| 007 | First Analysis Workflow | In Progress | Phase 4A deterministic local-only workflow skeleton is in progress; Phase 4B deterministic department adapters and Phase 4C local-only agent handoff mapping have started for `POST /api/v1/analyze-stock` internals; live research, persistence, production Supabase, broker execution, and real-money trading remain out of scope. |
 | 008 | Simulation Desk MVP | Planned | Paper-orders and paper-portfolio workflow. |
 | 009 | Simple UI or Report Output | Planned | Minimal output layer for strategy reports. |
 | 010 | Review and Learning Loop | Planned | Trade reviews, proposals, and audit continuity. |
@@ -51,6 +51,7 @@
 - Production Supabase connection added: **No**
 - Backend Phase 4A deterministic workflow skeleton added: **Yes**
 - Phase 4B deterministic department adapters started: **Yes**
+- Phase 4C local-only agent handoff mapping started: **Yes**
 - Frontend runtime implementation added: **No**
 - Real-money trading automation added: **No**
 - Brokerage API integration added: **No**
@@ -59,6 +60,6 @@
 ## Latest Review Update
 
 - Task 007 / Milestone M4 remains in progress with Phase 4A deterministic local-only workflow skeleton work for `POST /api/v1/analyze-stock`.
-- Phase 4B deterministic department adapters have started inside the same local-only workflow and expose non-persistent adapter preview metadata while preserving the locked endpoint name, success/error envelope, `analysis_status`, and `workflow_phase`; `docs/09-api-and-agent-contracts.md` is aligned to the current runtime contract.
+- Phase 4B deterministic department adapters and Phase 4C local-only agent handoff mapping have started inside the same local-only workflow path while preserving the locked endpoint name, success/error envelope, `analysis_status`, and `workflow_phase`; `docs/09-api-and-agent-contracts.md` remains aligned to current public runtime behavior because no public payload change is introduced.
 - The Codex PR Factory governance workflow is recorded in `docs/20-codex-pr-factory.md`.
 - Live investment research, production Supabase, Railway deployment, live market data, persistence writes, brokerage integration, secrets, paper order creation, and real-money trading automation remain out of scope.

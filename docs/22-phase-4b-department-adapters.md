@@ -134,11 +134,16 @@ git diff --check
 
 ## Phase 4C Follow-Up Path
 
-Phase 4C should remain small and reviewed. Candidate follow-ups include:
+Phase 4C introduces a small local-only handoff mapping from Phase 4B adapter outputs to future `agent_runs` / `agent_outputs` preview shapes. The handoff mapping is internal review metadata for future persistence planning; it does not change Phase 4B adapter boundaries and does not make adapter previews real persisted records.
 
-- stronger adapter-to-agent-run handoff documentation without persistence writes;
-- richer deterministic test fixtures for future live-data provider evaluation;
-- explicit contract tests for future `agent_runs` / `agent_outputs` retrieval once those endpoints are implementation-authorized;
-- strategy recommendation creation work only after Harness Engineering authorizes that endpoint and persistence scope.
+Phase 4C keeps the same no-production boundaries:
 
-Phase 4C must not add live market data, production Supabase, persistence writes, broker integration, secrets, paper orders, or real-money trading unless Harness Engineering explicitly authorizes a governance-sensitive task and updates relevant source-of-truth docs in the same PR.
+- no live market data or external data providers;
+- no production Supabase connection;
+- no persistence writes;
+- no `agent_runs`, `agent_outputs`, `strategy_recommendations`, paper-order, or audit-event records;
+- no `GET /api/v1/agent-runs/{agent_run_id}` runtime;
+- no `POST /api/v1/strategy-recommendations` runtime;
+- no broker integration, secrets, paper orders, or real-money trading.
+
+Later Phase 4D work may decide whether to expose handoff previews publicly or implement persistence-backed agent-run retrieval, but only through a separately reviewed and explicitly authorized task with aligned docs, tests, and governance updates.
