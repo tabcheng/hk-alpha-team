@@ -158,16 +158,16 @@ Reviewers should also confirm:
 - `docs/11-project-status.md` contains no stale “until this PR is merged” wording;
 - Task 007 and Milestone M4 remain In Progress.
 
-## Phase 4E Follow-Up Path
+## Phase 4E Follow-On Path
 
-Phase 4E should proceed as a separately reviewed task from current repository source-of-truth.
+Phase 4E selects the internal-validation path from current repository source-of-truth while preserving this Phase 4D exposure decision.
 
-Possible Phase 4E paths include:
+The next implementation-limited step is to keep Phase 4C handoff previews internal while expanding local workflow validation across:
 
-- keeping handoff previews internal while expanding local workflow validation;
-- drafting a future public metadata contract for review without implementing it;
-- preparing the reviewed design for `GET /api/v1/agent-runs/{agent_run_id}` before runtime work is authorized;
-- preparing persistence-readiness documentation for future `agent_runs` / `agent_outputs` writes without connecting production Supabase;
-- continuing the first analysis workflow in local-only, advisory-only mode.
+- the existing Phase 4A analyze-stock workflow payload;
+- Phase 4B department adapter outputs; and
+- Phase 4C handoff preview records built in memory for validation only.
 
-Any Phase 4E work that changes public API semantics, persistence behavior, production infrastructure, or endpoint runtime must be explicitly approved and must update contracts, runtime code, tests, status, and logs in the same PR.
+Phase 4E must not expose handoff previews through `POST /api/v1/analyze-stock`, must not change public API semantics, must not implement `GET /api/v1/agent-runs/{agent_run_id}` runtime, and must not add persistence, production Supabase, broker integration, secrets, paper orders, or real-money trading automation.
+
+Any future work after Phase 4E that changes public API semantics, persistence behavior, production infrastructure, or endpoint runtime must be explicitly approved and must update contracts, runtime code, tests, status, and logs in the same PR.
