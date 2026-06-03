@@ -32,6 +32,14 @@ The local skeleton includes these internal stages:
 
 These stages are implementation scaffolding only. They do not yet represent complete Investment Strategy Office research.
 
+## Phase 4B Department Adapter Follow-Up
+
+Phase 4B implements the planned follow-up by adding deterministic local department adapters behind the same analyze-stock endpoint and required response envelope. The adapter layer produces common-shape preview outputs for all eight HK Alpha Team departments, and the workflow consumes those outputs for the existing score buckets instead of computing all placeholder stage scores inline.
+
+Phase 4B intentionally keeps `analysis_status = "phase4a_skeleton"` and `workflow_phase = "Phase 4A — Deterministic First Analysis Workflow Skeleton"` so the current public runtime semantics remain stable while the internal scoring scaffold deepens.
+
+The adapter outputs are local-only review metadata. They are not persisted `agent_outputs` records, do not mean `agent_runs` were created, and do not imply live research, live market data, production Supabase, broker execution, paper orders, or real-money trading. See `docs/22-phase-4b-department-adapters.md` for the adapter contract and validation notes.
+
 ## Deterministic and Local-Only Design
 
 Phase 4A must be deterministic for the same normalized symbol across stable workflow fields and scores.
@@ -133,13 +141,12 @@ PYTHONPATH=backend pytest backend/tests -q
 git diff --check
 ```
 
-## Phase 4B Follow-Up Path
+## Phase 4C Follow-Up Path
 
-Likely Phase 4B work should remain small and reviewed. Candidate follow-ups include:
+Likely Phase 4C work should remain small and reviewed. Candidate follow-ups include:
 
-- richer deterministic department scoring adapters that still avoid live data;
-- agent-output adapter shapes that mirror the locked common agent contract without persistence;
-- explicit handoff mapping from workflow stages to future `agent_runs` / `agent_outputs` records;
+- explicit handoff mapping from workflow stages to future `agent_runs` / `agent_outputs` records without creating records yet;
+- richer deterministic fixtures that prepare for future provider evaluation while still avoiding live data;
 - additional contract tests for future strategy recommendation creation once that endpoint is explicitly authorized.
 
-Phase 4B must not add live market data, production Supabase, broker integration, secrets, or real-money trading unless Harness Engineering explicitly authorizes a future governance-sensitive task and updates relevant source-of-truth docs.
+Phase 4C must not add live market data, production Supabase, broker integration, secrets, paper orders, or real-money trading unless Harness Engineering explicitly authorizes a future governance-sensitive task and updates relevant source-of-truth docs.

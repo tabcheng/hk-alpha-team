@@ -165,3 +165,15 @@ We will not upgrade GitHub account/organization immediately. During Phase 2 we w
 - Runtime, tests, and canonical docs are aligned for Phase 4A.
 - The endpoint name, success/error envelopes, preferred strategy labels, advisory-only framing, and no-real-money-execution boundaries remain locked.
 - Phase 4A remains deterministic and local-only: no live market data, external APIs, persistence writes, production Supabase, broker integration, secrets, paper order creation, or real-money trading automation.
+
+
+## 2026-06-02 — Decision: Expose Phase 4B Department Adapter Preview Metadata Without Runtime Semantic Rename
+
+**Context:** Phase 4B starts Task 007 follow-up work by adding deterministic department scoring adapters that mirror the locked common agent output shape. The adapter outputs are useful for reviewability, but the workflow must remain local-only, advisory-only, and non-persistent.
+
+**Decision:** Expose `department_outputs` and `department_output_note` as local-only analyze-stock response metadata while preserving `analysis_status = "phase4a_skeleton"`, `workflow_phase = "Phase 4A — Deterministic First Analysis Workflow Skeleton"`, locked endpoint names, and the required response envelope.
+
+**Implications:**
+- Runtime, tests, and canonical docs are aligned for Phase 4B adapter preview metadata.
+- `department_outputs` mirrors the common agent output shape but is not a persisted `agent_outputs` record and does not mean `agent_runs` were created.
+- Phase 4B remains deterministic and local-only: no live market data, external APIs, persistence writes, production Supabase, broker integration, secrets, paper order creation, or real-money trading automation.

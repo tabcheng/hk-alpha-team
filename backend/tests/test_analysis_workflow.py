@@ -7,6 +7,7 @@ from app.analysis_workflow import (
     build_first_analysis_workflow,
     normalize_symbol,
 )
+from app.department_adapters import COMMON_AGENT_OUTPUT_FIELDS, DEPARTMENT_NAMES
 
 REQUIRED_DATA_FIELDS = {
     "symbol",
@@ -36,12 +37,18 @@ def test_valid_hk_symbol_produces_phase4a_workflow_payload() -> None:
     assert payload["workflow_phase"] == WORKFLOW_PHASE
     assert payload["analysis_status"] != "stub_only"
     assert "Phase 4A deterministic local-only skeleton" in payload["summary"]
+    assert "Phase 4B department adapter previews" in payload["summary"]
     assert "not live investment research" in payload["summary"]
     assert payload["schema_version"] == "v0.1"
 
 
 def _stable_workflow_subset(payload: dict) -> dict:
-    return {key: value for key, value in payload.items() if key != "generated_at"}
+    stable = {key: value for key, value in payload.items() if key != "generated_at"}
+    stable["department_outputs"] = [
+        {key: value for key, value in output.items() if key != "generated_at"}
+        for output in payload["department_outputs"]
+    ]
+    return stable
 
 
 def test_same_symbol_returns_stable_deterministic_scores_and_fields() -> None:
@@ -67,17 +74,17 @@ def test_scores_are_placeholder_numeric_values_and_not_live_data_derived() -> No
     payload = build_first_analysis_workflow("0005.HK")
     scores = payload["scores"]
 
-    for score_name in ["market", "fundamental", "technical", "sentiment", "risk"]:
+    for score_name in ["market", "fundamental", "technical", "sentiment", "risk", "simulation"]:
         assert isinstance(scores[score_name], int)
         assert 0 <= scores[score_name] <= 100
-    assert scores["simulation"] is None
-    assert scores["score_basis"] == "deterministic_phase4a_placeholders_not_market_data_derived"
+    assert scores["score_basis"] == "deterministic_phase4b_department_adapters_not_market_data_derived"
     assert payload["score_confidence"] == {
         "market": 20,
         "fundamental": 20,
         "technical": 20,
         "sentiment": 20,
         "risk": 25,
+        "simulation": 15,
     }
     assert payload["stock_context"]["live_data_used"] is False
 
@@ -117,8 +124,25 @@ def test_phase4a_warnings_are_explicit() -> None:
     warning_text = " ".join(PHASE_4A_WARNINGS)
 
     assert "deterministic skeleton" in warning_text
+    assert "Phase 4B department adapter previews" in warning_text
     assert "No live market data" in warning_text
     assert "No persistence" in warning_text
     assert "production Supabase" in warning_text
     assert "No broker execution" in warning_text
     assert "real-money" in warning_text
+
+
+def test_workflow_consumes_department_adapter_outputs() -> None:
+    payload = build_first_analysis_workflow("0700.HK")
+    department_outputs = payload["department_outputs"]
+
+    assert [output["agent_name"] for output in department_outputs] == DEPARTMENT_NAMES
+    assert all(set(output) == COMMON_AGENT_OUTPUT_FIELDS for output in department_outputs)
+    assert payload["scores"]["market"] == department_outputs[0]["score"]
+    assert payload["scores"]["fundamental"] == department_outputs[1]["score"]
+    assert payload["scores"]["sentiment"] == department_outputs[2]["score"]
+    assert payload["scores"]["technical"] == department_outputs[3]["score"]
+    assert payload["scores"]["risk"] == department_outputs[4]["score"]
+    assert payload["scores"]["simulation"] == department_outputs[6]["score"]
+    assert "not persisted agent_outputs records" in payload["department_output_note"]
+    assert payload["agent_trace"]["agent_outputs_created"] is False
