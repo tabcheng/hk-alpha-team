@@ -129,13 +129,15 @@ The `sql-migration-check` workflow validates that the draft migration executes s
 
 PR #8 does **not** add production Supabase setup, Railway deployment, live market data integration, brokerage execution integration, secrets, or real-money trading automation.
 
-## Phase 4A / 4B First Analysis Workflow Skeleton
+## Phase 4A–4D First Analysis Workflow Skeleton
 
 - `POST /api/v1/analyze-stock` now delegates to a deterministic local-only Phase 4A workflow skeleton.
 - Phase 4B adds deterministic department scoring adapters that mirror the locked common agent output shape while preserving the current `analysis_status = "phase4a_skeleton"` and `workflow_phase = "Phase 4A — Deterministic First Analysis Workflow Skeleton"` semantics.
+- Phase 4C adds deterministic local-only adapter-to-agent-run handoff mapping for internal planning, and Phase 4D documents that those handoff previews remain internal-only for now.
 - The workflow preserves advisory-only human-decision framing, required success/error envelopes, preferred strategy labels, and explicit warnings.
 - The workflow performs no live market data access, external API calls, persistence writes, production Supabase connection, broker execution, paper order creation, secrets usage, or real-money trading automation.
-- `docs/21-first-analysis-workflow-skeleton.md` documents the Phase 4A workflow stages, output fields, boundaries, and validation path; `docs/22-phase-4b-department-adapters.md` documents the Phase 4B adapter layer.
+- Phase 4D does not expose `agent_handoff_preview` or an equivalent public analyze-stock response field and does not implement `GET /api/v1/agent-runs/{agent_run_id}`.
+- `docs/21-first-analysis-workflow-skeleton.md` documents the Phase 4A workflow stages, output fields, boundaries, and validation path; `docs/22-phase-4b-department-adapters.md` documents the Phase 4B adapter layer; `docs/23-phase-4c-agent-handoff-mapping.md` documents the Phase 4C internal handoff mapping; `docs/24-phase-4d-handoff-preview-exposure-decision.md` documents the Phase 4D internal-only exposure decision.
 
 ## Documentation Map
 
@@ -164,6 +166,8 @@ PR #8 does **not** add production Supabase setup, Railway deployment, live marke
 - `docs/20-codex-pr-factory.md` — Codex PR Factory governance workflow for task-to-PR execution.
 - `docs/21-first-analysis-workflow-skeleton.md` — Phase 4A deterministic local-only first-analysis workflow skeleton runbook.
 - `docs/22-phase-4b-department-adapters.md` — Phase 4B deterministic local-only department adapter runbook.
+- `docs/23-phase-4c-agent-handoff-mapping.md` — Phase 4C deterministic local-only adapter-to-agent-run handoff mapping runbook.
+- `docs/24-phase-4d-handoff-preview-exposure-decision.md` — Phase 4D handoff preview exposure decision and public-exposure gate checklist.
 - `codex-tasks/005-create-supabase-migration-draft.md` — Task 005 phase-entry card for migration draft planning.
 - `docs/decision-log.md` — key project decisions.
 - `docs/progress-log.md` — milestone progress tracking.

@@ -169,13 +169,22 @@ PYTHONPATH=backend pytest backend/tests -q
 git diff --check
 ```
 
-## Phase 4D Follow-Up Path
+## Phase 4D Exposure Decision
 
-Phase 4D can build on this handoff layer only through a separately reviewed and explicitly authorized task.
+Phase 4D is documented in `docs/24-phase-4d-handoff-preview-exposure-decision.md`.
+
+That decision keeps Phase 4C handoff previews internal-only for now and defers public exposure through `POST /api/v1/analyze-stock` until Harness Engineering explicitly approves a future contract-changing PR.
+
+The Phase 4D decision preserves this Phase 4C mapping as deterministic local-only planning metadata and does not authorize public response fields, persistence writes, production Supabase, `GET /api/v1/agent-runs/{agent_run_id}` runtime, strategy recommendation persistence, broker integration, or real-money trading automation.
+
+## Later Follow-Up Path
+
+Future work can build on this handoff layer only through a separately reviewed and explicitly authorized task.
 
 Potential future work includes:
 
-- deciding whether handoff previews should remain internal or become public review metadata;
+- keeping handoff previews internal while expanding local workflow validation;
+- designing a future public metadata contract only after explicit Harness Engineering approval;
 - designing the reviewed `GET /api/v1/agent-runs/{agent_run_id}` runtime when endpoint implementation is authorized;
 - adding persistence-backed `agent_runs` / `agent_outputs` creation only after production Supabase and write boundaries are approved;
 - adding strategy recommendation persistence only after `POST /api/v1/strategy-recommendations` is explicitly authorized;
