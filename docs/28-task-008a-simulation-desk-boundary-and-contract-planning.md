@@ -104,7 +104,7 @@ The first minimum M5 implementation-adjacent slice should be **local-only contra
 
 Recommended minimum contents for the first implementation-adjacent PR:
 
-- local-only fixture examples for paper portfolio, paper order intent, simulated position, trade review, and learning proposal shapes;
+- local-only fixture examples for all seven required Simulation Desk record shapes: paper portfolio, paper order intent, paper position, portfolio snapshot, trade review, learning proposal, and audit event;
 - validation-only schemas or typed fixtures that reference the canonical table and endpoint names without database writes;
 - tests proving no fixture implies production Supabase, broker execution, real-money trading, or paper-order persistence;
 - explicit warnings or metadata stating that fixtures are non-persistent and local-only;
@@ -137,7 +137,7 @@ Task 008A does not include:
 
 ## Future PR Sequence Proposal
 
-- **Task 008B: local-only simulation contract fixtures / schemas, no persistence.** Define deterministic fixture and validation shapes for Simulation Desk records while preserving locked contracts and no-runtime boundaries.
+- **Task 008B: Implement Task 008B — Local-only Simulation Contract Fixtures, Schemas, and Validation Matrix.** Define deterministic fixtures, validation helpers, and matrix/report coverage for all seven required Simulation Desk record shapes while preserving locked contracts, pure local-only helpers, and no-runtime/no-persistence boundaries.
 - **Task 008C: local-only paper order validation service or stub, no database writes unless separately approved.** Add validation logic only if Harness Engineering approves the implementation-limited scope and confirms that no persistence or endpoint behavior is introduced without same-PR authorization.
 - **Task 008D: persistence planning or migration alignment, only if Harness Engineering approves.** Prepare persistence/migration alignment separately, with approval gates for schema migration, Supabase, audit-event handling, and retention policy.
 

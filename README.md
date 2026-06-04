@@ -139,6 +139,14 @@ PR #8 does **not** add production Supabase setup, Railway deployment, live marke
 - Phase 4D does not expose `agent_handoff_preview` or an equivalent public analyze-stock response field and does not implement `GET /api/v1/agent-runs/{agent_run_id}`.
 - `docs/21-first-analysis-workflow-skeleton.md` documents the Phase 4A workflow stages, output fields, boundaries, and validation path; `docs/22-phase-4b-department-adapters.md` documents the Phase 4B adapter layer; `docs/23-phase-4c-agent-handoff-mapping.md` documents the Phase 4C internal handoff mapping; `docs/24-phase-4d-handoff-preview-exposure-decision.md` documents the Phase 4D internal-only exposure decision.
 
+## Phase 5 Task 008B Local Simulation Contract Fixtures
+
+- `backend/app/simulation_contract.py` — pure local-only Simulation Desk contract fixtures, validators, and validation matrix helpers for the seven canonical record shapes.
+- `backend/tests/test_simulation_contract.py` — positive and negative tests for required record types, canonical schema references, locked endpoint references, boundary flags, and non-mutating validation.
+- `docs/29-task-008b-local-simulation-contract-fixtures.md` — Task 008B fixture coverage, validation matrix, non-goals, and Task 008C entry criteria.
+
+Task 008B does **not** add IO, HTTP, database access, Supabase clients, endpoint handlers, persistence, paper order creation, broker integration, live market data, or real-money trading automation.
+
 ## Documentation Map
 
 - `PROJECT_BRIEF.md` — concise project charter.

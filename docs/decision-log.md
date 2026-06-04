@@ -212,3 +212,16 @@ We will not upgrade GitHub account/organization immediately. During Phase 2 we w
 - Task 008 / Milestone M5 are In Progress for documentation-only planning, not implementation.
 - This decision does not authorize runtime behavior, persistence writes, production Supabase, broker integration, paper-order creation, paper-portfolio runtime, strategy recommendation persistence, audit event creation, live market data, secrets, or real-money trading automation.
 - Future Simulation Desk implementation requires explicit Harness Engineering review at the public API contract, persistence, production Supabase, broker / real-money, and status/log gates.
+
+## 2026-06-04 — Decision: Implement Task 008B as Pure Local Simulation Contract Fixtures and Validation Matrix
+
+**Context:** Task 008A defined the Simulation Desk MVP boundary and identified local-only contract fixtures as the safest first implementation-limited M5 slice before any runtime, persistence, production Supabase, broker, paper-order creation, or real-money trading work.
+
+**Decision:** Implement Task 008B as a pure local-only Simulation Desk contract fixture and validation module with deterministic fixtures for the seven required record shapes, validation helpers, matrix/report coverage, tests, and documentation.
+
+**Implications:**
+- Task 008 / Milestone M5 remain In Progress with an implementation-limited local validation slice.
+- Canonical schema table names and locked endpoint names are referenced without renaming or runtime implementation.
+- Losing outcomes remain visible and learning proposals remain reviewable rather than auto-applied.
+- No IO, HTTP, database access, endpoint handlers, persistence, production Supabase, paper order creation, broker integration, live market data, secrets, or real-money trading automation are authorized by this decision.
+- Any Task 008C expansion beyond pure local validation requires explicit Harness Engineering review and same-PR updates to affected contracts, runtime, tests, status, and logs.
