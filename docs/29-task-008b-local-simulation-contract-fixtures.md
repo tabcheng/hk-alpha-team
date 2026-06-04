@@ -91,7 +91,7 @@ Task 008B test coverage includes positive and negative cases for the required re
 - fixture report contains all expected record types and boundary flags;
 - missing required field fails;
 - unknown record type fails;
-- invalid quantity fails;
+- invalid quantity fails, with `paper_order_intent.quantity` allowing zero as a non-negative paper-order intent value and `paper_position.quantity` remaining positive-only;
 - invalid status fails;
 - hidden losing outcome fails;
 - auto-applied learning proposal fails;

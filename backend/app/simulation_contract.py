@@ -418,7 +418,7 @@ def validate_simulation_record(record: SimulationRecord) -> dict[str, Any]:
             record.get("status") in VALID_STATUSES_BY_RECORD_TYPE["paper_order_intent"],
             "paper_order_intent status is invalid",
         )
-        _require_positive_number(record.get("quantity"), "paper_order_intent quantity")
+        _require_non_negative_number(record.get("quantity"), "paper_order_intent quantity")
         if record.get("limit_price") is not None:
             _require_non_negative_number(
                 record.get("limit_price"),

@@ -95,9 +95,26 @@ def test_task_008b_unknown_record_type_fails() -> None:
         validate_simulation_record(record)
 
 
-@pytest.mark.parametrize("record_type", ["paper_order_intent", "paper_position"])
-def test_task_008b_invalid_quantity_fails(record_type: str) -> None:
-    record = _fixture_by_type(record_type)
+def test_task_008b_paper_order_intent_zero_quantity_passes() -> None:
+    record = _fixture_by_type("paper_order_intent")
+    record["quantity"] = 0
+
+    report = validate_simulation_record(record)
+
+    assert report["validation_status"] == "passed"
+    assert report["record_type"] == "paper_order_intent"
+
+
+def test_task_008b_paper_order_intent_negative_quantity_fails() -> None:
+    record = _fixture_by_type("paper_order_intent")
+    record["quantity"] = -1
+
+    with pytest.raises(ValueError, match="quantity.*non-negative"):
+        validate_simulation_record(record)
+
+
+def test_task_008b_paper_position_zero_quantity_fails() -> None:
+    record = _fixture_by_type("paper_position")
     record["quantity"] = 0
 
     with pytest.raises(ValueError, match="quantity.*positive"):
