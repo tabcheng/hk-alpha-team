@@ -163,15 +163,12 @@ The internal validation module exposes local helper functions for tests and futu
 
 These helpers are not mounted as FastAPI routes and are not included in public API responses.
 
-## Phase 4F Follow-Up Path
+## Phase 4F Follow-Up Note
 
-Potential Phase 4F work may continue strengthening local workflow quality while preserving contract boundaries.
+Phase 4F follows this validation layer by adding fixture-backed internal validation scenarios and an M4 readiness matrix in `docs/26-phase-4f-fixture-backed-validation-and-m4-readiness.md`.
 
-Possible follow-up paths include:
+The Phase 4F fixtures strengthen coverage around canonical passing workflow payloads, targeted drift/failure payloads, handoff preview preservation, unresolved ID boundaries, warning disclosures, public non-exposure keys, and validation non-mutation.
 
-- adding more fixture-backed internal validation scenarios;
-- adding review-oriented diagnostics for local development only;
-- preparing a future Harness Engineering-approved contract-changing proposal if public handoff preview exposure becomes desirable;
-- continuing toward Simulation Desk MVP only after Task 007 / Milestone M4 readiness is reviewed.
+Phase 4F remains implementation-limited and local-only: it does not change public analyze-stock semantics, expose handoff previews publicly, update `docs/09-api-and-agent-contracts.md`, add persistence, connect to production Supabase, implement endpoint runtime, create paper orders, or add broker/real-money trading automation.
 
 Any future public payload change, persistence work, production Supabase connection, or endpoint runtime implementation must be explicitly approved and reviewed in its own scoped PR.
