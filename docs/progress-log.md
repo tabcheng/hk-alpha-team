@@ -159,3 +159,11 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Added deterministic fixture coverage for canonical passing analyze-stock workflow payloads and targeted drift/failure scenarios across Phase 4A payload fields, Phase 4B department outputs, Phase 4C handoff previews, the Phase 4D internal-only public exposure boundary, and the Phase 4E validation layer.
 - Added an M4 readiness matrix documenting satisfied criteria, open closeout items, explicit out-of-scope items before Task 008, and changes requiring Harness Engineering approval.
 - Preserved the no-public-payload-change, no-persistence, and no-production-boundary: no public handoff preview fields, no `docs/09-api-and-agent-contracts.md` update, no endpoint runtime, no persistence writes, no production Supabase, no broker integration, no secrets, no paper orders, and no real-money trading automation.
+
+## 2026-06-04 — Phase 4G M4 Closeout Readiness Review
+
+- Completed Phase 4G as a documentation-only, governance-sensitive readiness review for Task 007 / Milestone M4 after Phase 4A through Phase 4F.
+- Determined that M4 can close while Phase 4C handoff previews remain internal-only because public handoff preview exposure is not required for M4 closeout and remains a separate future contract-changing PR requiring Harness Engineering approval plus same-PR `docs/09-api-and-agent-contracts.md`, runtime, and API test updates.
+- Assessed Phase 4E internal validation and Phase 4F fixture-backed validation as sufficient for Task 008 handoff planning readiness, while not validating or implementing Simulation Desk MVP runtime, paper portfolios, paper orders, strategy recommendation persistence, production Supabase, live data, broker integration, or real-money trading automation.
+- Marked Task 007 / Milestone M4 Completed in `docs/11-project-status.md`; kept Task 008 Simulation Desk MVP Planned and M5 Planned.
+- Preserved the no-public-payload-change, no-`docs/09`-change, no-persistence, no-production-Supabase, no-endpoint-runtime, no-broker, no-paper-order, no-secrets, and no-real-money-trading boundaries.

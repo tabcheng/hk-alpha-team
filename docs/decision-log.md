@@ -189,3 +189,14 @@ We will not upgrade GitHub account/organization immediately. During Phase 2 we w
 - A future public exposure PR must update `docs/09-api-and-agent-contracts.md`, runtime response code, and API tests in the same PR.
 - Future exposure must clearly warn that previews are preview-only and non-persistent, not `agent_runs` / `agent_outputs` database rows and not a `GET /api/v1/agent-runs/{agent_run_id}` response.
 - No persistence writes, production Supabase, broker integration, paper orders, secrets, or real-money trading automation are authorized by this decision.
+
+## 2026-06-04 — Decision: Close Task 007 / Milestone M4 After Phase 4G Readiness Review
+
+**Context:** Phase 4A through Phase 4F created the deterministic local-only analyze-stock workflow skeleton, deterministic department adapters, local-only handoff mapping, an internal-only handoff preview exposure decision, internal workflow validation, and fixture-backed validation scenarios with an M4 readiness matrix. Task 007 / Milestone M4 still required a final governance-sensitive closeout decision.
+
+**Decision:** Mark Task 007 / Milestone M4 completed after Phase 4G readiness review, while keeping Task 008 Simulation Desk MVP Planned and M5 Planned. M4 can close while Phase 4C handoff previews remain internal-only because public handoff preview exposure is not required for M4 closeout.
+
+**Implications:**
+- Public handoff preview exposure remains deferred to a separate future contract-changing PR requiring explicit Harness Engineering approval and same-PR `docs/09-api-and-agent-contracts.md`, runtime, and API test updates.
+- Phase 4E / Phase 4F validation evidence is sufficient for Task 008 handoff planning readiness, not for Simulation Desk MVP runtime behavior.
+- No public analyze-stock payload change, `docs/09` contract change, persistence writes, production Supabase connection, endpoint runtime, broker integration, paper orders, secrets, or real-money trading automation are authorized by M4 closeout.

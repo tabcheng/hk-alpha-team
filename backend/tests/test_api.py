@@ -73,16 +73,16 @@ def test_project_status_endpoint_returns_required_envelope() -> None:
 
     status_doc_lines = _project_status_doc_lines()
     assert _extract_table_status(status_doc_lines, "M3") == "Completed"
-    assert _extract_table_status(status_doc_lines, "M4") == "In Progress"
+    assert _extract_table_status(status_doc_lines, "M4") == "Completed"
     assert _extract_table_status(status_doc_lines, "005") == "Completed"
     assert _extract_table_status(status_doc_lines, "006") == "Completed"
-    assert _extract_table_status(status_doc_lines, "007") == "In Progress"
+    assert _extract_table_status(status_doc_lines, "007") == "Completed"
 
     assert payload["data"]["current_phase"] == "Phase 4 — First Analysis Workflow"
-    assert payload["data"]["current_milestone"] == "M4 (In Progress)"
+    assert payload["data"]["current_milestone"] == "M4 (Completed)"
     assert payload["data"]["task_status"]["005"] == "Completed"
     assert payload["data"]["task_status"]["006"] == "Completed"
-    assert payload["data"]["task_status"]["007"] == "In Progress"
+    assert payload["data"]["task_status"]["007"] == "Completed"
 
 
 def test_analyze_stock_contract_doc_matches_phase4a_runtime() -> None:
