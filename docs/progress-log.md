@@ -202,3 +202,11 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Fixed the Task 008C local-only boundary flag bypass by deriving paper-order validation boundary flags from inherited Task 008B `BOUNDARY_FLAG_NAMES` plus Task 008C-specific flags.
 - Added regression tests proving top-level and nested `supabase_client_required=true` and `broker_api_called=true` fail validation.
 - Preserved Task 008C pure local-only scope: no endpoint runtime, no FastAPI route, no HTTP, no persistence, no database writes, no production Supabase, no Supabase client, no broker integration, no paper-order creation, no secrets, and no real-money trading automation.
+
+## 2026-06-04 — Task 008D Persistence Gate Readiness Planning
+
+- Added Task 008D persistence gate readiness and migration alignment planning for the Simulation Desk MVP.
+- Mapped Task 008B local-only Simulation Desk fixture record shapes and Task 008C local paper-order intent validation to canonical `docs/08-supabase-schema-design.md` tables.
+- Mapped locked `docs/09-api-and-agent-contracts.md` endpoint names to future approval gates without implementing endpoint runtime.
+- Recorded explicit approval gates before SQL migration, Supabase client setup, production Supabase, persistence writes, endpoint runtime, paper-order creation, paper-portfolio runtime, strategy recommendation persistence, audit-event creation, broker integration, or any real-money capability.
+- Scope remains documentation-only and planning-only: no migration, no persistence, no endpoint runtime, no production Supabase, no broker, no paper-order creation, no real-money trading automation, no secrets, and no live market data.

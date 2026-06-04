@@ -225,3 +225,10 @@ We will not upgrade GitHub account/organization immediately. During Phase 2 we w
 - Losing outcomes remain visible and learning proposals remain reviewable rather than auto-applied.
 - No IO, HTTP, database access, endpoint handlers, persistence, production Supabase, paper order creation, broker integration, live market data, secrets, or real-money trading automation are authorized by this decision.
 - Any Task 008C expansion beyond pure local validation requires explicit Harness Engineering review and same-PR updates to affected contracts, runtime, tests, status, and logs.
+
+## 2026-06-04 — Task 008D Remains Planning-Only Persistence Gate Readiness
+
+- Decision: Task 008D is limited to documentation-only, governance-sensitive persistence gate readiness and migration alignment planning for the Simulation Desk MVP.
+- Rationale: Task 008B and Task 008C created local-only Simulation Desk record shapes and validation behavior, so the next safe step is to map those artifacts to canonical schema tables and approval gates before any migration, runtime, or persistence work begins.
+- Boundary: This decision does not authorize SQL migration, endpoint runtime, persistence writes, Supabase client setup, production Supabase, paper-order creation, paper-portfolio runtime, strategy recommendation persistence, audit-event database creation, broker integration, autonomous order placement, or real-money trading automation.
+- Review requirement: Harness Engineering must explicitly approve any future task that crosses a named migration, persistence, Supabase, endpoint runtime, paper-order creation, paper-portfolio runtime, strategy recommendation persistence, audit-event creation, broker, or real-money gate.
