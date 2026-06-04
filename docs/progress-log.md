@@ -196,3 +196,9 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Added positive and negative tests for valid paper-order intents, market buy/sell, limit orders, zero quantity, local registry match, non-mutating validation, missing/malformed fields, invalid side/order type, negative numeric values, forbidden runtime/persistence/production/broker/real-money/external/secrets flags, and inputs implying actual order creation.
 - Preserved Task 008C pure local-only scope: no endpoint runtime, no FastAPI route, no HTTP, no persistence, no database writes, no production Supabase, no Supabase client, no broker, no paper-order creation, no paper-portfolio runtime, no strategy recommendation persistence, no secrets, no live market data, no external APIs, no production infrastructure, and no real-money trading automation.
 - Kept Task 007 / Milestone M4 Completed and Task 008 / Milestone M5 In Progress.
+
+## 2026-06-04 — Task 008C Review Follow-up
+
+- Fixed the Task 008C local-only boundary flag bypass by deriving paper-order validation boundary flags from inherited Task 008B `BOUNDARY_FLAG_NAMES` plus Task 008C-specific flags.
+- Added regression tests proving top-level and nested `supabase_client_required=true` and `broker_api_called=true` fail validation.
+- Preserved Task 008C pure local-only scope: no endpoint runtime, no FastAPI route, no HTTP, no persistence, no database writes, no production Supabase, no Supabase client, no broker integration, no paper-order creation, no secrets, and no real-money trading automation.

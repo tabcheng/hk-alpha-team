@@ -5,6 +5,7 @@ from copy import deepcopy
 from typing import Any, Mapping
 
 from app.simulation_contract import (
+    BOUNDARY_FLAG_NAMES,
     LOCKED_ENDPOINT_NAMES,
     VALID_ORDER_SIDES,
     VALID_ORDER_TYPES,
@@ -15,20 +16,13 @@ LOCAL_PAPER_ORDER_SCHEMA_TABLE = "paper_orders"
 LOCAL_PAPER_ORDER_ENDPOINT_REFERENCE = "POST /api/v1/simulation/paper-orders"
 HK_SYMBOL_PATTERN = re.compile(r"^\d{4}\.HK$")
 
-LOCAL_PAPER_ORDER_BOUNDARY_FLAGS = (
-    "io_enabled",
-    "http_enabled",
-    "database_write_enabled",
-    "persistence_enabled",
-    "production_supabase_required",
-    "production_supabase_connected",
-    "endpoint_runtime_enabled",
-    "paper_order_created",
-    "broker_execution_enabled",
-    "real_money_order_placed",
-    "real_money_trading_automation_enabled",
+TASK_008C_SPECIFIC_BOUNDARY_FLAGS = (
     "external_api_required",
     "secrets_required",
+)
+
+LOCAL_PAPER_ORDER_BOUNDARY_FLAGS = tuple(
+    dict.fromkeys((*BOUNDARY_FLAG_NAMES, *TASK_008C_SPECIFIC_BOUNDARY_FLAGS))
 )
 
 ORDER_CREATION_IMPLICATION_FIELDS = (

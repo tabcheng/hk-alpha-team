@@ -96,7 +96,7 @@ The local validation service accepts paper-order-intent-like mappings and valida
 | `order_type` | Optional; defaults to `market`; when present must be `market` or `limit`. |
 | `limit_price` | Optional; when present must be numeric and non-negative. |
 
-The service returns a local validation result/report that states no paper order is created. These boundary flags must remain false whether supplied at the top level or, where applicable, through a nested `boundary_flags` mapping:
+The service returns a local validation result/report that states no paper order is created. Task 008C inherits the Task 008B `BOUNDARY_FLAG_NAMES` set and adds Task 008C-specific local-only flags, so inherited flags such as `supabase_client_required` and `broker_api_called` cannot bypass validation. These boundary flags must remain false whether supplied at the top level or, where applicable, through a nested `boundary_flags` mapping:
 
 - `io_enabled`
 - `http_enabled`
@@ -104,9 +104,11 @@ The service returns a local validation result/report that states no paper order 
 - `persistence_enabled`
 - `production_supabase_required`
 - `production_supabase_connected`
+- `supabase_client_required`
 - `endpoint_runtime_enabled`
 - `paper_order_created`
 - `broker_execution_enabled`
+- `broker_api_called`
 - `real_money_order_placed`
 - `real_money_trading_automation_enabled`
 - `external_api_required`
@@ -132,7 +134,7 @@ Inputs implying actual order creation, such as `would_create_order=true`, `creat
 | Malformed symbol | Negative test for non-`0700.HK` style symbol. |
 | Invalid enums | Negative tests for invalid `side` and `order_type`. |
 | Invalid numeric values | Negative tests for negative `quantity` and `limit_price`. |
-| Forbidden boundary flags | Negative tests for endpoint, persistence, database write, production Supabase, broker, real-money, external API, and secrets flags. |
+| Forbidden boundary flags | Negative tests for endpoint, persistence, database write, production Supabase, inherited Supabase-client/broker-API, broker, real-money, external API, and secrets flags. |
 | Actual order creation implication | Negative tests for input fields that imply creating, placing, submitting, or executing an order. |
 
 ## Explicit Non-Goals

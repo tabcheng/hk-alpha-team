@@ -181,7 +181,9 @@ def test_task_008c_negative_limit_price_fails() -> None:
         "persistence_enabled",
         "database_write_enabled",
         "production_supabase_required",
+        "supabase_client_required",
         "broker_execution_enabled",
+        "broker_api_called",
         "real_money_order_placed",
         "external_api_required",
         "secrets_required",
@@ -196,11 +198,20 @@ def test_task_008c_forbidden_top_level_boundary_flag_true_fails(flag_name: str) 
         validate_local_paper_order_intent(order)
 
 
-def test_task_008c_forbidden_nested_boundary_flag_true_fails() -> None:
+@pytest.mark.parametrize(
+    "flag_name",
+    [
+        "database_write_enabled",
+        "supabase_client_required",
+        "broker_api_called",
+    ],
+)
+def test_task_008c_forbidden_nested_boundary_flag_true_fails(flag_name: str) -> None:
+    assert flag_name in LOCAL_PAPER_ORDER_BOUNDARY_FLAGS
     order = _valid_order()
-    order["boundary_flags"] = {"database_write_enabled": True}
+    order["boundary_flags"] = {flag_name: True}
 
-    with pytest.raises(ValueError, match="database_write_enabled must remain false"):
+    with pytest.raises(ValueError, match=f"{flag_name} must remain false"):
         validate_local_paper_order_intent(order)
 
 
