@@ -152,3 +152,10 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Started Phase 4E inside Task 007 / Milestone M4 as an implementation-limited, local-only internal validation expansion.
 - Added validation scope for consistency across the Phase 4A analyze-stock workflow payload, Phase 4B department adapter outputs, and Phase 4C local-only handoff previews while preserving the Phase 4D internal-only exposure decision.
 - Kept public analyze-stock response semantics unchanged: no public handoff preview fields, no `docs/09-api-and-agent-contracts.md` update, no agent-runs endpoint runtime, no persistence, no production Supabase, no broker integration, no secrets, no paper orders, and no real-money trading automation.
+
+## 2026-06-04 — Phase 4F Fixture-Backed Validation and M4 Readiness Start
+
+- Started Phase 4F inside Task 007 / Milestone M4 as implementation-limited, local-only fixture-backed internal validation work.
+- Added deterministic fixture coverage for canonical passing analyze-stock workflow payloads and targeted drift/failure scenarios across Phase 4A payload fields, Phase 4B department outputs, Phase 4C handoff previews, the Phase 4D internal-only public exposure boundary, and the Phase 4E validation layer.
+- Added an M4 readiness matrix documenting satisfied criteria, open closeout items, explicit out-of-scope items before Task 008, and changes requiring Harness Engineering approval.
+- Preserved the no-public-payload-change, no-persistence, and no-production-boundary: no public handoff preview fields, no `docs/09-api-and-agent-contracts.md` update, no endpoint runtime, no persistence writes, no production Supabase, no broker integration, no secrets, no paper orders, and no real-money trading automation.
