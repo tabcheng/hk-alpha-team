@@ -174,3 +174,17 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Added a Task 008A planning source-of-truth document defining Simulation Desk MVP boundaries, `docs/04` operating-rule alignment, `docs/08` simulation schema references, `docs/09` locked endpoint references, the first minimum M5 slice, approval gates, and follow-up PR sequence.
 - Marked Task 008 / Milestone M5 In Progress for planning only while preserving Task 007 / Milestone M4 as Completed.
 - Preserved no runtime, no persistence, no production Supabase, no broker, no real-money trading, no secrets, no live market data, no endpoint implementation, no paper-order creation, and no paper-portfolio runtime boundaries.
+
+## 2026-06-04 — Task 008B Local Simulation Contract Fixtures, Schemas, and Validation Matrix
+
+- Implemented Task 008B as a pure local-only Simulation Desk contract validation slice.
+- Added deterministic fixtures, individual-record validation, collection validation, and a validation matrix/report helper for `paper_portfolio`, `paper_order_intent`, `paper_position`, `portfolio_snapshot`, `trade_review`, `learning_proposal`, and `audit_event`.
+- Added positive and negative tests for required record types, required fields, unknown record types, invalid quantities/statuses, hidden losing outcomes, auto-applied learning proposals, enabled boundary flags, full matrix coverage, and non-mutating validation.
+- Added `docs/29-task-008b-local-simulation-contract-fixtures.md` to document fixture coverage, validation matrix coverage, non-goals, and Task 008C entry criteria.
+- Preserved the local-only boundary: no IO, HTTP, database access, production Supabase, endpoint handlers, persistence, paper order creation, broker integration, live market data, or real-money trading automation.
+
+## 2026-06-04 — Task 008B Review Follow-up
+
+- Tightened Task 008B fixture helpers so endpoint-reference lists are isolated per fixture record rather than sharing a mutable object.
+- Strengthened validators to self-check non-mutation with deep-copy comparisons and to fail when locked endpoint references are missing, not only when unknown endpoint names are present.
+- Added targeted tests for deterministic fixture generation, isolated mutable fixture fields, and missing locked endpoint references while preserving all local-only/no-runtime boundaries.
