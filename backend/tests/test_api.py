@@ -81,10 +81,11 @@ def test_project_status_endpoint_returns_required_envelope() -> None:
     assert _extract_table_status(status_doc_lines, "008") == "In Progress"
 
     assert payload["data"]["current_phase"] == "Phase 5 — Simulation Desk MVP"
-    assert payload["data"]["current_milestone"] == "M4 (Completed)"
+    assert payload["data"]["current_milestone"] == "M5 (In Progress)"
     assert payload["data"]["task_status"]["005"] == "Completed"
     assert payload["data"]["task_status"]["006"] == "Completed"
     assert payload["data"]["task_status"]["007"] == "Completed"
+    assert payload["data"]["task_status"]["008"] == "In Progress"
 
 
 def test_analyze_stock_contract_doc_matches_phase4a_runtime() -> None:
