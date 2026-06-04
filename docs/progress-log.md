@@ -188,3 +188,11 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Tightened Task 008B fixture helpers so endpoint-reference lists are isolated per fixture record rather than sharing a mutable object.
 - Strengthened validators to self-check non-mutation with deep-copy comparisons and to fail when locked endpoint references are missing, not only when unknown endpoint names are present.
 - Added targeted tests for deterministic fixture generation, isolated mutable fixture fields, and missing locked endpoint references while preserving all local-only/no-runtime boundaries.
+
+## 2026-06-04 — Task 008C Local Paper Order Validation Service / Stub
+
+- Started and completed Task 008C as an implementation-limited, governance-sensitive, pure local-only Simulation Desk paper-order validation service/stub.
+- Added local in-memory validation helpers for paper-order-intent-like inputs, including required `portfolio_id`, `symbol`, `side`, and `quantity` checks; optional `order_type` and `limit_price` checks; conservative `0700.HK`-style symbol validation; optional local portfolio registry matching; no-order-created result fields; and false boundary flags.
+- Added positive and negative tests for valid paper-order intents, market buy/sell, limit orders, zero quantity, local registry match, non-mutating validation, missing/malformed fields, invalid side/order type, negative numeric values, forbidden runtime/persistence/production/broker/real-money/external/secrets flags, and inputs implying actual order creation.
+- Preserved Task 008C pure local-only scope: no endpoint runtime, no FastAPI route, no HTTP, no persistence, no database writes, no production Supabase, no Supabase client, no broker, no paper-order creation, no paper-portfolio runtime, no strategy recommendation persistence, no secrets, no live market data, no external APIs, no production infrastructure, and no real-money trading automation.
+- Kept Task 007 / Milestone M4 Completed and Task 008 / Milestone M5 In Progress.
