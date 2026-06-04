@@ -167,3 +167,10 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Assessed Phase 4E internal validation and Phase 4F fixture-backed validation as sufficient for Task 008 handoff planning readiness, while not validating or implementing Simulation Desk MVP runtime, paper portfolios, paper orders, strategy recommendation persistence, production Supabase, live data, broker integration, or real-money trading automation.
 - Marked Task 007 / Milestone M4 Completed in `docs/11-project-status.md`; kept Task 008 Simulation Desk MVP Planned and M5 Planned.
 - Preserved the no-public-payload-change, no-`docs/09`-change, no-persistence, no-production-Supabase, no-endpoint-runtime, no-broker, no-paper-order, no-secrets, and no-real-money-trading boundaries.
+
+## 2026-06-04 — Task 008A Simulation Desk MVP Boundary and Contract Planning Start
+
+- Started Task 008A inside Task 008 / Milestone M5 as documentation-only, governance-sensitive Simulation Desk MVP boundary and contract planning.
+- Added a Task 008A planning source-of-truth document defining Simulation Desk MVP boundaries, `docs/04` operating-rule alignment, `docs/08` simulation schema references, `docs/09` locked endpoint references, the first minimum M5 slice, approval gates, and follow-up PR sequence.
+- Marked Task 008 / Milestone M5 In Progress for planning only while preserving Task 007 / Milestone M4 as Completed.
+- Preserved no runtime, no persistence, no production Supabase, no broker, no real-money trading, no secrets, no live market data, no endpoint implementation, no paper-order creation, and no paper-portfolio runtime boundaries.

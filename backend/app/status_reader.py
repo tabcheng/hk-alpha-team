@@ -12,28 +12,44 @@ def _extract_current_phase(lines: list[str]) -> str:
     return "Unknown"
 
 
-def _extract_milestone_status(lines: list[str], milestone: str = "M4") -> str:
+def _extract_table_status(lines: list[str], row_id: str) -> str:
     for line in lines:
         row = line.strip()
-        if row.startswith(f"| {milestone} |"):
+        if row.startswith(f"| {row_id} |"):
             parts = [p.strip() for p in row.split("|") if p.strip()]
             if len(parts) >= 3:
                 return parts[2]
     return "Unknown"
 
 
+def _extract_milestone_status(lines: list[str], milestone: str = "M4") -> str:
+    return _extract_table_status(lines, milestone)
+
+
 def _extract_task_status(lines: list[str], task_ids: tuple[str, ...] = ("005", "006", "007")) -> dict[str, str]:
-    statuses: dict[str, str] = {}
-    for task_id in task_ids:
-        statuses[task_id] = "Unknown"
-        for line in lines:
-            row = line.strip()
-            if row.startswith(f"| {task_id} |"):
-                parts = [p.strip() for p in row.split("|") if p.strip()]
-                if len(parts) >= 3:
-                    statuses[task_id] = parts[2]
-                break
-    return statuses
+    return {task_id: _extract_table_status(lines, task_id) for task_id in task_ids}
+
+
+def _current_milestone_id(phase: str) -> str:
+    phase_to_milestone = {
+        "Phase 1": "M1",
+        "Phase 2": "M2",
+        "Phase 3": "M3",
+        "Phase 4": "M4",
+        "Phase 5": "M5",
+        "Phase 6": "M6",
+        "Phase 7": "M7",
+    }
+    for phase_prefix, milestone_id in phase_to_milestone.items():
+        if phase.startswith(phase_prefix):
+            return milestone_id
+    return "M4"
+
+
+def _tracked_task_ids_for_phase(phase: str) -> tuple[str, ...]:
+    if phase.startswith("Phase 5"):
+        return ("005", "006", "007", "008")
+    return ("005", "006", "007")
 
 
 def read_project_status() -> dict[str, object]:
@@ -46,11 +62,12 @@ def read_project_status() -> dict[str, object]:
 
     lines = STATUS_DOC_PATH.read_text(encoding="utf-8").splitlines()
     phase = _extract_current_phase(lines)
-    milestone_status = _extract_milestone_status(lines, "M4")
-    task_status = _extract_task_status(lines, ("005", "006", "007"))
+    milestone_id = _current_milestone_id(phase)
+    milestone_status = _extract_milestone_status(lines, milestone_id)
+    task_status = _extract_task_status(lines, _tracked_task_ids_for_phase(phase))
 
     return {
         "current_phase": phase,
-        "current_milestone": f"M4 ({milestone_status})",
+        "current_milestone": f"{milestone_id} ({milestone_status})",
         "task_status": task_status,
     }
