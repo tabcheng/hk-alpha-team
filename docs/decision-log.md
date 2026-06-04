@@ -200,3 +200,15 @@ We will not upgrade GitHub account/organization immediately. During Phase 2 we w
 - Public handoff preview exposure remains deferred to a separate future contract-changing PR requiring explicit Harness Engineering approval and same-PR `docs/09-api-and-agent-contracts.md`, runtime, and API test updates.
 - Phase 4E / Phase 4F validation evidence is sufficient for Task 008 handoff planning readiness, not for Simulation Desk MVP runtime behavior.
 - No public analyze-stock payload change, `docs/09` contract change, persistence writes, production Supabase connection, endpoint runtime, broker integration, paper orders, secrets, or real-money trading automation are authorized by M4 closeout.
+
+## 2026-06-04 — Decision: Start Task 008 / Milestone M5 Planning With Task 008A Boundary and Contract Planning
+
+**Context:** Task 007 / Milestone M4 is completed after Phase 4G closeout readiness review. The next source-of-truth step is to start Task 008 / Milestone M5 safely by defining Simulation Desk MVP boundaries before any runtime, persistence, production Supabase, broker, paper-order execution, or real-money trading work begins.
+
+**Decision:** Start Task 008 / Milestone M5 as In Progress for Task 008A planning only. Task 008A records Simulation Desk MVP boundary, operating-rule, schema-reference, endpoint-reference, approval-gate, validation, and follow-up PR sequencing guidance.
+
+**Implications:**
+- Task 007 / Milestone M4 remain Completed.
+- Task 008 / Milestone M5 are In Progress for documentation-only planning, not implementation.
+- This decision does not authorize runtime behavior, persistence writes, production Supabase, broker integration, paper-order creation, paper-portfolio runtime, strategy recommendation persistence, audit event creation, live market data, secrets, or real-money trading automation.
+- Future Simulation Desk implementation requires explicit Harness Engineering review at the public API contract, persistence, production Supabase, broker / real-money, and status/log gates.
