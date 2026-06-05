@@ -210,3 +210,16 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Mapped locked `docs/09-api-and-agent-contracts.md` endpoint names to future approval gates without implementing endpoint runtime.
 - Recorded explicit approval gates before SQL migration, Supabase client setup, production Supabase, persistence writes, endpoint runtime, paper-order creation, paper-portfolio runtime, strategy recommendation persistence, audit-event creation, broker integration, or any real-money capability.
 - Scope remains documentation-only and planning-only: no migration, no persistence, no endpoint runtime, no production Supabase, no broker, no paper-order creation, no real-money trading automation, no secrets, and no live market data.
+
+## 2026-06-05 — PR Review Evidence Closure Protocol Governance Update
+
+- Added `docs/32-pr-review-evidence-closure-protocol.md` as a documentation-only, governance-sensitive full PR review evidence protocol.
+- Extended the Codex PR Factory and mandatory full PR review workflow to classify closed evidence, reduced-risk evidence, and residual limitations.
+- Recorded explicit review rules for public web availability, authenticated GitHub source-of-truth fallback, CI depth, local rerun limitations, branch protection visibility, expected-head-SHA merge locking, unresolved review threads, and post-merge source-of-truth verification.
+- Preserved Task 008 / Milestone M5 as In Progress and did not start Task 008E; no runtime, persistence, migration, Supabase, production infrastructure, broker integration, secrets, or real-money trading automation was introduced.
+
+## 2026-06-05 — PR Review Checklist Evidence Closure Correction
+
+- Updated `docs/13-pr-review-checklist.md` so the reusable checklist enforces the Evidence Closure Protocol from `docs/32-pr-review-evidence-closure-protocol.md`.
+- Added concise checklist items for public web availability, authenticated GitHub fallback, latest reviewed head SHA, branch freshness, CI depth, workflow conclusions, job/log inspection requirements, exact command outputs, local rerun classification, branch protection visibility, unresolved review thread count, expected-head-SHA merge lock, and post-merge source-of-truth verification.
+- Preserved documentation-only and governance-only scope: no backend runtime, frontend, `docs/09`, schema/migration, workflow, production infrastructure, broker, real-money trading automation, or Task 008E work was introduced.
