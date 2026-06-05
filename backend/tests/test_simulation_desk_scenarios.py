@@ -287,3 +287,69 @@ def test_task_008f_locked_endpoint_duplicate_or_reorder_fails_validation() -> No
 
     with pytest.raises(ValueError, match="locked endpoint names must be referenced without implementation"):
         validate_simulation_desk_scenario_pack(pack)
+
+
+def _valid_scenario_validation_result(pack: dict[str, object]) -> dict[str, object]:
+    return pack["scenario_matrix"]["paper_order_intent_scenarios"][
+        "valid_paper_order_intent"
+    ]["validation_result"]
+
+
+def test_task_008f_valid_scenario_stored_validation_result_order_creation_fails() -> None:
+    pack = build_simulation_desk_scenario_pack()
+    validation_result = _valid_scenario_validation_result(pack)
+    validation_result["would_create_order"] = True
+
+    with pytest.raises(
+        ValueError,
+        match="valid scenario stored validation_result must not claim paper-order creation",
+    ):
+        validate_simulation_desk_scenario_pack(pack)
+
+
+def test_task_008f_valid_scenario_stored_validation_result_symbol_mismatch_fails() -> None:
+    pack = build_simulation_desk_scenario_pack()
+    validation_result = _valid_scenario_validation_result(pack)
+    validation_result["symbol"] = "700.HK"
+
+    with pytest.raises(
+        ValueError,
+        match="valid scenario stored validation_result must match fresh local revalidation",
+    ):
+        validate_simulation_desk_scenario_pack(pack)
+
+
+def test_task_008f_valid_scenario_stored_validation_result_side_mismatch_fails() -> None:
+    pack = build_simulation_desk_scenario_pack()
+    validation_result = _valid_scenario_validation_result(pack)
+    validation_result["side"] = "hold"
+
+    with pytest.raises(
+        ValueError,
+        match="valid scenario stored validation_result must match fresh local revalidation",
+    ):
+        validate_simulation_desk_scenario_pack(pack)
+
+
+def test_task_008f_valid_scenario_stored_validation_result_quantity_mismatch_fails() -> None:
+    pack = build_simulation_desk_scenario_pack()
+    validation_result = _valid_scenario_validation_result(pack)
+    validation_result["quantity"] = -1
+
+    with pytest.raises(
+        ValueError,
+        match="valid scenario stored validation_result must match fresh local revalidation",
+    ):
+        validate_simulation_desk_scenario_pack(pack)
+
+
+def test_task_008f_valid_scenario_stored_validation_result_boundary_flag_fails() -> None:
+    pack = build_simulation_desk_scenario_pack()
+    validation_result = _valid_scenario_validation_result(pack)
+    validation_result["persistence_enabled"] = True
+
+    with pytest.raises(
+        ValueError,
+        match="valid scenario stored validation_result must match fresh local revalidation",
+    ):
+        validate_simulation_desk_scenario_pack(pack)

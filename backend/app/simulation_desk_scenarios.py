@@ -401,6 +401,18 @@ def validate_simulation_desk_scenario_pack(pack: Mapping[str, object]) -> dict[s
         "valid paper-order intent scenario revalidation must not mutate inputs",
     )
     _require(valid_revalidation.get("would_create_order") is False, "valid scenario revalidation must not create a paper order")
+    stored_valid_result = _require_mapping(
+        valid_scenario.get("validation_result"),
+        "scenario_matrix.paper_order_intent_scenarios.valid_paper_order_intent.validation_result",
+    )
+    _require(
+        stored_valid_result.get("would_create_order") is False,
+        "valid scenario stored validation_result must not claim paper-order creation",
+    )
+    _require(
+        dict(stored_valid_result) == valid_revalidation,
+        "valid scenario stored validation_result must match fresh local revalidation",
+    )
 
     for scenario_name, expected_error_fragment in INVALID_SCENARIO_EXPECTATIONS.items():
         scenario = _require_mapping(order_scenarios.get(scenario_name), f"scenario {scenario_name}")

@@ -251,3 +251,10 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Added deeper fail-safe checks for hidden losing records, auto-applied learning proposal evidence, exact locked endpoint reference preservation, and complete next-gate direction preservation.
 - Added regression tests for stale valid/invalid scenario inputs, hidden loss evidence, auto-applied learning proposals, missing next-gate directions, and duplicate locked endpoint references.
 - Preserved Task 008F pure local-only scope: no runtime, no persistence, no Supabase client or production Supabase connection, no endpoint handler, no paper-order creation, no paper-portfolio runtime, no strategy persistence, no audit-event database creation, no live market data, no external API calls, no secrets, no deployment, no autonomous order placement, and no real-money trading automation.
+
+
+## 2026-06-05 — Task 008F Valid Scenario Stored Evidence Review Fix
+
+- Fixed the PR #25 review blocker by requiring the stored valid paper-order scenario `validation_result` to be a mapping, to keep `would_create_order = false`, and to exactly match fresh local Task 008C revalidation of the scenario `input_order`.
+- Added regression coverage proving edited stored valid-scenario evidence fails when `would_create_order` is set true, when the stored symbol changes to `700.HK`, when side is changed to an invalid value, when quantity is changed negative, and when a stored boundary flag claims persistence.
+- Preserved Task 008F local-only scope and did not modify `docs/09-api-and-agent-contracts.md`, `docs/08-supabase-schema-design.md`, migrations, Supabase clients, endpoint runtime, persistence, paper-order creation, paper-portfolio runtime, strategy persistence, audit-event runtime, broker/live-data/external API integrations, secrets, deployment, autonomous order placement, or real-money trading automation.

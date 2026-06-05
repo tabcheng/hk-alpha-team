@@ -184,7 +184,7 @@ Task 008F does not add or authorize:
 - Changes canonical schema table names.
 - Changes locked endpoint names.
 - Mutates inputs during validation.
-- Provides stale scenario evidence whose stored pass/fail status no longer matches local paper-order intent revalidation.
+- Provides stale scenario evidence whose stored pass/fail status or stored valid-scenario `validation_result` no longer matches local paper-order intent revalidation.
 - Omits, reorders, duplicates, or changes locked endpoint names or next-gate directions.
 - Implies Task 008F closes M5.
 
@@ -201,7 +201,7 @@ Expected evidence:
 
 - Valid pack build and validation pass.
 - Task 008B, 008C, and 008E source evidence included.
-- Stored scenario evidence is revalidated rather than trusted blindly.
+- Stored scenario evidence, including the valid scenario `validation_result`, is revalidated rather than trusted blindly.
 - Valid order scenario passes.
 - Invalid order scenarios fail safely.
 - Readiness aggregation scenario passes.
