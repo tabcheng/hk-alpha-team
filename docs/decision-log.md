@@ -240,3 +240,11 @@ We will not upgrade GitHub account/organization immediately. During Phase 2 we w
 **Decision:** Adopt `docs/32-pr-review-evidence-closure-protocol.md` as part of the Codex PR Factory full PR review process. Future full PR reviews must classify evidence as closed evidence, reduced-risk evidence, or residual limitation; use authenticated GitHub connector/API evidence as source of truth when public web search is unavailable; choose CI depth proportional to PR risk; avoid unsupported local-rerun claims; record hidden branch protection/ruleset visibility as a limitation instead of requesting routine Harness Engineering screenshots; require expected-head-SHA merge locking; block on unresolved review threads; and perform post-merge source-of-truth verification on `main`.
 
 **Implications:** This governance decision does not eliminate all residual review risk and does not authorize runtime, persistence, migrations, Supabase clients, production infrastructure, broker integration, real-money trading automation, or Task 008E. It converts recurring limitations into explicit evidence gates for future PR reviews.
+
+## 2026-06-05 — Decision: Approve Task 008E as Local-Only Simulation Desk Readiness Reporting
+
+**Context:** Task 008B provides local Simulation Desk fixture validation, Task 008C provides local paper-order intent validation, and Task 008D records persistence gate readiness without approving migration or persistence work.
+
+**Decision:** Task 008E is approved only as an implementation-limited, pure local-only readiness reporting slice that aggregates Task 008B and Task 008C evidence into a deterministic in-memory artifact.
+
+**Implications:** This decision does not approve runtime behavior, SQL migration, persistence writes, Supabase client setup, production Supabase, endpoint implementation, paper-order creation, paper-portfolio runtime, strategy recommendation persistence, audit-event creation, broker integration, live market data, external API usage, secrets, deployment, autonomous order placement, or real-money trading automation. Any future Task 008F gate requires explicit Harness Engineering review and approval.

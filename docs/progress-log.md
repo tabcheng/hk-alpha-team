@@ -223,3 +223,13 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Updated `docs/13-pr-review-checklist.md` so the reusable checklist enforces the Evidence Closure Protocol from `docs/32-pr-review-evidence-closure-protocol.md`.
 - Added concise checklist items for public web availability, authenticated GitHub fallback, latest reviewed head SHA, branch freshness, CI depth, workflow conclusions, job/log inspection requirements, exact command outputs, local rerun classification, branch protection visibility, unresolved review thread count, expected-head-SHA merge lock, and post-merge source-of-truth verification.
 - Preserved documentation-only and governance-only scope: no backend runtime, frontend, `docs/09`, schema/migration, workflow, production infrastructure, broker, real-money trading automation, or Task 008E work was introduced.
+
+## 2026-06-05 — Task 008E Local Simulation Desk Readiness Report
+
+**Scope:** Added an implementation-limited, pure local-only Simulation Desk readiness report that aggregates Task 008B local fixture validation evidence and Task 008C local paper-order intent validation evidence.
+
+**Validation behavior:** The readiness helper builds deterministic in-memory evidence, preserves canonical schema table names, references locked MVP endpoint names without implementing endpoints, records approval gates as not crossed, keeps `would_create_order = false`, and validates that all forbidden boundary flags remain false.
+
+**Boundaries:** Task 008E does not add or authorize SQL migration, endpoint runtime, persistence writes, Supabase client setup, production Supabase, paper-order creation, paper-portfolio runtime, strategy recommendation persistence, audit-event creation, broker integration, live market data, external API calls, secrets, production deployment, autonomous order placement, or real-money trading automation.
+
+**Status:** Task 008 / Milestone M5 remains In Progress. Task 008E is readiness evidence only; any Task 008F gate crossing requires separate Harness Engineering approval and same-PR source-of-truth updates.

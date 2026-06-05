@@ -2,7 +2,7 @@
 
 ## Snapshot Date
 
-2026-06-04
+2026-06-05
 
 ## Current Phase
 
@@ -19,7 +19,7 @@
 | 005 | Create Supabase Migration Draft | Completed | Completed by PR #5 with local/test SQL execution validation and CI migration check workflow. |
 | 006 | Backend Skeleton | Completed | PR #8 merged the analyze-stock stub, validation envelope handling, backend tests, and mobile-first strategy notes, completing M3 readiness for Phase 4. |
 | 007 | First Analysis Workflow | Completed | Completed by Phase 4G closeout readiness review after Phase 4A deterministic local-only workflow skeleton, Phase 4B deterministic department adapters, Phase 4C local-only handoff mapping, Phase 4D internal-only handoff preview decision, Phase 4E internal workflow validation, and Phase 4F fixture-backed validation/M4 readiness evidence. Public handoff previews, live research, persistence, production Supabase, broker execution, paper orders, and real-money trading remain out of scope. |
-| 008 | Simulation Desk MVP | In Progress | Task 008D adds persistence gate readiness and migration alignment planning only after Task 008A planning, Task 008B local fixtures/validators, and Task 008C local paper-order validation. No SQL migration, endpoint runtime, persistence writes, Supabase client, production Supabase, paper-order creation, broker integration, or real-money trading automation is implemented or authorized. |
+| 008 | Simulation Desk MVP | In Progress | Task 008E adds an implementation-limited local-only readiness report aggregating Task 008B fixture validation and Task 008C paper-order intent validation after Task 008D persistence gate planning. No SQL migration, endpoint runtime, persistence writes, Supabase client, production Supabase, paper-order creation, paper-portfolio runtime, strategy recommendation persistence, audit-event creation, broker integration, or real-money trading automation is implemented or authorized. |
 | 009 | Simple UI or Report Output | Planned | Minimal output layer for strategy reports. |
 | 010 | Review and Learning Loop | Planned | Trade reviews, proposals, and audit continuity. |
 
@@ -44,7 +44,7 @@
 - Real-money execution and brokerage API integration remain explicitly out of scope.
 - Codex PR Factory governance defines role separation, gates, PR body evidence expectations, and source-of-truth-based follow-up handling.
 - Phase 4C handoff previews remain internal-only for now; Phase 4E validates this boundary locally, Phase 4F adds fixture-backed internal validation scenarios plus an M4 readiness matrix, and Phase 4G records M4 closeout readiness. Public exposure through `POST /api/v1/analyze-stock` requires explicit future approval and same-PR contract/runtime/test updates.
-- Task 008D adds persistence gate readiness and migration alignment planning only after Task 008A, Task 008B, and Task 008C. It does not authorize SQL migration, IO, HTTP, endpoint runtime, persistence writes, Supabase client, production Supabase, broker integration, paper order creation, paper-portfolio runtime, strategy recommendation persistence, live market data, or real-money trading automation.
+- Task 008E adds an implementation-limited local-only Simulation Desk readiness report aggregating Task 008B and Task 008C evidence after Task 008D persistence gate planning. It does not authorize SQL migration, IO, HTTP, endpoint runtime, persistence writes, Supabase client, production Supabase, broker integration, paper-order creation, paper-portfolio runtime, strategy recommendation persistence, audit-event creation, live market data, secrets, production deployment, or real-money trading automation.
 
 ## Scope Compliance Snapshot
 
@@ -53,6 +53,7 @@
 - Task 008B local simulation contract fixtures added: **Yes — pure local-only and implementation-limited**
 - Task 008C local paper-order validation service/stub added: **Yes — pure local-only and implementation-limited**
 - Task 008D persistence gate readiness and migration alignment planning added: **Yes — documentation-only and governance-sensitive**
+- Task 008E local Simulation Desk readiness report added: **Yes — implementation-limited and pure local-only**
 - Production deployment added: **No**
 - Production Supabase connection added: **No**
 - Backend Phase 4A deterministic workflow skeleton completed: **Yes**
@@ -64,7 +65,11 @@
 - Frontend runtime implementation added: **No**
 - Local-only Simulation Desk contract fixtures added: **Yes — deterministic in-memory fixtures only**
 - Local-only paper-order validation service/stub added: **Yes — deterministic in-memory validation only**
+- Local-only Simulation Desk readiness report added: **Yes — deterministic in-memory aggregation only**
 - Paper-order runtime added: **No**
+- Strategy recommendation persistence added: **No**
+- Audit-event creation runtime added: **No**
+- Live market data added: **No**
 - Paper-portfolio runtime added: **No**
 - Persistence writes added: **No**
 - SQL migration added: **No**
