@@ -110,6 +110,8 @@ Validation also checks that:
 - All required boundary flags are present and false.
 - Source Task 008B boundary-compliance checks remain true.
 - Source Task 008C boundary flags remain false.
+- Source Task 008C `record_type` remains `paper_order_intent`.
+- Source Task 008C `validated_order` contains the local paper-order fields and passes `validate_local_paper_order_intent` revalidation with the local portfolio registry.
 - Approval gate status values remain false.
 - `would_create_order` remains false.
 - Readiness report validation does not mutate inputs.
@@ -124,7 +126,7 @@ PYTHONPATH=backend pytest backend/tests -q
 git diff --check
 ```
 
-Task-specific tests must cover the default readiness report, Task 008B evidence, Task 008C evidence, canonical schema preservation, locked endpoint references, forbidden boundary flag rejection, invalid local paper-order input, non-mutating behavior, and no runtime/persistence/external/broker/real-money behavior.
+Task-specific tests must cover the default readiness report, Task 008B evidence, Task 008C evidence, embedded Task 008C `record_type` and `validated_order` revalidation failures, canonical schema preservation, locked endpoint references, forbidden boundary flag rejection, invalid local paper-order input, non-mutating behavior, and no runtime/persistence/external/broker/real-money behavior.
 
 ## Risk Areas
 

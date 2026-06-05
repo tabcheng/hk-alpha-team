@@ -120,6 +120,59 @@ def test_task_008e_approval_gate_crossed_fails_validation() -> None:
         validate_simulation_desk_readiness_report(report)
 
 
+def test_task_008e_task_008c_wrong_record_type_fails_validation() -> None:
+    report = build_simulation_desk_readiness_report()
+    evidence = report["source_reports"]["task_008c"]
+    evidence["record_type"] = "paper_position"
+
+    assert evidence["source_task_id"] == "008C"
+    assert evidence["validation_status"] == "passed"
+    assert evidence["would_create_order"] is False
+    assert all(value is False for value in evidence["boundary_flags"].values())
+    with pytest.raises(ValueError, match="record_type must remain paper_order_intent"):
+        validate_simulation_desk_readiness_report(report)
+
+
+@pytest.mark.parametrize(
+    ("field_name", "malformed_value", "expected_error"),
+    [
+        ("symbol", "700.HK", "0700.HK"),
+        ("side", "hold", "side must be buy or sell"),
+        ("quantity", -1, "quantity must be non-negative"),
+        ("order_type", "stop", "order_type must be market or limit"),
+        ("limit_price", -0.01, "limit_price must be non-negative"),
+    ],
+)
+def test_task_008e_task_008c_stale_malformed_validated_order_fails_validation(
+    field_name: str,
+    malformed_value: object,
+    expected_error: str,
+) -> None:
+    report = build_simulation_desk_readiness_report()
+    evidence = report["source_reports"]["task_008c"]
+    evidence["validated_order"][field_name] = malformed_value
+
+    assert evidence["source_task_id"] == "008C"
+    assert evidence["validation_status"] == "passed"
+    assert evidence["would_create_order"] is False
+    assert all(value is False for value in evidence["boundary_flags"].values())
+    with pytest.raises(ValueError, match=expected_error):
+        validate_simulation_desk_readiness_report(report)
+
+
+def test_task_008e_task_008c_missing_portfolio_id_fails_validation() -> None:
+    report = build_simulation_desk_readiness_report()
+    evidence = report["source_reports"]["task_008c"]
+    evidence["validated_order"].pop("portfolio_id")
+
+    assert evidence["source_task_id"] == "008C"
+    assert evidence["validation_status"] == "passed"
+    assert evidence["would_create_order"] is False
+    assert all(value is False for value in evidence["boundary_flags"].values())
+    with pytest.raises(ValueError, match="validated_order missing required fields"):
+        validate_simulation_desk_readiness_report(report)
+
+
 def test_task_008e_invalid_local_paper_order_input_fails_safely() -> None:
     order = _valid_order()
     order["symbol"] = "700.HK"

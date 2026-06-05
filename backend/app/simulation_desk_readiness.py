@@ -13,6 +13,7 @@ from app.simulation_contract import (
 )
 from app.simulation_order_validation import (
     LOCAL_PAPER_ORDER_BOUNDARY_FLAGS,
+    LOCAL_PAPER_ORDER_RECORD_TYPE,
     build_local_paper_order_validation_report,
     validate_local_paper_order_intent,
 )
@@ -60,6 +61,15 @@ APPROVAL_GATES_NOT_CROSSED = (
     "audit-event database creation approval gate",
     "broker integration approval gate",
     "real-money trading approval gate",
+)
+
+TASK_008C_VALIDATED_ORDER_REQUIRED_FIELDS = (
+    "portfolio_id",
+    "symbol",
+    "side",
+    "quantity",
+    "order_type",
+    "limit_price",
 )
 
 
@@ -266,6 +276,37 @@ def validate_simulation_desk_readiness_report(report: Mapping[str, object]) -> d
     _require(
         not task_008c_enabled_flags,
         f"Task 008C boundary flags must remain false: {task_008c_enabled_flags}",
+    )
+    _require(
+        task_008c.get("record_type") == LOCAL_PAPER_ORDER_RECORD_TYPE,
+        "Task 008C record_type must remain paper_order_intent",
+    )
+    validated_order = _require_mapping(
+        task_008c.get("validated_order"),
+        "source_reports.task_008c.validated_order",
+    )
+    missing_validated_order_fields = sorted(
+        set(TASK_008C_VALIDATED_ORDER_REQUIRED_FIELDS) - set(validated_order)
+    )
+    _require(
+        not missing_validated_order_fields,
+        "Task 008C validated_order missing required fields: "
+        f"{missing_validated_order_fields}",
+    )
+    try:
+        task_008c_revalidation = validate_local_paper_order_intent(
+            validated_order,
+            portfolio_registry=_build_portfolio_registry(),
+        )
+    except ValueError as exc:
+        raise ValueError(
+            "Simulation Desk readiness validation failed: "
+            "Task 008C validated_order failed local paper-order revalidation: "
+            f"{exc}"
+        ) from exc
+    _require(
+        task_008c_revalidation["would_create_order"] is False,
+        "Task 008C validated_order revalidation must not create orders",
     )
     _require(task_008c.get("would_create_order") is False, "Task 008C must not create orders")
 
