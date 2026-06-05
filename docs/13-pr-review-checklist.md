@@ -70,11 +70,29 @@ For implementation PRs:
 - [ ] Tests were run and reported (or explicit rationale for no tests).
 - [ ] Validation evidence is included (commands, outputs, or artifact checks).
 
-## G. Completion Gate
+## G. Evidence Closure Gate
+
+Use `docs/32-pr-review-evidence-closure-protocol.md` as the detailed protocol for evidence classification, residual limitations, and final review language. Before final approval/merge:
+
+- [ ] Public web availability checked or recorded as supplementary/unavailable.
+- [ ] Authenticated GitHub PR metadata, diff, review threads, CI status, and source files checked when public web evidence is unavailable.
+- [ ] Latest reviewed head SHA recorded.
+- [ ] Branch freshness checked.
+- [ ] CI depth level identified.
+- [ ] Workflow conclusions checked.
+- [ ] Job steps/logs inspected when required by `docs/32-pr-review-evidence-closure-protocol.md`, or the limitation is recorded.
+- [ ] Exact command outputs are present in the PR body or Codex final response.
+- [ ] Local rerun performed, or explicitly classified as not performed / reduced-risk evidence.
+- [ ] Branch protection / ruleset visibility checked when tooling permits, or residual limitation recorded.
+- [ ] Unresolved review thread count checked.
+- [ ] Expected head SHA merge lock stated.
+- [ ] Post-merge source-of-truth verification required when applicable.
+
+## H. Completion Gate
 
 - [ ] PR is mergeable (required for completion).
 
-## H. Review Thread Closure Gate
+## I. Review Thread Closure Gate
 
 Before final approval/merge:
 
