@@ -102,3 +102,5 @@ For every implementation-limited or governance-sensitive PR, reviewers must perf
 
 A PR must not be considered approved if unresolved review threads remain, even if top-level comments are positive.
 
+Evidence closure for full PR reviews is defined in `docs/32-pr-review-evidence-closure-protocol.md`. Reviewers must use that protocol to classify public web search gaps, authenticated GitHub source-of-truth fallback, CI depth, local rerun limitations, branch protection visibility, expected-head-SHA merge locking, unresolved review threads, and post-merge source-of-truth verification.
+

@@ -155,6 +155,10 @@ Confirm no secrets, API keys, Supabase service role keys, Railway tokens, broker
 
 Run available checks appropriate to the task and report exact commands/results. If code checks are unnecessary for documentation-only changes, say so clearly and still run available lightweight docs/contract checks.
 
+### Evidence Closure Gate
+
+Full PR reviews must apply the PR Review Evidence Closure Protocol in `docs/32-pr-review-evidence-closure-protocol.md`. The protocol extends this Factory workflow by classifying evidence as closed evidence, reduced-risk evidence, or residual limitation; treating public web search as supplementary; allowing authenticated GitHub connector/API evidence to serve as source of truth for private or unindexed PRs; setting CI depth expectations by PR risk; requiring accurate local-rerun language; recording branch protection visibility limits without requesting routine Harness Engineering screenshots; requiring expected-head-SHA merge locking; blocking on unresolved review threads; and requiring post-merge source-of-truth verification.
+
 ### PR Review Gate
 
 A PR is not complete until it is mergeable, relevant checks are reviewed, and unresolved review threads are addressed. Codex must not self-approve.

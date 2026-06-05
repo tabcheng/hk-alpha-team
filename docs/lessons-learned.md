@@ -103,3 +103,15 @@
 
 - Future Phase 4 work should replace stub internals with fixture-backed agent workflow tests before adding live data dependencies.
 - Environment promotion should remain explicit so production Supabase, Railway, and secrets are not introduced as hidden prerequisites.
+
+## 2026-06-05 — PR Review Evidence Closure Governance
+
+### What Worked
+
+- Converting recurring PR review limitations into explicit evidence classes and gates improves review consistency without requiring Harness Engineering to collect manual screenshots.
+- Treating authenticated GitHub connector/API evidence as the source of truth for private or unindexed PRs reduces dependence on public web indexing.
+
+### What to Improve
+
+- Future full PR reviews should classify residual limitations explicitly instead of repeating vague caveats.
+- Final review notes should pair no-known-blockers language with the latest reviewed head SHA, expected-head-SHA merge locking, review-thread status, CI depth, and post-merge source-of-truth verification.
