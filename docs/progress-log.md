@@ -233,3 +233,21 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 **Boundaries:** Task 008E does not add or authorize SQL migration, endpoint runtime, persistence writes, Supabase client setup, production Supabase, paper-order creation, paper-portfolio runtime, strategy recommendation persistence, audit-event creation, broker integration, live market data, external API calls, secrets, production deployment, autonomous order placement, or real-money trading automation.
 
 **Status:** Task 008 / Milestone M5 remains In Progress. Task 008E is readiness evidence only; any Task 008F gate crossing requires separate Harness Engineering approval and same-PR source-of-truth updates.
+
+## 2026-06-05 — Task 008F Local Simulation Desk Scenario Pack and Gate Decision Matrix
+
+**Scope:** Added an implementation-limited, governance-sensitive, pure local-only Simulation Desk scenario pack that aggregates Task 008B fixture validation evidence, Task 008C local paper-order intent validation evidence, and Task 008E readiness aggregation evidence.
+
+**Validation behavior:** The scenario pack includes a valid HK paper-order intent scenario, malformed `700.HK` symbol fail-safe evidence, invalid side, invalid quantity, invalid order type, invalid limit price, missing portfolio id, Task 008E readiness aggregation, canonical schema table references, locked endpoint traceability, false approval gates, false forbidden boundary flags, loss visibility evidence, learning proposal reviewability evidence, and a next-gate matrix that approves no gate.
+
+**Boundaries:** Task 008F does not add or authorize SQL migration, endpoint runtime, persistence writes, Supabase client setup, production Supabase, paper-order creation, paper-portfolio runtime, strategy recommendation persistence, audit-event creation, broker integration, live market data, external API calls, secrets, production deployment, autonomous order placement, or real-money trading automation.
+
+**Status:** Task 008 / Milestone M5 remains In Progress. Task 008F is local scenario-pack/readiness evidence only; any Task 008G gate crossing requires separate explicit Harness Engineering approval and same-PR source-of-truth updates.
+
+
+## 2026-06-05 — Task 008F Review Follow-up
+
+- Strengthened the Task 008F scenario-pack validator so stored valid and invalid paper-order scenario evidence is revalidated against the local Task 008C helper instead of being trusted only by status strings.
+- Added deeper fail-safe checks for hidden losing records, auto-applied learning proposal evidence, exact locked endpoint reference preservation, and complete next-gate direction preservation.
+- Added regression tests for stale valid/invalid scenario inputs, hidden loss evidence, auto-applied learning proposals, missing next-gate directions, and duplicate locked endpoint references.
+- Preserved Task 008F pure local-only scope: no runtime, no persistence, no Supabase client or production Supabase connection, no endpoint handler, no paper-order creation, no paper-portfolio runtime, no strategy persistence, no audit-event database creation, no live market data, no external API calls, no secrets, no deployment, no autonomous order placement, and no real-money trading automation.

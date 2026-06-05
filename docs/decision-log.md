@@ -248,3 +248,11 @@ We will not upgrade GitHub account/organization immediately. During Phase 2 we w
 **Decision:** Task 008E is approved only as an implementation-limited, pure local-only readiness reporting slice that aggregates Task 008B and Task 008C evidence into a deterministic in-memory artifact.
 
 **Implications:** This decision does not approve runtime behavior, SQL migration, persistence writes, Supabase client setup, production Supabase, endpoint implementation, paper-order creation, paper-portfolio runtime, strategy recommendation persistence, audit-event creation, broker integration, live market data, external API usage, secrets, deployment, autonomous order placement, or real-money trading automation. Any future Task 008F gate requires explicit Harness Engineering review and approval.
+
+## 2026-06-05 — Decision: Keep Task 008F as Local-Only Scenario-Pack and Gate-Decision Evidence
+
+**Context:** Task 008B provides local Simulation Desk fixture validation, Task 008C provides local paper-order intent validation, Task 008D records persistence and migration gate planning, and Task 008E aggregates readiness evidence without opening runtime or persistence gates.
+
+**Decision:** Task 008F is approved only as an implementation-limited, governance-sensitive, pure local-only scenario-pack and gate-decision evidence slice. It may aggregate Task 008B, Task 008C, and Task 008E evidence; include deterministic valid and invalid scenario validation; preserve canonical schema table names; reference locked endpoint names for traceability only; and record possible future Task 008G directions without approving any gate.
+
+**Implications:** Task 008 / Milestone M5 remains In Progress. This decision does not authorize SQL migration, persistence writes, Supabase client setup, production Supabase, endpoint runtime, paper-order creation, paper-portfolio runtime, strategy recommendation persistence, audit-event database creation, broker integration, live market data, external API calls, secrets, deployment, autonomous order placement, or real-money trading automation. Any future Task 008G gate crossing requires explicit Harness Engineering approval in a separate PR scope.
