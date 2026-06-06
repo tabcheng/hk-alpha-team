@@ -291,3 +291,12 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Added the Vendor / External Data Source Approval Gate: every specific vendor, vendor API, paid data source, production external service, broker integration, payment provider, authentication provider, live data provider, deployment provider, or third-party service requires separate discussion, current-source/web verification where facts may change, Evidence Closure documentation, and explicit Harness Engineering approval before implementation.
 - Confirmed Task 008I does not connect vendors, call live market data, call external APIs, add API keys/secrets, add vendor SDKs, create production third-party dependencies, or add payment, auth, broker, deployment, market data, news, financial data, or AI/model vendor integrations.
 - Task 008 / M5 remains In Progress.
+
+## 2026-06-06 — Task 008J Simulation Desk Persistence Alignment
+
+- Added a Task 008J documentation page covering purpose, source-of-truth review, runtime-to-persistence mapping, 0001 schema gaps, local/test-only migration boundary, adapter boundary design, validation strategy, risk areas, and Task 008K entry criteria.
+- Added `supabase/migrations/0002_align_simulation_desk_persistence_fields.sql` as an additive local/test-only draft that preserves canonical table names and does not alter `0001_create_core_schema.sql`.
+- Added a local-only Simulation Desk persistence-intent boundary that builds deterministic payloads for future `paper_orders`, `portfolio_snapshots`, `learning_proposals`, and `audit_events` targets without database, disk, Supabase, vendor, or network writes.
+- Added deterministic tests for both approved simulation origins, unsafe boundary rejection, reviewable/non-auto-applied learning proposal previews, append-only audit event previews, portfolio snapshot mapping, no Supabase/vendor/network/disk dependency, and runtime response envelope continuity.
+- Updated local SQL validation to execute migration files in lexical order so `0001` and `0002` are validated together where PostgreSQL is available.
+- Task 008 / M5 remains In Progress; production Supabase, Supabase client runtime, runtime persistence writes, vendor/API integration, broker integration, billing/auth/deployment runtime, secrets, autonomous real-money execution, and real-money trading remain out of scope.

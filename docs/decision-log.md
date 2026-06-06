@@ -293,3 +293,18 @@ We will not upgrade GitHub account/organization immediately. During Phase 2 we w
 **Rationale:** HK Alpha Team may eventually need market data, fundamentals, news, sentiment, AI/model, search/web data, billing, auth, hosting, notification, broker-sandbox, or other third-party services. Vendor choices can affect cost, licensing, redistribution rights, privacy, retention, security, reliability, auditability, investment recommendations, simulations, billing, entitlements, and user-facing claims, so they must be reviewed explicitly before implementation.
 
 **Task 008I boundary:** Task 008I does not connect vendors, call live market data, call external APIs, add API keys/secrets, add vendor SDKs, create production third-party dependencies, or add payment, auth, broker, deployment, market data, news, financial data, or AI/model vendor integrations. Only local/in-memory behavior is implemented.
+
+## 2026-06-06 — Task 008J Persistence Schema Alignment and Intent Boundary
+
+Decision: Task 008J introduces Simulation Desk persistence schema alignment, a local/test-only additive migration draft, and a local-only persistence-intent adapter boundary.
+
+Rationale: Task 008I runtime records should not move directly into a real database write path. The project needs a deterministic, reviewable mapping layer that preserves simulation origin, advisory-only boundaries, recommendation lineage, learning proposal reviewability, append-only audit previews, and loss visibility before any future persistence adapter is approved.
+
+Boundaries:
+
+- No real database writes are approved.
+- No production Supabase connection is approved.
+- No Supabase client runtime is added.
+- No vendor/API calls, broker integrations, deployment, billing/auth runtime, membership runtime, secrets, real-money trading, or autonomous real-money execution are approved.
+- Future production persistence or a Supabase adapter requires a separate explicit PR scope and Evidence Closure.
+- Codex does not self-approve this governance-sensitive change.

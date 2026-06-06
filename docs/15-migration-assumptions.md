@@ -36,3 +36,17 @@ Capture explicit schema interpretation assumptions for the first migration draft
 - Add local SQL execution checks in a dedicated environment-ready PR.
 - Add RLS policy definitions and role tests after baseline schema acceptance.
 - Add migration drift checks between SQL files and canonical docs as the migration set expands.
+
+## Task 008J Migration Assumptions — Simulation Desk Persistence Alignment
+
+Date: 2026-06-06
+
+- `supabase/migrations/0002_align_simulation_desk_persistence_fields.sql` is a local/test-only additive migration draft.
+- The draft exists to validate Task 008G/008I Simulation Desk runtime field alignment before any real Supabase write path is approved.
+- Production Supabase application requires a later explicit Harness Engineering approval, separate PR scope, and Evidence Closure.
+- Runtime persistence writes remain out of scope for Task 008J.
+- A future Supabase adapter requires a separate PR and must not be inferred from the presence of a persistence-intent boundary.
+- `0001_create_core_schema.sql` remains unchanged; Task 008J bridges gaps through additive `0002` only.
+- Canonical table names must not be renamed by migration drafts.
+- Destructive schema changes, column drops, production data rewrites, secrets, vendor/API calls, broker integrations, and real-money execution remain prohibited.
+- Local/CI SQL validation should execute migration files in lexical order so `0001` and `0002` are validated together where PostgreSQL is available.
