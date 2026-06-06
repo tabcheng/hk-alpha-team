@@ -19,7 +19,7 @@
 | 005 | Create Supabase Migration Draft | Completed | Completed by PR #5 with local/test SQL execution validation and CI migration check workflow. |
 | 006 | Backend Skeleton | Completed | PR #8 merged the analyze-stock stub, validation envelope handling, backend tests, and mobile-first strategy notes, completing M3 readiness for Phase 4. |
 | 007 | First Analysis Workflow | Completed | Completed by Phase 4G closeout readiness review after Phase 4A deterministic local-only workflow skeleton, Phase 4B deterministic department adapters, Phase 4C local-only handoff mapping, Phase 4D internal-only handoff preview decision, Phase 4E internal workflow validation, and Phase 4F fixture-backed validation/M4 readiness evidence. Public handoff previews, live research, persistence, production Supabase, broker execution, paper orders, and real-money trading remain out of scope. |
-| 008 | Simulation Desk MVP | In Progress | Task 008H adds a documentation-only commercial-readiness and subscription-product governance baseline after Task 008G, while keeping dual Simulation Desk origins (`user_recorded` and `system_generated_learning`) and all advisory-only/no-real-money boundaries intact. Runtime, persistence, deployment, billing/payment, membership/subscription runtime, auth runtime, live market data, broker integration, secrets, autonomous real-money execution, and real-money trading remain prohibited/out of scope. |
+| 008 | Simulation Desk MVP | In Progress | Task 008I adds a non-production in-memory Simulation Desk backend runtime slice for the locked paper-order and paper-portfolio endpoints after Task 008G/008H. Dual origins (`user_recorded` and `system_generated_learning`) remain distinguishable and advisory-only. SQL migration, Supabase persistence, production Supabase, deployment, billing/payment, membership/subscription runtime, auth runtime, live market data, vendor integrations, external APIs, paid data providers, broker APIs, payment providers, authentication providers, production third-party services, secrets, autonomous real-money execution, and real-money trading remain prohibited/out of scope. |
 | 009 | Simple UI or Report Output | Planned | Minimal output layer for strategy reports. |
 | 010 | Review and Learning Loop | Planned | Trade reviews, proposals, and audit continuity. |
 
@@ -44,7 +44,7 @@
 - Real-money execution and brokerage API integration remain explicitly out of scope.
 - Codex PR Factory governance defines role separation, gates, PR body evidence expectations, and source-of-truth-based follow-up handling.
 - Phase 4C handoff previews remain internal-only for now; Phase 4E validates this boundary locally, Phase 4F adds fixture-backed internal validation scenarios plus an M4 readiness matrix, and Phase 4G records M4 closeout readiness. Public exposure through `POST /api/v1/analyze-stock` requires explicit future approval and same-PR contract/runtime/test updates.
-- Task 008G records Harness Engineering approval for non-real-money productization gates and adopts the dual simulation-origin product model: `user_recorded` paper trades and `system_generated_learning` simulations remain distinguishable and auditable. Task 008H adds commercial-readiness governance for possible future membership/subscription offerings through explicit PRs and evidence-based review. Neither task authorizes runtime, persistence, deployment, subscription billing, payment processing, live data, broker integration, autonomous real-money execution, or real-money trading; Task 008 / M5 remains In Progress.
+- Task 008G records Harness Engineering approval for non-real-money productization gates and adopts the dual simulation-origin product model: `user_recorded` paper trades and `system_generated_learning` simulations remain distinguishable and auditable. Task 008H adds commercial-readiness governance for possible future membership/subscription offerings through explicit PRs and evidence-based review. Task 008I adds a non-production in-memory backend runtime slice for `POST /api/v1/simulation/paper-orders` and `GET /api/v1/paper-portfolios/{portfolio_id}` only. It does not authorize SQL migration, Supabase persistence, deployment, subscription billing, payment processing, live data, vendor integration, external APIs, paid data providers, broker APIs, payment providers, authentication providers, production third-party services, autonomous real-money execution, or real-money trading; Task 008 / M5 remains In Progress.
 
 ## Scope Compliance Snapshot
 
@@ -57,8 +57,10 @@
 - Task 008F local Simulation Desk scenario pack and gate decision matrix added: **Yes — implementation-limited, governance-sensitive, and pure local-only**
 - Task 008G dual simulation-origin product foundation added: **Yes — governance-sensitive contract/schema alignment plus local-only validation helper and tests**
 - Task 008H commercial-readiness governance baseline added: **Yes — documentation-only commercial-readiness and subscription-product governance planning**
+- Task 008I dual-origin Simulation Desk runtime slice added: **Yes — non-production, in-memory backend runtime only**
 - Harness Engineering non-real-money productization gate approval recorded: **Yes — schema/contract alignment, planning, recordkeeping, system-generated learning simulations, audit events, and future non-real-money sequencing only**
 - Production deployment added: **No**
+- Vendor/API capability future direction approved in principle: **Yes — every specific vendor/API still requires separate discussion, current-source verification, and explicit Harness Engineering approval before implementation**
 - Production Supabase connection added: **No**
 - Backend Phase 4A deterministic workflow skeleton completed: **Yes**
 - Phase 4B deterministic department adapters completed: **Yes**
@@ -71,15 +73,21 @@
 - Local-only paper-order validation service/stub added: **Yes — deterministic in-memory validation only**
 - Local-only Simulation Desk readiness report added: **Yes — deterministic in-memory aggregation only**
 - Local-only Simulation Desk scenario pack added: **Yes — deterministic in-memory valid/invalid/readiness evidence only**
-- Paper-order runtime added: **No**
+- Paper-order runtime added: **Yes — non-production in-memory runtime only for `POST /api/v1/simulation/paper-orders`**
 - Strategy recommendation persistence added: **No**
-- Audit-event creation runtime added: **No**
+- Audit-event creation runtime added: **Preview only — in-memory audit-event previews, no persistence writes**
 - Live market data added: **No**
-- Paper-portfolio runtime added: **No**
+- Vendor integration added: **No**
+- External API integration added: **No**
+- Paid data provider added: **No**
+- Payment provider added: **No**
+- Authentication provider added: **No**
+- Production third-party service dependency added: **No**
+- Paper-portfolio runtime added: **Yes — non-production in-memory snapshot only for `GET /api/v1/paper-portfolios/{portfolio_id}`**
 - Persistence writes added: **No**
 - SQL migration added: **No**
 - Supabase client added: **No**
-- Endpoint runtime added: **No**
+- Endpoint runtime added: **Yes — limited to Task 008I Simulation Desk in-memory endpoints**
 - Real-money trading automation added: **No**
 - Brokerage API integration added: **No**
 - Secrets committed: **No**
@@ -88,7 +96,7 @@
 
 - Task 007 / Milestone M4 is completed by the Phase 4G M4 closeout readiness review after Phase 4A through Phase 4F evidence review and required validation.
 - Phase 4C handoff previews remain internal-only for M4 closeout; public exposure is not required for closing M4 and remains a separate contract-changing PR requiring Harness Engineering approval plus same-PR `docs/09-api-and-agent-contracts.md`, runtime, and API test updates.
-- Task 008 Simulation Desk MVP and M5 remain In Progress. Task 008H adds a documentation-only commercial-readiness and subscription-product governance baseline after Task 008G; it does not implement SQL migration, endpoint runtime, persistence writes, Supabase client, production Supabase, broker integration, live market data, deployment, authentication runtime, membership/subscription runtime, billing/payment integration, autonomous real-money execution, or real-money trading automation.
-- The locked endpoint names, success/error envelope, `analysis_status`, and `workflow_phase` remain unchanged; `docs/09-api-and-agent-contracts.md` remains aligned to current public runtime behavior because no public payload change is introduced.
+- Task 008 Simulation Desk MVP and M5 remain In Progress. Task 008I adds non-production in-memory endpoint runtime for the locked Simulation Desk paper-order and paper-portfolio endpoints after Task 008G/008H; it does not implement SQL migration, persistence writes outside process memory, Supabase client, production Supabase, vendor integration, external APIs, paid data providers, broker integration, live market data, deployment, authentication providers/runtime, payment providers, membership/subscription runtime, billing/payment integration, production third-party services, autonomous real-money execution, or real-money trading automation.
+- The locked endpoint names and success/error envelope remain unchanged; Task 008I implements existing locked Simulation Desk endpoints without renaming MVP endpoints or changing the required response envelope.
 - The Codex PR Factory governance workflow is recorded in `docs/20-codex-pr-factory.md`.
-- Task 007 remains Completed and M4 remains Completed; Task 008 / M5 remains In Progress and has progressed through Task 008H commercial-readiness governance after Task 008G dual simulation-origin contract/schema foundation, while preserving advisory-only and paper-only scope with no SQL migration, IO, HTTP, endpoint runtime, persistence writes, Supabase client, production Supabase, broker execution, live market data, secrets, deployment, paper-order runtime, membership/subscription runtime, billing/payment integration, authentication runtime, production infrastructure, real-money trading, or autonomous real-money execution.
+- Task 007 remains Completed and M4 remains Completed; Task 008 / M5 remains In Progress and has progressed through Task 008I dual-origin Simulation Desk runtime after Task 008G dual simulation-origin contract/schema foundation and Task 008H commercial-readiness governance, while preserving advisory-only and paper-only scope with no SQL migration, persistence writes outside process memory, Supabase client, production Supabase, vendor integration, external APIs, paid data providers, broker execution, live market data, secrets, deployment, payment providers, authentication providers/runtime, membership/subscription runtime, billing/payment integration, production third-party services, production infrastructure, real-money trading, or autonomous real-money execution.

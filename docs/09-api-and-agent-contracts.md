@@ -48,7 +48,7 @@ Contract boundaries for both origins:
 - learning proposals are reviewable artifacts and must not be auto-applied;
 - losing simulations remain visible, and historical recommendations are not overwritten.
 
-Future runtime implementation must keep `POST /api/v1/simulation/paper-orders` as the endpoint name and must keep the required response envelope intact.
+Task 008I runtime implementation keeps `POST /api/v1/simulation/paper-orders` as the endpoint name, preserves the required response envelope, and limits behavior to non-production in-memory paper-only records.
 
 ## Endpoint Specifications (Required Details)
 
@@ -104,7 +104,8 @@ Future runtime implementation must keep `POST /api/v1/simulation/paper-orders` a
 - **Path parameters:** None.
 - **Request body:** `{ "portfolio_id": "...", "symbol": "...", "side": "buy|sell", "quantity": n, "simulation_origin": "user_recorded|system_generated_learning" }`.
 - **Response shape:** Required success envelope with created paper order data in `data`; the required envelope fields (`request_id`, `status`, `data`, `metadata`, `warnings`) must not be removed or renamed.
-- **Validation notes:** non-negative quantity; portfolio must exist; `simulation_origin` must be either `user_recorded` or `system_generated_learning`; all responses must include warnings/metadata confirming paper-only advisory scope, no real-money order placement, no broker execution API call, no autonomous real-money execution, no production Supabase connection unless separately approved, and no secrets required.
+- **Current Task 008I behavior:** Non-production process-local in-memory runtime only. Creates deterministic paper-only records, in-memory audit-event previews, and optional reviewable learning-proposal previews for `system_generated_learning`; no database write or external service call is performed.
+- **Validation notes:** positive quantity; portfolio id and conservative HK symbol format are validated; `simulation_origin` must be either `user_recorded` or `system_generated_learning`; all responses must include warnings/metadata confirming paper-only advisory scope, no real-money order placement, no broker execution API call, no autonomous real-money execution, no production Supabase connection, no persistence write, and no secrets required.
 - **User-recorded validation:** `user_recorded` payloads require human/user/Harness Engineering source metadata such as `created_by_type`, user/source identifier, `user_recorded_notes`, user rationale, and optional `strategy_recommendation_id` if the human links the paper trade to a recommendation. These records must not imply AI-generated learning unless explicitly linked through a reviewable proposal.
 - **System-generated-learning validation:** `system_generated_learning` payloads require `created_by_type`, `source_recommendation_id` or `strategy_recommendation_id`, original recommendation, original scores, original thesis, entry assumptions, exit assumptions, PnL, holding period, what worked, what failed, improvement suggestions, `system_learning_reason`, and `requires_human_review = true`.
 - **Learning proposal behavior:** System-generated learning simulations may create or reference reviewable `learning_proposals`, but `auto_apply` / `proposals_auto_applied` must be false and production strategy logic must not be silently changed.
@@ -116,6 +117,7 @@ Future runtime implementation must keep `POST /api/v1/simulation/paper-orders` a
 - **Path parameters:** `portfolio_id` (required).
 - **Request body:** None.
 - **Response shape:** Required success envelope with portfolio object in `data`.
+- **Current Task 008I behavior:** Returns a non-production process-local in-memory paper portfolio snapshot with recent paper orders, audit-event previews, placeholder cash/NAV fields, and boundary flags. Unknown in-memory portfolio ids return `NOT_FOUND`.
 - **Validation notes:** `portfolio_id` must be valid id format.
 - **Error cases:** `VALIDATION_ERROR`, `NOT_FOUND`, `INTERNAL_ERROR`.
 

@@ -139,3 +139,17 @@
 
 - Commercial-product standards should be documented before runtime, membership, subscription, billing, deployment, or public-facing product work begins.
 - Future productization tasks should include explicit privacy, retention, entitlement, billing, compliance, security, and audit-trail review sections before implementation starts.
+
+## 2026-06-06 — Task 008I Runtime Slice Follow-up
+
+### What Worked
+
+- Reusing the Task 008G origin contract at the API boundary kept `user_recorded` and `system_generated_learning` semantics aligned while enabling real backend behavior.
+- Deterministic process-local IDs and timestamps made the in-memory runtime testable without introducing persistence, Supabase, secrets, or external services.
+- Returning audit-event previews and learning-proposal previews allowed product workflow validation while preserving the no-auto-apply and no-database-write boundaries.
+
+### What to Improve
+
+- Future persistence work should explicitly map Task 008G/008I additive origin and boundary fields to SQL/schema changes before any Supabase write path is approved.
+- Future Simulation Desk endpoint expansion should keep losing outcomes visible in fixtures and runtime responses, especially when portfolio valuation and review loops are added.
+- PR scopes that cross from planning into runtime should keep status/log documentation changes in the same PR so M5 progress remains auditable without claiming completion early.

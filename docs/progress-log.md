@@ -275,3 +275,19 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Preserved the Task 008G dual Simulation Desk origin model: `user_recorded` and `system_generated_learning` remain paper-only, advisory-only, auditable, and human-in-the-loop.
 - Preserved out-of-scope boundaries: no frontend/UI, backend runtime, FastAPI endpoints, persistence writes, SQL migrations, Supabase client or production Supabase connection, billing/payment integration, membership/subscription runtime, authentication runtime, live market data, broker integration, deployment configuration, secrets, real-money trading, autonomous real-money execution, or locked contract renames.
 - Task 008 / M5 remains In Progress and is not claimed complete.
+
+## 2026-06-06 — Task 008I Dual-Origin Simulation Desk Runtime Slice
+
+- Added a non-production FastAPI runtime slice for the locked Simulation Desk endpoints: `POST /api/v1/simulation/paper-orders` and `GET /api/v1/paper-portfolios/{portfolio_id}`.
+- Added deterministic process-local in-memory recordkeeping for paper order records, paper portfolio snapshots, audit-event previews, and reviewable learning-proposal previews.
+- Preserved both Task 008G simulation origins: `user_recorded` and `system_generated_learning`.
+- Confirmed Task 008I does not add SQL migration, Supabase persistence, production Supabase, deployment, billing/payment runtime, membership/subscription runtime, auth runtime, live data, external API calls, broker integration, secrets, real-money trading, or autonomous real-money execution.
+- Task 008 / M5 remains In Progress.
+
+
+## 2026-06-06 — Task 008I Vendor / External Data Source Boundary
+
+- Recorded Harness Engineering approval for vendor/API capability as a future product direction in principle.
+- Added the Vendor / External Data Source Approval Gate: every specific vendor, vendor API, paid data source, production external service, broker integration, payment provider, authentication provider, live data provider, deployment provider, or third-party service requires separate discussion, current-source/web verification where facts may change, Evidence Closure documentation, and explicit Harness Engineering approval before implementation.
+- Confirmed Task 008I does not connect vendors, call live market data, call external APIs, add API keys/secrets, add vendor SDKs, create production third-party dependencies, or add payment, auth, broker, deployment, market data, news, financial data, or AI/model vendor integrations.
+- Task 008 / M5 remains In Progress.

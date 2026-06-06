@@ -153,6 +153,15 @@ PR #8 does **not** add production Supabase setup, Railway deployment, live marke
 
 Task 008B does **not** add IO, HTTP, database access, Supabase clients, endpoint handlers, persistence, paper order creation, broker integration, live market data, or real-money trading automation.
 
+
+## Phase 5 Task 008I Dual-Origin Simulation Desk Runtime Slice
+
+- `POST /api/v1/simulation/paper-orders` is implemented as a non-production in-memory runtime endpoint for both `user_recorded` and `system_generated_learning` paper-only origins.
+- `GET /api/v1/paper-portfolios/{portfolio_id}` returns a process-local in-memory paper portfolio snapshot with recent records and audit-event previews.
+- The runtime preserves the locked success/error envelope, distinguishes both origins, keeps learning proposals reviewable/not auto-applied, and keeps losing outcomes visible.
+- Task 008I does not add SQL migrations, Supabase persistence, production Supabase, deployment, billing/payment runtime, membership/subscription runtime, auth runtime, live data, external API calls, broker integration, secrets, real-money trading, or autonomous real-money execution.
+- Task 008 / M5 remains In Progress.
+
 ## Documentation Map
 
 - `PROJECT_BRIEF.md` — concise project charter.
