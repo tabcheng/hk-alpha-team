@@ -258,3 +258,12 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Fixed the PR #25 review blocker by requiring the stored valid paper-order scenario `validation_result` to be a mapping, to keep `would_create_order = false`, and to exactly match fresh local Task 008C revalidation of the scenario `input_order`.
 - Added regression coverage proving edited stored valid-scenario evidence fails when `would_create_order` is set true, when the stored symbol changes to `700.HK`, when side is changed to an invalid value, when quantity is changed negative, and when a stored boundary flag claims persistence.
 - Preserved Task 008F local-only scope and did not modify `docs/09-api-and-agent-contracts.md`, `docs/08-supabase-schema-design.md`, migrations, Supabase clients, endpoint runtime, persistence, paper-order creation, paper-portfolio runtime, strategy persistence, audit-event runtime, broker/live-data/external API integrations, secrets, deployment, autonomous order placement, or real-money trading automation.
+
+
+## 2026-06-05 — Task 008G Dual Simulation Origin Product Contract and Schema Foundation
+
+- Started Task 008G after Harness Engineering approved non-real-money productization gates following Task 008F.
+- Documented the two Simulation Desk origin pipelines: `user_recorded` for human/Harness Engineering paper-trade records and `system_generated_learning` for HK Alpha Team / Simulation Investment Desk validation simulations.
+- Updated Simulation Desk, schema, and API contract planning to preserve origin/source semantics, recommendation lineage, human review, reviewable-only learning proposals, loss visibility, and auditability.
+- Added local-only origin validation helper and tests covering valid origins, invalid origin failure, origin-specific required fields, reviewable learning proposals, no auto-apply behavior, no real-money/broker/production Supabase/secrets flags, loss visibility, no historical overwrites, non-mutating validation, and advisory-only human-in-the-loop framing.
+- Preserved Task 008 / M5 In Progress and did not implement endpoint runtime, persistence writes, production Supabase connection, broker integration, live market data, secrets, deployment, autonomous order placement, or real-money trading automation.

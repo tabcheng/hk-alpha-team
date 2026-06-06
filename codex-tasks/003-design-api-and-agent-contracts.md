@@ -45,3 +45,8 @@ Define service contracts between application layers and agent departments using 
 - The Phase 4A/4B skeleton preserves the locked endpoint name and response envelope while avoiding live market data, external APIs, persistence, production Supabase, Railway deployment, broker execution, paper order creation, secrets, and real-money trading automation.
 - The historical Phase 3 contract-first stub used `analysis_status = "stub_only"`; the current canonical runtime contract uses `analysis_status = "phase4a_skeleton"`.
 - Future Phase 4 work should extend the skeleton without renaming the endpoint, envelope fields, or preferred strategy labels unless the contract lock process is followed.
+
+
+## Task 008G API Alignment Note
+
+Task 008G preserves the locked endpoint name `POST /api/v1/simulation/paper-orders` and the required response envelope while documenting `simulation_origin` values: `user_recorded` and `system_generated_learning`. Later endpoint runtime must keep real-money trading, autonomous execution, broker execution APIs, production Supabase, secrets, auto-applied learning proposals, and hidden losing simulations out of scope unless explicitly approved in a future PR.

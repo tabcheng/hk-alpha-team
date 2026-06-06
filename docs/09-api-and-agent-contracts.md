@@ -83,11 +83,14 @@ Define the exact required MVP endpoint set, exact required response envelope, an
 - **Error cases:** `VALIDATION_ERROR`, `AGENT_CONTRACT_VIOLATION`, `INTERNAL_ERROR`.
 
 ### `POST /api/v1/simulation/paper-orders`
-- **Purpose:** Create a paper-trading order record for simulation desk.
+- **Purpose:** Create a paper-trading order record for the Simulation Desk while preserving the origin distinction between human-recorded paper trades and system-generated learning simulations.
 - **Path parameters:** None.
-- **Request body:** `{ "portfolio_id": "...", "symbol": "...", "side": "buy|sell", "quantity": n }`.
-- **Response shape:** Required success envelope with created paper order data in `data`.
-- **Validation notes:** non-negative quantity; portfolio must exist.
+- **Request body:** `{ "portfolio_id": "...", "symbol": "...", "side": "buy|sell", "quantity": n, "simulation_origin": "user_recorded|system_generated_learning" }`.
+- **Response shape:** Required success envelope with created paper order data in `data`; the required envelope fields (`request_id`, `status`, `data`, `metadata`, `schema_version`, `generated_at`, `source`, `warnings`) must not be renamed or removed.
+- **Validation notes:** non-negative quantity; portfolio must exist; `simulation_origin` must be either `user_recorded` or `system_generated_learning`; response warnings/metadata must state paper-only, advisory-only behavior and no real-money order placement.
+- **`user_recorded` validation:** requires human/user source semantics such as `created_by_type`, `user_recorded_notes`, user/source notes, user rationale, and optional `source_recommendation_id` / `strategy_recommendation_id` when linked to a recommendation. It must not imply AI self-generated learning unless an explicit learning-proposal linkage exists.
+- **`system_generated_learning` validation:** requires original recommendation linkage, original scores, original thesis, entry/exit assumptions, `system_learning_reason`, `learning_proposal_id` when applicable, and `requires_human_review = true` for learning proposal references. It may create reviewable learning proposals in later persistence/runtime PRs, but proposals must not be auto-applied or silently mutate production strategy logic.
+- **Prohibited metadata states:** `real_money_order_placed`, `real_money_trading_automation_enabled`, `autonomous_real_money_execution`, `broker_execution_enabled`, `broker_api_called`, `production_supabase_connected`, and `secrets_required` must remain false for Task 008G local validation and for any later non-real-money runtime until explicitly approved.
 - **Error cases:** `VALIDATION_ERROR`, `NOT_FOUND`, `INTERNAL_ERROR`.
 
 ### `GET /api/v1/paper-portfolios/{portfolio_id}`

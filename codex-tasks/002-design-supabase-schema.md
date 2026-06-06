@@ -36,3 +36,8 @@ Design initial Supabase/Postgres schema for HK Alpha Team data domains using the
 - Schema design document (ERD-level).
 - SQL migration draft (design-only stage).
 - Notes on RBAC and auditability implications.
+
+
+## Task 008G Schema Alignment Note
+
+Task 008G preserves the canonical table set while documenting origin/source semantics for Simulation Desk records. Future schema work must keep `user_recorded` paper trades distinguishable from `system_generated_learning` validation simulations through origin fields, recommendation lineage, human-review flags, learning-proposal linkage, loss visibility, and audit events.

@@ -147,6 +147,16 @@ PR #8 does **not** add production Supabase setup, Railway deployment, live marke
 
 Task 008B does **not** add IO, HTTP, database access, Supabase clients, endpoint handlers, persistence, paper order creation, broker integration, live market data, or real-money trading automation.
 
+
+## Phase 5 Task 008G Dual Simulation-Origin Foundation
+
+Task 008G records Harness Engineering approval for non-real-money productization gates and adopts the Simulation Desk dual-origin model:
+
+- `user_recorded` — paper trades entered or recorded by Harness Engineering / the human user.
+- `system_generated_learning` — HK Alpha Team / Simulation Investment Desk simulations generated from approved recommendation packets to validate recommendation quality and produce reviewable learning proposals.
+
+The locked endpoint `POST /api/v1/simulation/paper-orders`, canonical table names, preferred strategy labels, and required response envelope remain preserved. Task 008G adds local-only validation helpers/tests and docs/schema/API alignment only; it does not add endpoint runtime, persistence writes, production Supabase, broker execution APIs, live market data, deployment, secrets, autonomous order placement, auto-applied learning proposals, hidden losing simulations, or real-money trading.
+
 ## Documentation Map
 
 - `PROJECT_BRIEF.md` — concise project charter.
@@ -176,6 +186,7 @@ Task 008B does **not** add IO, HTTP, database access, Supabase clients, endpoint
 - `docs/22-phase-4b-department-adapters.md` — Phase 4B deterministic local-only department adapter runbook.
 - `docs/23-phase-4c-agent-handoff-mapping.md` — Phase 4C deterministic local-only adapter-to-agent-run handoff mapping runbook.
 - `docs/24-phase-4d-handoff-preview-exposure-decision.md` — Phase 4D handoff preview exposure decision and public-exposure gate checklist.
+- `docs/35-task-008g-dual-simulation-origin-product-foundation.md` — Task 008G dual simulation-origin product foundation, schema/API impact, validation scope, and Task 008H entry criteria.
 - `codex-tasks/005-create-supabase-migration-draft.md` — Task 005 phase-entry card for migration draft planning.
 - `docs/decision-log.md` — key project decisions.
 - `docs/progress-log.md` — milestone progress tracking.

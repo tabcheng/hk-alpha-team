@@ -115,3 +115,16 @@
 
 - Future full PR reviews should classify residual limitations explicitly instead of repeating vague caveats.
 - Final review notes should pair no-known-blockers language with the latest reviewed head SHA, expected-head-SHA merge locking, review-thread status, CI depth, and post-merge source-of-truth verification.
+
+
+## 2026-06-05 — Task 008G Simulation Desk Product-Concept Correction
+
+### What Worked
+
+- Separating `user_recorded` from `system_generated_learning` corrected the product concept before endpoint runtime and persistence writes were implemented.
+- Encoding the distinction in source-of-truth docs, schema planning, API contract text, local helpers, and tests reduced the risk that Simulation Desk becomes only a paper-order journal.
+
+### What to Improve
+
+- Future migration/runtime PRs should lock one final origin column name while preserving the documented semantics and auditability requirements.
+- Mixed-origin portfolio reports should be designed carefully so losing system-generated simulations and user-recorded outcomes remain visible instead of being aggregated away.
