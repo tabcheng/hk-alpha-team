@@ -53,6 +53,31 @@ Examples of facts requiring verification include:
 
 When verification is performed, the PR should identify the source type used, the date checked, and any remaining uncertainty. Repository docs should not overstate certainty based only on memory or unverified assumptions.
 
+
+## Vendor / External Data Source Approval Gate
+
+HK Alpha Team is expected to require external vendors, vendor APIs, online data sources, or third-party services over time. These may include market data providers, financial statement/fundamentals providers, news and sentiment providers, AI/model providers, search/web data providers, payment/billing providers, authentication providers, deployment/hosting providers, notification providers, and broker or broker-sandbox providers.
+
+Harness Engineering approves the product architecture to include vendor/API integration capability in principle. However, no specific vendor, vendor API, paid data source, production external service, broker integration, payment provider, authentication provider, live data provider, deployment provider, or third-party service may be selected, connected, implemented, or required without separate discussion and explicit Harness Engineering approval.
+
+Before connecting any vendor or vendor API, the responsible PR must document:
+
+1. vendor name and service category;
+2. intended product use;
+3. data fields or capabilities required;
+4. whether the integration is read-only, write-capable, paid, production-facing, or user-facing;
+5. pricing / usage-limit assumptions, checked against current vendor sources;
+6. terms-of-service / licensing / redistribution constraints, checked against current vendor sources;
+7. privacy, retention, and user-data implications;
+8. security and secret-management plan;
+9. failure modes, fallback behavior, and audit logging;
+10. whether the integration could influence investment recommendations, simulations, billing, entitlements, or user-facing claims;
+11. exact validation evidence and Evidence Closure classification.
+
+Until a vendor is explicitly approved, implementation may include only local interfaces, mock adapters, deterministic fixtures, or placeholder contracts that do not call the vendor, require secrets, fetch live data, incur cost, or create production dependency.
+
+Real-money trading, autonomous real-money execution, and broker execution APIs for autonomous order placement remain prohibited unless Harness Engineering later makes a separate governance decision. v1 remains advisory-only and human-in-the-loop.
+
 ## Major PR Review Protocol
 
 Major PRs, commercial-readiness PRs, runtime PRs, membership/subscription PRs, billing PRs, deployment PRs, or governance-sensitive PRs require full review protocol before merge.

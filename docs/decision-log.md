@@ -274,3 +274,22 @@ We will not upgrade GitHub account/organization immediately. During Phase 2 we w
 **Governance impact:** Commercial readiness must be introduced through explicit PRs and evidence-based review. Major commercial, runtime, deployment, membership, subscription, billing, or governance-sensitive PRs must use full review protocol, evidence closure language, and no-100%-certainty framing.
 
 **Boundary:** Advisory-only, no-guaranteed-return, no-real-money-trading, no autonomous real-money execution, and human-in-the-loop boundaries remain mandatory. This decision does not implement runtime, persistence, production Supabase, deployment, billing/payment integration, membership/subscription runtime, authentication runtime, live market data, broker integration, secrets, or real-money trading.
+
+## 2026-06-06 — Task 008I Non-Production Simulation Desk Runtime Slice
+
+**Decision:** Implement the first usable Simulation Desk backend runtime as a non-production, process-local in-memory slice for `POST /api/v1/simulation/paper-orders` and `GET /api/v1/paper-portfolios/{portfolio_id}`.
+
+**Rationale:** Harness Engineering approved non-real-money productization, and the Simulation Desk MVP needs usable endpoint behavior before any later decision on production persistence, Supabase deployment, commercial runtime, live data, broker integration, or real-money capabilities.
+
+**Boundary:** The runtime is paper-only, advisory-only, human-in-the-loop, and in-memory only. It does not implement SQL migration, database writes, Supabase client/runtime, production Supabase, deployment, billing/payment runtime, membership/subscription runtime, authentication runtime, live market data, external API calls, broker execution, real-money trading, or autonomous real-money execution.
+
+**Contract impact:** Locked endpoint names and the required response envelope are preserved. Dual simulation origins remain `user_recorded` and `system_generated_learning`; Task 008 / M5 remains In Progress.
+
+
+## 2026-06-06 — Vendor / External Data Source Approval Gate
+
+**Decision:** Harness Engineering approves vendor/API integration capability as a future HK Alpha Team product direction in principle, but every specific vendor, vendor API, paid data source, production external service, broker integration, payment provider, authentication provider, live data provider, deployment provider, or third-party service requires separate discussion, current-source/web verification where facts may change, documented Evidence Closure, and explicit Harness Engineering approval before it may be selected, connected, implemented, or required.
+
+**Rationale:** HK Alpha Team may eventually need market data, fundamentals, news, sentiment, AI/model, search/web data, billing, auth, hosting, notification, broker-sandbox, or other third-party services. Vendor choices can affect cost, licensing, redistribution rights, privacy, retention, security, reliability, auditability, investment recommendations, simulations, billing, entitlements, and user-facing claims, so they must be reviewed explicitly before implementation.
+
+**Task 008I boundary:** Task 008I does not connect vendors, call live market data, call external APIs, add API keys/secrets, add vendor SDKs, create production third-party dependencies, or add payment, auth, broker, deployment, market data, news, financial data, or AI/model vendor integrations. Only local/in-memory behavior is implemented.

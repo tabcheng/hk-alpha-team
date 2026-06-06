@@ -55,3 +55,13 @@ Define service contracts between application layers and agent departments using 
 - `system_generated_learning` records require original recommendation, original scores, original thesis, entry/exit assumptions, PnL, holding period, what worked, what failed, improvement suggestions, and `requires_human_review = true`.
 - Learning proposals remain reviewable only and must not be auto-applied.
 - Real-money trading, autonomous real-money execution, broker execution APIs, production Supabase connection, secrets, live market data, deployment, and persistence writes remain out of scope until separately approved.
+
+
+## Task 008I Runtime Addendum
+
+- `POST /api/v1/simulation/paper-orders` now has a non-production process-local in-memory runtime slice for both Task 008G origins.
+- `GET /api/v1/paper-portfolios/{portfolio_id}` now returns non-production in-memory paper portfolio snapshots for portfolios created within the current process.
+- The required response envelope remains unchanged.
+- Audit-event previews are generated in memory only; learning-proposal previews remain reviewable and are not auto-applied.
+- SQL migration, Supabase persistence, production Supabase, deployment, billing/payment runtime, membership/subscription runtime, auth runtime, live data, broker integration, secrets, real-money trading, and autonomous real-money execution remain out of scope.
+- Task 008 / M5 remains In Progress.
