@@ -6,6 +6,7 @@ import pytest
 
 from app.simulation_origin_contract import (
     ALLOWED_SIMULATION_ORIGINS,
+    REQUIRED_ORIGINAL_SCORE_FIELDS,
     SIMULATION_ORIGIN_BOUNDARY_FLAGS,
     SYSTEM_GENERATED_LEARNING_ORIGIN,
     USER_RECORDED_ORIGIN,
@@ -48,7 +49,26 @@ def test_task_008g_invalid_origin_fails() -> None:
     payload = _payload(USER_RECORDED_ORIGIN)
     payload["simulation_origin"] = "paper_journal_only"
 
-    with pytest.raises(ValueError, match="simulation_origin must be user_recorded or system_generated_learning"):
+    with pytest.raises(
+        ValueError,
+        match="simulation_origin must be user_recorded or system_generated_learning",
+    ):
+        validate_simulation_origin_payload(payload)
+
+
+def test_task_008g_conflicting_paper_order_origin_alias_fails() -> None:
+    payload = _payload(SYSTEM_GENERATED_LEARNING_ORIGIN)
+    payload["paper_order_origin"] = USER_RECORDED_ORIGIN
+
+    with pytest.raises(ValueError, match="paper_order_origin must match simulation_origin"):
+        validate_simulation_origin_payload(payload)
+
+
+def test_task_008g_created_by_type_must_match_origin() -> None:
+    payload = _payload(SYSTEM_GENERATED_LEARNING_ORIGIN)
+    payload["created_by_type"] = "human_user"
+
+    with pytest.raises(ValueError, match="created_by_type must be simulation_investment_desk"):
         validate_simulation_origin_payload(payload)
 
 
@@ -76,11 +96,36 @@ def test_task_008g_user_recorded_payload_requires_user_source_fields(field_name:
         "system_learning_reason",
     ],
 )
-def test_task_008g_system_generated_learning_requires_original_linkage_fields(field_name: str) -> None:
+def test_task_008g_system_generated_learning_requires_original_linkage_fields(
+    field_name: str,
+) -> None:
     payload = _payload(SYSTEM_GENERATED_LEARNING_ORIGIN)
     payload.pop(field_name)
 
     with pytest.raises(ValueError, match=f"{field_name} is required"):
+        validate_simulation_origin_payload(payload)
+
+
+@pytest.mark.parametrize("score_field", REQUIRED_ORIGINAL_SCORE_FIELDS)
+def test_task_008g_system_generated_learning_requires_each_original_score(
+    score_field: str,
+) -> None:
+    payload = _payload(SYSTEM_GENERATED_LEARNING_ORIGIN)
+    original_scores = payload["original_scores"]
+    assert isinstance(original_scores, dict)
+    original_scores.pop(score_field)
+
+    with pytest.raises(ValueError, match=f"original_scores.{score_field} is required"):
+        validate_simulation_origin_payload(payload)
+
+
+def test_task_008g_system_generated_learning_rejects_out_of_range_original_score() -> None:
+    payload = _payload(SYSTEM_GENERATED_LEARNING_ORIGIN)
+    original_scores = payload["original_scores"]
+    assert isinstance(original_scores, dict)
+    original_scores["market_score"] = 101
+
+    with pytest.raises(ValueError, match="original_scores.market_score must be between 0 and 100"):
         validate_simulation_origin_payload(payload)
 
 
@@ -109,11 +154,19 @@ def test_task_008g_system_generated_learning_requires_human_review_true() -> Non
     "auto_apply_payload",
     [
         {"auto_apply": True},
-        {"learning_proposal": {"proposals_reviewable": True, "proposals_auto_applied": False, "auto_apply": True}},
+        {
+            "learning_proposal": {
+                "proposals_reviewable": True,
+                "proposals_auto_applied": False,
+                "auto_apply": True,
+            }
+        },
         {"proposals_auto_applied": True},
     ],
 )
-def test_task_008g_learning_proposal_auto_apply_true_fails(auto_apply_payload: dict[str, object]) -> None:
+def test_task_008g_learning_proposal_auto_apply_true_fails(
+    auto_apply_payload: dict[str, object],
+) -> None:
     payload = _payload(SYSTEM_GENERATED_LEARNING_ORIGIN)
     payload.update(auto_apply_payload)
 

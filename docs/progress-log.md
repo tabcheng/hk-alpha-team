@@ -267,3 +267,9 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Updated Simulation Desk, schema, and API contract planning to preserve origin/source semantics, recommendation lineage, human review, reviewable-only learning proposals, loss visibility, and auditability.
 - Added local-only origin validation helper and tests covering valid origins, invalid origin failure, origin-specific required fields, reviewable learning proposals, no auto-apply behavior, no real-money/broker/production Supabase/secrets flags, loss visibility, no historical overwrites, non-mutating validation, and advisory-only human-in-the-loop framing.
 - Preserved Task 008 / M5 In Progress and did not implement endpoint runtime, persistence writes, production Supabase connection, broker integration, live market data, secrets, deployment, autonomous order placement, or real-money trading automation.
+
+## 2026-06-06 — Task 008G Review Follow-up
+
+- Tightened Task 008G local origin validation so any supplied `paper_order_origin` alias must match `simulation_origin`, preventing ambiguous or conflicting origin records.
+- Added explicit original-score field validation for `system_generated_learning` payloads, including required score keys and 0–100 numeric bounds.
+- Expanded regression tests for alias conflicts, origin/source actor mismatches, missing score fields, and out-of-range score values while preserving local-only, no-runtime, no-persistence, no-production-Supabase, no-broker, no-secrets, no-autonomous-execution, and no-real-money boundaries.

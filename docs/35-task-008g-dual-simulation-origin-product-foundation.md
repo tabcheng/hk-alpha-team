@@ -68,7 +68,8 @@ Local-only validation proves:
 - Both allowed origins validate successfully.
 - Unknown origins fail.
 - `user_recorded` requires user/source fields.
-- `system_generated_learning` requires original recommendation/thesis/score linkage and `requires_human_review = true`.
+- `system_generated_learning` requires original recommendation/thesis/score linkage, explicit original score fields, and `requires_human_review = true`.
+- Any supplied `paper_order_origin` alias must match `simulation_origin` to prevent ambiguous source records.
 - Learning proposals are reviewable and never auto-applied.
 - Real-money, broker, production Supabase, and secrets flags remain false.
 - Losing outcomes remain visible.

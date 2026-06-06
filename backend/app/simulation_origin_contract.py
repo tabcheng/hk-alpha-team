@@ -59,6 +59,15 @@ SYSTEM_GENERATED_LEARNING_REQUIRED_FIELDS = (
     "requires_human_review",
 )
 
+REQUIRED_ORIGINAL_SCORE_FIELDS = (
+    "market_score",
+    "fundamental_score",
+    "technical_score",
+    "sentiment_score",
+    "risk_score",
+    "simulation_score",
+)
+
 ORIGIN_CREATED_BY_TYPE = {
     USER_RECORDED_ORIGIN: "human_user",
     SYSTEM_GENERATED_LEARNING_ORIGIN: "simulation_investment_desk",
@@ -88,9 +97,34 @@ def _require_bool(value: object, field_name: str, expected: bool) -> bool:
     return value
 
 
+def _require_score(value: object, field_name: str) -> int | float:
+    _require(
+        isinstance(value, (int, float)) and not isinstance(value, bool),
+        f"{field_name} must be numeric",
+    )
+    _require(0 <= value <= 100, f"{field_name} must be between 0 and 100")
+    return value
+
+
 def _require_fields(payload: Mapping[str, object], fields: tuple[str, ...]) -> None:
     for field_name in fields:
         _require(field_name in payload, f"{field_name} is required")
+
+
+def _require_origin_alias_consistency(
+    payload: Mapping[str, object],
+    simulation_origin: str,
+) -> None:
+    if "paper_order_origin" not in payload:
+        return
+    paper_order_origin = _require_non_empty_string(
+        payload.get("paper_order_origin"),
+        "paper_order_origin",
+    )
+    _require(
+        paper_order_origin == simulation_origin,
+        "paper_order_origin must match simulation_origin when supplied",
+    )
 
 
 def _require_boundary_flags(payload: Mapping[str, object]) -> dict[str, bool]:
@@ -111,15 +145,24 @@ def _require_learning_behavior(payload: Mapping[str, object]) -> dict[str, bool]
     proposals_reviewable = payload.get("proposals_reviewable", True)
     proposals_auto_applied = payload.get("proposals_auto_applied", False)
     if "proposals_auto_applied" in payload:
-        _require(payload["proposals_auto_applied"] is False, "proposals_auto_applied must be false")
+        _require(
+            payload["proposals_auto_applied"] is False,
+            "proposals_auto_applied must be false",
+        )
     if "proposals_reviewable" in payload:
         _require(payload["proposals_reviewable"] is True, "proposals_reviewable must be true")
     if "learning_proposal" in payload:
         learning_proposal = _require_mapping(payload["learning_proposal"], "learning_proposal")
         proposals_reviewable = learning_proposal.get("proposals_reviewable", proposals_reviewable)
-        proposals_auto_applied = learning_proposal.get("proposals_auto_applied", proposals_auto_applied)
+        proposals_auto_applied = learning_proposal.get(
+            "proposals_auto_applied",
+            proposals_auto_applied,
+        )
         if "auto_apply" in learning_proposal:
-            _require(learning_proposal["auto_apply"] is False, "learning proposal auto_apply must be false")
+            _require(
+                learning_proposal["auto_apply"] is False,
+                "learning proposal auto_apply must be false",
+            )
     if "auto_apply" in payload:
         _require(payload["auto_apply"] is False, "learning proposal auto_apply must be false")
     _require(proposals_reviewable is True, "proposals_reviewable must be true")
@@ -149,8 +192,14 @@ def _validate_user_recorded(payload: Mapping[str, object]) -> dict[str, object]:
     _require_non_empty_string(payload.get("user_id"), "user_id")
     _require_non_empty_string(payload.get("user_recorded_notes"), "user_recorded_notes")
     _require_non_empty_string(payload.get("user_decision_rationale"), "user_decision_rationale")
-    paper_order_origin = _require_non_empty_string(payload.get("paper_order_origin"), "paper_order_origin")
-    _require(paper_order_origin == USER_RECORDED_ORIGIN, "paper_order_origin must be user_recorded")
+    paper_order_origin = _require_non_empty_string(
+        payload.get("paper_order_origin"),
+        "paper_order_origin",
+    )
+    _require(
+        paper_order_origin == USER_RECORDED_ORIGIN,
+        "paper_order_origin must be user_recorded",
+    )
     source_recommendation_id = payload.get("source_recommendation_id")
     if source_recommendation_id is not None:
         _require_non_empty_string(source_recommendation_id, "source_recommendation_id")
@@ -169,7 +218,10 @@ def _validate_system_generated_learning(payload: Mapping[str, object]) -> dict[s
         "system_learning_reason",
     ):
         _require_non_empty_string(payload.get(field_name), field_name)
-    _require_mapping(payload.get("original_scores"), "original_scores")
+    original_scores = _require_mapping(payload.get("original_scores"), "original_scores")
+    for score_field in REQUIRED_ORIGINAL_SCORE_FIELDS:
+        _require(score_field in original_scores, f"original_scores.{score_field} is required")
+        _require_score(original_scores[score_field], f"original_scores.{score_field}")
     _require_mapping(payload.get("entry_assumptions"), "entry_assumptions")
     _require_mapping(payload.get("exit_assumptions"), "exit_assumptions")
     _require_bool(payload.get("requires_human_review"), "requires_human_review", True)
@@ -189,16 +241,21 @@ def validate_simulation_origin_payload(payload: Mapping[str, object]) -> dict[st
     before_validation = deepcopy(dict(payload))
     _require_fields(payload, COMMON_REQUIRED_FIELDS)
 
-    simulation_origin = _require_non_empty_string(payload.get("simulation_origin"), "simulation_origin")
+    simulation_origin = _require_non_empty_string(
+        payload.get("simulation_origin"),
+        "simulation_origin",
+    )
     _require(
         simulation_origin in ALLOWED_SIMULATION_ORIGINS,
         "simulation_origin must be user_recorded or system_generated_learning",
     )
     created_by_type = _require_non_empty_string(payload.get("created_by_type"), "created_by_type")
+    expected_created_by_type = ORIGIN_CREATED_BY_TYPE[simulation_origin]
     _require(
-        created_by_type == ORIGIN_CREATED_BY_TYPE[simulation_origin],
-        f"created_by_type must be {ORIGIN_CREATED_BY_TYPE[simulation_origin]} for {simulation_origin}",
+        created_by_type == expected_created_by_type,
+        f"created_by_type must be {expected_created_by_type} for {simulation_origin}",
     )
+    _require_origin_alias_consistency(payload, simulation_origin)
     _require_non_empty_string(payload.get("portfolio_id"), "portfolio_id")
     _require_non_empty_string(payload.get("symbol"), "symbol")
     _require_bool(payload.get("advisory_only"), "advisory_only", True)
@@ -233,7 +290,10 @@ def validate_simulation_origin_payload(payload: Mapping[str, object]) -> dict[st
 def build_simulation_origin_sample_payload(origin: str) -> SimulationOriginPayload:
     """Return deterministic local-only sample payloads for either Task 008G origin."""
 
-    _require(origin in ALLOWED_SIMULATION_ORIGINS, "origin must be user_recorded or system_generated_learning")
+    _require(
+        origin in ALLOWED_SIMULATION_ORIGINS,
+        "origin must be user_recorded or system_generated_learning",
+    )
     common: SimulationOriginPayload = {
         "simulation_origin": origin,
         "created_by_type": ORIGIN_CREATED_BY_TYPE[origin],
@@ -251,7 +311,9 @@ def build_simulation_origin_sample_payload(origin: str) -> SimulationOriginPaylo
                 "paper_order_origin": USER_RECORDED_ORIGIN,
                 "user_id": "harness-engineering-user",
                 "user_recorded_notes": "Human-entered paper trade note for review.",
-                "user_decision_rationale": "Harness Engineering recorded the paper decision manually.",
+                "user_decision_rationale": (
+                    "Harness Engineering recorded the paper decision manually."
+                ),
                 "source_recommendation_id": "strategy-rec-optional-001",
             }
         )
@@ -272,7 +334,9 @@ def build_simulation_origin_sample_payload(origin: str) -> SimulationOriginPaylo
             "original_thesis": "Approved recommendation packet requires paper-trading validation.",
             "entry_assumptions": {"entry_price": 375.5, "entry_rule": "fixture limit assumption"},
             "exit_assumptions": {"exit_rule": "review after invalidation or target window"},
-            "system_learning_reason": "Validate recommendation quality and capture reviewable learning.",
+            "system_learning_reason": (
+                "Validate recommendation quality and capture reviewable learning."
+            ),
             "requires_human_review": True,
             "learning_proposal_id": "learning-proposal-008g-001",
             "learning_proposal": {
