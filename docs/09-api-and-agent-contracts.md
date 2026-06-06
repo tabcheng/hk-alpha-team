@@ -33,6 +33,23 @@ Define the exact required MVP endpoint set, exact required response envelope, an
 ```
 
 
+## Simulation Origin Contract Addendum (Task 008G)
+
+Task 008G preserves locked MVP endpoint names and the exact required response envelope while adding product-contract clarity for the Simulation Desk's two origins:
+
+- `user_recorded` — a human/Harness Engineering/user-entered paper-trade record.
+- `system_generated_learning` — a Simulation Investment Desk/HK Alpha Team paper-trading simulation generated to validate recommendation quality and produce reviewable learning proposals.
+
+Contract boundaries for both origins:
+
+- advisory-only and human-in-the-loop framing is required;
+- real-money trading, real-money order placement, autonomous real-money execution, broker execution APIs, and broker API calls are prohibited;
+- production Supabase connections, secrets, live market data, deployment, and endpoint runtime writes require later explicit approval;
+- learning proposals are reviewable artifacts and must not be auto-applied;
+- losing simulations remain visible, and historical recommendations are not overwritten.
+
+Future runtime implementation must keep `POST /api/v1/simulation/paper-orders` as the endpoint name and must keep the required response envelope intact.
+
 ## Endpoint Specifications (Required Details)
 
 ### `GET /health`
@@ -83,12 +100,16 @@ Define the exact required MVP endpoint set, exact required response envelope, an
 - **Error cases:** `VALIDATION_ERROR`, `AGENT_CONTRACT_VIOLATION`, `INTERNAL_ERROR`.
 
 ### `POST /api/v1/simulation/paper-orders`
-- **Purpose:** Create a paper-trading order record for simulation desk.
+- **Purpose:** Create a paper-trading order record for the Simulation Desk while preserving whether the origin is a human-recorded paper trade or a system-generated learning simulation.
 - **Path parameters:** None.
-- **Request body:** `{ "portfolio_id": "...", "symbol": "...", "side": "buy|sell", "quantity": n }`.
-- **Response shape:** Required success envelope with created paper order data in `data`.
-- **Validation notes:** non-negative quantity; portfolio must exist.
-- **Error cases:** `VALIDATION_ERROR`, `NOT_FOUND`, `INTERNAL_ERROR`.
+- **Request body:** `{ "portfolio_id": "...", "symbol": "...", "side": "buy|sell", "quantity": n, "simulation_origin": "user_recorded|system_generated_learning" }`.
+- **Response shape:** Required success envelope with created paper order data in `data`; the required envelope fields (`request_id`, `status`, `data`, `metadata`, `warnings`) must not be removed or renamed.
+- **Validation notes:** non-negative quantity; portfolio must exist; `simulation_origin` must be either `user_recorded` or `system_generated_learning`; all responses must include warnings/metadata confirming paper-only advisory scope, no real-money order placement, no broker execution API call, no autonomous real-money execution, no production Supabase connection unless separately approved, and no secrets required.
+- **User-recorded validation:** `user_recorded` payloads require human/user/Harness Engineering source metadata such as `created_by_type`, user/source identifier, `user_recorded_notes`, user rationale, and optional `strategy_recommendation_id` if the human links the paper trade to a recommendation. These records must not imply AI-generated learning unless explicitly linked through a reviewable proposal.
+- **System-generated-learning validation:** `system_generated_learning` payloads require `created_by_type`, `source_recommendation_id` or `strategy_recommendation_id`, original recommendation, original scores, original thesis, entry assumptions, exit assumptions, PnL, holding period, what worked, what failed, improvement suggestions, `system_learning_reason`, and `requires_human_review = true`.
+- **Learning proposal behavior:** System-generated learning simulations may create or reference reviewable `learning_proposals`, but `auto_apply` / `proposals_auto_applied` must be false and production strategy logic must not be silently changed.
+- **Loss visibility behavior:** Losing outcomes must remain visible and historical recommendations must not be overwritten.
+- **Error cases:** `VALIDATION_ERROR`, `NOT_FOUND`, `AGENT_CONTRACT_VIOLATION`, `INTERNAL_ERROR`.
 
 ### `GET /api/v1/paper-portfolios/{portfolio_id}`
 - **Purpose:** Return paper portfolio state and recent snapshots.

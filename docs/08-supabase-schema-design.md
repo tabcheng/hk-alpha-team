@@ -46,6 +46,9 @@ Define the exact required HK Alpha Team v1 Supabase/Postgres schema table set wi
 - `paper_portfolios` 1:N `portfolio_snapshots`
 - `paper_positions` 1:N `trade_reviews`
 - `strategy_recommendations` 1:N `paper_orders`
+- `paper_orders` 0:1 `learning_proposals` through reviewable learning linkage metadata when a `system_generated_learning` simulation proposes improvements
+- `paper_orders` 1:N `audit_events` through `entity_type = "paper_orders"` and `entity_id`
+- `learning_proposals` 1:N `audit_events` through `entity_type = "learning_proposals"` and `entity_id`
 
 ## ERD-Level Table Details
 
@@ -166,52 +169,82 @@ Define the exact required HK Alpha Team v1 Supabase/Postgres schema table set wi
 - **Notes/constraints:** paper-only scope.
 
 ### `paper_orders`
-- **Purpose:** Simulation paper order intents and lifecycle events.
+- **Purpose:** Simulation paper order intents and lifecycle events for both user-recorded paper trades and system-generated learning simulations.
 - **Primary key:** `id` (uuid).
-- **Major columns:** `portfolio_id`, `stock_id`, `strategy_recommendation_id`, `side`, `order_type`, `quantity`, `limit_price`, `status`, `submitted_at`, `filled_at`, `created_at`.
-- **Important foreign keys:** `portfolio_id -> paper_portfolios.id`; `stock_id -> stocks.id`; `strategy_recommendation_id -> strategy_recommendations.id`.
-- **Indexes:** index on `(portfolio_id, submitted_at desc)`; index on `(stock_id, submitted_at desc)`.
-- **Notes/constraints:** non-negative quantity; paper execution only.
+- **Major columns:** `portfolio_id`, `stock_id`, `strategy_recommendation_id`, `source_recommendation_id`, `simulation_origin`, `paper_order_origin`, `created_by_type`, `user_recorded_notes`, `system_learning_reason`, `requires_human_review`, `learning_proposal_id`, `side`, `order_type`, `quantity`, `limit_price`, `status`, `submitted_at`, `filled_at`, `created_at`.
+- **Important foreign keys:** `portfolio_id -> paper_portfolios.id`; `stock_id -> stocks.id`; `strategy_recommendation_id -> strategy_recommendations.id`; `source_recommendation_id -> strategy_recommendations.id` when system-learning lineage needs explicit source terminology; `learning_proposal_id -> learning_proposals.id` when a reviewable proposal is created.
+- **Indexes:** index on `(portfolio_id, submitted_at desc)`; index on `(stock_id, submitted_at desc)`; planned index on `(simulation_origin, created_at desc)`; planned index on `(source_recommendation_id, created_at desc)`.
+- **Notes/constraints:** non-negative quantity; paper execution only; `simulation_origin` / `paper_order_origin` allowed values are `user_recorded` and `system_generated_learning`; `created_by_type` distinguishes human/user/Harness Engineering from Simulation Investment Desk/system; `requires_human_review` must be true for system-generated learning proposal linkage.
 
 ### `paper_positions`
-- **Purpose:** Open/closed simulated position records.
+- **Purpose:** Open/closed simulated position records derived from paper orders while preserving order origin.
 - **Primary key:** `id` (uuid).
-- **Major columns:** `portfolio_id`, `stock_id`, `opened_from_order_id`, `side`, `quantity`, `avg_entry_price`, `avg_exit_price`, `status`, `opened_at`, `closed_at`, `created_at`.
+- **Major columns:** `portfolio_id`, `stock_id`, `opened_from_order_id`, `simulation_origin`, `side`, `quantity`, `avg_entry_price`, `avg_exit_price`, `status`, `opened_at`, `closed_at`, `created_at`.
 - **Important foreign keys:** `portfolio_id -> paper_portfolios.id`; `stock_id -> stocks.id`; `opened_from_order_id -> paper_orders.id`.
-- **Indexes:** index on `(portfolio_id, status)`; index on `(stock_id, status)`.
-- **Notes/constraints:** preserves losing and winning positions.
+- **Indexes:** index on `(portfolio_id, status)`; index on `(stock_id, status)`; planned index on `(simulation_origin, status)`.
+- **Notes/constraints:** preserves losing and winning positions; position origin should be inherited from `paper_orders.simulation_origin` for auditability.
 
 ### `portfolio_snapshots`
 - **Purpose:** Periodic valuation snapshots for paper portfolios.
 - **Primary key:** `id` (uuid).
-- **Major columns:** `portfolio_id`, `snapshot_time`, `nav`, `cash`, `gross_exposure`, `net_exposure`, `drawdown_pct`, `created_at`.
+- **Major columns:** `portfolio_id`, `snapshot_time`, `simulation_origin_summary_json`, `nav`, `cash`, `gross_exposure`, `net_exposure`, `drawdown_pct`, `created_at`.
 - **Important foreign keys:** `portfolio_id -> paper_portfolios.id`.
 - **Indexes:** unique `(portfolio_id, snapshot_time)`.
-- **Notes/constraints:** supports simulation performance and risk tracking.
+- **Notes/constraints:** supports simulation performance and risk tracking; future snapshot rollups should preserve separate user-recorded and system-generated-learning attribution when both origins exist in one portfolio.
 
 ### `trade_reviews`
 - **Purpose:** Post-trade review records with explicit learning notes.
 - **Primary key:** `id` (uuid).
-- **Major columns:** `paper_position_id`, `outcome_label`, `review_notes`, `mistake_tags_json`, `what_worked_json`, `what_failed_json`, `reviewed_at`, `created_at`.
+- **Major columns:** `paper_position_id`, `simulation_origin`, `outcome_label`, `review_notes`, `user_recorded_notes`, `system_learning_reason`, `mistake_tags_json`, `what_worked_json`, `what_failed_json`, `improvement_suggestions_json`, `requires_human_review`, `reviewed_at`, `created_at`.
 - **Important foreign keys:** `paper_position_id -> paper_positions.id`.
-- **Indexes:** index on `(paper_position_id, reviewed_at desc)`.
-- **Notes/constraints:** losing trades must remain visible.
+- **Indexes:** index on `(paper_position_id, reviewed_at desc)`; planned index on `(simulation_origin, reviewed_at desc)`.
+- **Notes/constraints:** losing trades must remain visible; user-recorded reviews preserve human notes, while system-generated learning reviews preserve the original thesis, scores, what worked, what failed, and improvement suggestions.
 
 ### `learning_proposals`
-- **Purpose:** Improvement proposals derived from reviews and simulations.
+- **Purpose:** Improvement proposals derived from reviews and system-generated learning simulations.
 - **Primary key:** `id` (uuid).
-- **Major columns:** `source_type`, `source_id`, `title`, `proposal_text`, `expected_impact`, `risk_of_change`, `status`, `created_at`, `updated_at`.
-- **Important foreign keys:** optional references by typed source metadata.
-- **Indexes:** index on `(status, created_at desc)`.
-- **Notes/constraints:** proposals are reviewable, not auto-applied.
+- **Major columns:** `source_type`, `source_id`, `source_recommendation_id`, `simulation_origin`, `title`, `proposal_text`, `expected_impact`, `risk_of_change`, `requires_human_review`, `auto_apply`, `status`, `created_at`, `updated_at`.
+- **Important foreign keys:** optional references by typed source metadata; `source_recommendation_id -> strategy_recommendations.id` when proposal lineage traces to a recommendation.
+- **Indexes:** index on `(status, created_at desc)`; planned index on `(simulation_origin, status, created_at desc)`.
+- **Notes/constraints:** proposals are reviewable, not auto-applied; `requires_human_review` must be true and `auto_apply` must be false for system-generated learning proposals.
 
 ### `audit_events`
 - **Purpose:** Immutable governance and audit event log.
 - **Primary key:** `id` (uuid).
-- **Major columns:** `event_uuid`, `event_type`, `entity_type`, `entity_id`, `actor_type`, `actor_id`, `event_payload_json`, `created_at`.
+- **Major columns:** `event_uuid`, `event_type`, `entity_type`, `entity_id`, `actor_type`, `actor_id`, `simulation_origin`, `event_payload_json`, `created_at`.
 - **Important foreign keys:** polymorphic entity references via `entity_type` + `entity_id`.
-- **Indexes:** unique `event_uuid`; index on `(entity_type, entity_id, created_at desc)`.
-- **Notes/constraints:** append-only; never overwrite historical events.
+- **Indexes:** unique `event_uuid`; index on `(entity_type, entity_id, created_at desc)`; planned index on `(simulation_origin, created_at desc)`.
+- **Notes/constraints:** append-only; never overwrite historical events; audit events must distinguish user-recorded paper-trade actions from system-generated learning simulation actions.
+
+## Simulation Origin Semantics (Task 008G)
+
+Task 008G adopts a dual simulation-origin schema foundation without renaming canonical tables:
+
+- `user_recorded` — paper trades entered or recorded by Harness Engineering / a human user. These records preserve user notes, user rationale, optional recommendation linkage, trade review fields, and audit provenance.
+- `system_generated_learning` — paper-trading simulations generated by HK Alpha Team / the Simulation Investment Desk to validate recommendation quality. These records preserve original recommendation linkage, original scores, original thesis, entry/exit assumptions, PnL, holding period, what worked, what failed, improvement suggestions, reviewable learning proposals, and audit provenance.
+
+Planned field-level additions are additive contract/schema clarifications, not table renames:
+
+- `simulation_origin` or `paper_order_origin` on `paper_orders` to identify `user_recorded` vs. `system_generated_learning`.
+- `created_by_type` on origin-bearing records to distinguish human/user/Harness Engineering entries from Simulation Investment Desk/system entries.
+- `source_recommendation_id` and existing `strategy_recommendation_id` terminology remain recommendation-lineage fields; future implementation may use both when explicit source wording is needed without renaming the canonical endpoint or table.
+- `user_recorded_notes` applies to user-entered paper-trade records and reviews.
+- `system_learning_reason` applies to system-generated learning simulations.
+- `requires_human_review` applies to system-learning records and learning proposals.
+- `learning_proposal_id` links a paper order/review to a reviewable proposal when one is created.
+
+Relationship impact:
+
+- `strategy_recommendations` remain append-only source recommendations for system-generated learning simulations and optional user-recorded linkage.
+- `paper_portfolios` can contain both origins, but reports and snapshots must preserve origin-level attribution.
+- `paper_orders` are the primary origin-bearing paper-trade intents.
+- `paper_positions` inherit origin from the opening paper order.
+- `portfolio_snapshots` may aggregate both origins while retaining origin summary metadata.
+- `trade_reviews` preserve human notes for `user_recorded` records and learning review fields for `system_generated_learning` records.
+- `learning_proposals` are created only as reviewable artifacts and must not be auto-applied.
+- `audit_events` record origin, actor type, entity linkage, and boundary confirmations for both pipelines.
+
+The schema remains advisory-only and paper-only. Real-money trading, autonomous real-money execution, broker execution APIs, production Supabase connections, and silent learning-proposal application remain prohibited.
 
 ## RLS and Auditability Notes
 
