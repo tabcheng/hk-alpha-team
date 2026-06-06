@@ -115,3 +115,15 @@
 
 - Future full PR reviews should classify residual limitations explicitly instead of repeating vague caveats.
 - Final review notes should pair no-known-blockers language with the latest reviewed head SHA, expected-head-SHA merge locking, review-thread status, CI depth, and post-merge source-of-truth verification.
+
+## 2026-06-06 — Task 008G Simulation Desk Product-Concept Correction
+
+### What Worked
+
+- Separating `user_recorded` paper trades from `system_generated_learning` simulations clarified the Simulation Desk's product role before endpoint runtime or persistence writes were introduced.
+- Encoding origin boundaries in local validation tests makes the contract easier to review without connecting production Supabase or creating paper orders.
+
+### What to Improve
+
+- Future Simulation Desk tasks should avoid reducing the desk to a single paper-order journal; recommendation-quality validation, losing-outcome visibility, and reviewable learning proposals are first-class product responsibilities.
+- Runtime and persistence PRs should enforce origin fields at the boundary so user-entered records and system-generated learning simulations remain distinguishable and auditable.

@@ -64,6 +64,23 @@ EXPECTED_STRATEGY_LABELS = [
     "AVOID",
 ]
 
+EXPECTED_SIMULATION_ORIGINS = [
+    "user_recorded",
+    "system_generated_learning",
+]
+
+EXPECTED_SIMULATION_ORIGIN_FIELDS = [
+    "simulation_origin",
+    "paper_order_origin",
+    "created_by_type",
+    "source_recommendation_id",
+    "strategy_recommendation_id",
+    "user_recorded_notes",
+    "system_learning_reason",
+    "requires_human_review",
+    "learning_proposal_id",
+]
+
 SENSITIVE_PATTERNS = [
     "SUPABASE_SERVICE_ROLE_KEY=",
     "RAILWAY_TOKEN=",
@@ -150,7 +167,11 @@ def main() -> int:
     errors += must_contain(readme_text, "README envelope keys", EXPECTED_ENVELOPE_KEYS)
 
     errors += must_contain(schema_text, "Schema doc table names", EXPECTED_TABLES)
+    errors += must_contain(schema_text, "Schema doc simulation origins", EXPECTED_SIMULATION_ORIGINS)
+    errors += must_contain(schema_text, "Schema doc simulation origin fields", EXPECTED_SIMULATION_ORIGIN_FIELDS)
     errors += must_contain(api_text, "API doc endpoint names", EXPECTED_ENDPOINTS)
+    errors += must_contain(api_text, "API doc simulation origins", EXPECTED_SIMULATION_ORIGINS)
+    errors += must_contain(readme_text, "README simulation origins", EXPECTED_SIMULATION_ORIGINS)
     errors += must_contain(api_text, "API doc envelope keys", EXPECTED_ENVELOPE_KEYS)
     errors += must_contain(migration_text, "Migration SQL table names", EXPECTED_TABLES)
     errors += must_contain(migration_text, "Migration SQL lineage snippets", MIGRATION_REQUIRED_SNIPPETS)
