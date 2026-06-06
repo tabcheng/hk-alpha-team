@@ -127,3 +127,15 @@
 
 - Future Simulation Desk tasks should avoid reducing the desk to a single paper-order journal; recommendation-quality validation, losing-outcome visibility, and reviewable learning proposals are first-class product responsibilities.
 - Runtime and persistence PRs should enforce origin fields at the boundary so user-entered records and system-generated learning simulations remain distinguishable and auditable.
+
+## 2026-06-06 — Task 008H Commercial Readiness Governance
+
+### What Worked
+
+- Recording commercial-product expectations before implementation clarified that membership/subscription possibilities are governance and planning topics until explicit runtime PRs are approved.
+- Pairing commercial-readiness language with Evidence Closure, web verification, and no-100%-certainty rules reduces the risk of overstated product claims.
+
+### What to Improve
+
+- Commercial-product standards should be documented before runtime, membership, subscription, billing, deployment, or public-facing product work begins.
+- Future productization tasks should include explicit privacy, retention, entitlement, billing, compliance, security, and audit-trail review sections before implementation starts.

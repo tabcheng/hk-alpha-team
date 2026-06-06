@@ -264,3 +264,13 @@ We will not upgrade GitHub account/organization immediately. During Phase 2 we w
 - **Rationale:** User-entered paper trade journals and system-generated recommendation-quality simulations have different provenance, required fields, review expectations, and learning impact. They must remain distinguishable so audit records, performance reviews, and learning proposals are trustworthy.
 - **Contract/schema impact:** Canonical table names, locked MVP endpoint names, preferred strategy labels, Investment Strategy Office required fields, and response envelope fields remain unchanged. Additive field-level semantics such as `simulation_origin`, `paper_order_origin`, `created_by_type`, `source_recommendation_id`, `user_recorded_notes`, `system_learning_reason`, `requires_human_review`, and `learning_proposal_id` are documented for future implementation.
 - **Boundary:** Real-money trading, real-money order placement, autonomous real-money execution, broker execution APIs, committed secrets, production Supabase connection, deployment, live market data, silent auto-application of learning proposals, and hiding or overwriting losing simulations remain prohibited.
+
+## 2026-06-06 — Task 008H Commercial Readiness and Subscription Product Governance Baseline
+
+**Decision:** Harness Engineering treats HK Alpha Team as a serious commercial product candidate that may later support membership or subscription offerings.
+
+**Rationale:** Commercial-readiness standards should be recorded before runtime, persistence, membership, subscription, billing, deployment, or public-facing product work begins, so product claims, evidence expectations, user/account planning, entitlement planning, privacy, retention, audit, billing, security, and compliance boundaries can be reviewed explicitly.
+
+**Governance impact:** Commercial readiness must be introduced through explicit PRs and evidence-based review. Major commercial, runtime, deployment, membership, subscription, billing, or governance-sensitive PRs must use full review protocol, evidence closure language, and no-100%-certainty framing.
+
+**Boundary:** Advisory-only, no-guaranteed-return, no-real-money-trading, no autonomous real-money execution, and human-in-the-loop boundaries remain mandatory. This decision does not implement runtime, persistence, production Supabase, deployment, billing/payment integration, membership/subscription runtime, authentication runtime, live market data, broker integration, secrets, or real-money trading.

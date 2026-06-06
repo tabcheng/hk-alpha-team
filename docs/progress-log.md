@@ -266,3 +266,12 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Added local validation coverage for allowed origins, required user/source fields, required original recommendation/thesis/score linkage fields, human-review-only learning proposal behavior, loss visibility, historical recommendation preservation, advisory-only framing, and non-mutation of payloads.
 - Preserved boundaries: no FastAPI endpoint runtime, no persistence writes, no production Supabase connection, no secrets, no broker execution APIs, no real-money trading, no autonomous real-money order placement, no live market data, no deployment, no auto-applied learning proposals, and no hidden or overwritten losing simulations.
 - Task 008 / M5 remains In Progress and is not claimed complete.
+
+## 2026-06-06 — Task 008H Commercial Readiness and Subscription Product Governance Baseline
+
+- Added documentation-only commercial-readiness governance before runtime, persistence, membership, subscription, billing, deployment, or user-facing product work begins.
+- Recorded that Harness Engineering treats HK Alpha Team as a serious commercial product candidate with possible future membership/subscription offerings, subject to explicit PRs and evidence-based review.
+- Documented GitHub `main` source-of-truth expectations, web verification for uncertain/changeable facts, full PR review protocol, Evidence Closure language, no-100%-certainty rule, commercial-readiness roadmap, and Codex/reviewer role boundaries.
+- Preserved the Task 008G dual Simulation Desk origin model: `user_recorded` and `system_generated_learning` remain paper-only, advisory-only, auditable, and human-in-the-loop.
+- Preserved out-of-scope boundaries: no frontend/UI, backend runtime, FastAPI endpoints, persistence writes, SQL migrations, Supabase client or production Supabase connection, billing/payment integration, membership/subscription runtime, authentication runtime, live market data, broker integration, deployment configuration, secrets, real-money trading, autonomous real-money execution, or locked contract renames.
+- Task 008 / M5 remains In Progress and is not claimed complete.
