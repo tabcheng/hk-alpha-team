@@ -240,6 +240,36 @@ def test_task_008g_nested_learning_proposal_false_auto_apply_fields_pass() -> No
     assert result["proposals_auto_applied"] is False
 
 
+def test_task_008g_top_level_auto_applied_true_fails_explicitly() -> None:
+    payload = _payload(SYSTEM_GENERATED_LEARNING_ORIGIN)
+    payload["auto_applied"] = True
+
+    with pytest.raises(ValueError, match="auto_applied must be false"):
+        validate_simulation_origin_payload(payload)
+
+
+def test_task_008g_nested_learning_proposal_auto_applied_true_fails_explicitly() -> None:
+    payload = _payload(SYSTEM_GENERATED_LEARNING_ORIGIN)
+    payload["learning_proposal"] = {"auto_applied": True}
+
+    with pytest.raises(ValueError, match="learning_proposal.auto_applied must be false"):
+        validate_simulation_origin_payload(payload)
+
+
+def test_task_008g_nested_learning_proposal_stored_applied_marker_fails() -> None:
+    payload = _payload(SYSTEM_GENERATED_LEARNING_ORIGIN)
+    payload["learning_proposal"] = {
+        "auto_applied": False,
+        "applied_at": "2026-06-06T00:00:00Z",
+    }
+
+    with pytest.raises(
+        ValueError,
+        match="learning_proposal.applied_at must not imply auto-application",
+    ):
+        validate_simulation_origin_payload(payload)
+
+
 @pytest.mark.parametrize(
     "flag_name",
     [
