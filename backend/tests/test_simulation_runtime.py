@@ -241,20 +241,23 @@ def test_get_paper_portfolio_returns_state_recent_records_and_audit_previews() -
     assert snapshot["audit_event_previews"][0]["preview_only"] is True
 
 
-def test_invalid_paper_portfolio_id_returns_not_found_error_envelope() -> None:
-    response = client.get("/api/v1/paper-portfolios/invalid%20portfolio")
+@pytest.mark.parametrize("portfolio_id", ["ab", "invalid%20portfolio"])
+def test_invalid_paper_portfolio_id_returns_validation_error_envelope(portfolio_id: str) -> None:
+    response = client.get(f"/api/v1/paper-portfolios/{portfolio_id}")
 
-    assert response.status_code == 404
+    assert response.status_code == 422
     error_payload = response.json()
-    assert_error_envelope(error_payload, code="NOT_FOUND")
+    assert_error_envelope(error_payload, code="VALIDATION_ERROR")
     assert "portfolio_id" in error_details_text(error_payload)
 
 
 def test_unknown_paper_portfolio_returns_not_found_error_envelope() -> None:
-    response = client.get("/api/v1/paper-portfolios/unknown-portfolio")
+    response = client.get("/api/v1/paper-portfolios/valid-but-unknown-portfolio")
 
     assert response.status_code == 404
-    assert_error_envelope(response.json(), code="NOT_FOUND")
+    error_payload = response.json()
+    assert_error_envelope(error_payload, code="NOT_FOUND")
+    assert "paper portfolio not found" in error_details_text(error_payload)
 
 
 def test_direct_runtime_does_not_write_database_or_call_external_services() -> None:

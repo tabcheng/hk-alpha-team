@@ -8,6 +8,7 @@ from app.contracts import error_envelope, success_envelope
 from app.simulation_runtime import (
     RUNTIME_WARNINGS,
     PaperOrderRequest,
+    SimulationRuntimeNotFoundError,
     SimulationRuntimeValidationError,
     build_paper_portfolio_snapshot,
     create_paper_order_record,
@@ -65,6 +66,15 @@ def get_paper_portfolio(portfolio_id: str):
     try:
         data = build_paper_portfolio_snapshot(portfolio_id)
     except SimulationRuntimeValidationError as exc:
+        return JSONResponse(
+            status_code=422,
+            content=error_envelope(
+                "VALIDATION_ERROR",
+                "Paper portfolio request validation failed.",
+                {"message": str(exc), "portfolio_id": portfolio_id},
+            ),
+        )
+    except SimulationRuntimeNotFoundError as exc:
         return JSONResponse(
             status_code=404,
             content=error_envelope(

@@ -72,6 +72,10 @@ class SimulationRuntimeValidationError(ValueError):
     pass
 
 
+class SimulationRuntimeNotFoundError(ValueError):
+    pass
+
+
 def _require(condition: bool, message: str) -> None:
     if not condition:
         raise SimulationRuntimeValidationError(message)
@@ -306,7 +310,7 @@ def build_paper_portfolio_snapshot(
     )
     records = store.get_portfolio_snapshot_records(normalized_portfolio_id)
     if records is None:
-        raise SimulationRuntimeValidationError("paper portfolio not found")
+        raise SimulationRuntimeNotFoundError("paper portfolio not found")
     orders, audits = records
     base_currency = orders[-1].get("base_currency", "HKD") if orders else "HKD"
     return {
