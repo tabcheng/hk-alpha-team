@@ -273,3 +273,9 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Tightened Task 008G local origin validation so any supplied `paper_order_origin` alias must match `simulation_origin`, preventing ambiguous or conflicting origin records.
 - Added explicit original-score field validation for `system_generated_learning` payloads, including required score keys and 0–100 numeric bounds.
 - Expanded regression tests for alias conflicts, origin/source actor mismatches, missing score fields, and out-of-range score values while preserving local-only, no-runtime, no-persistence, no-production-Supabase, no-broker, no-secrets, no-autonomous-execution, and no-real-money boundaries.
+
+## 2026-06-06 — Task 008G PR #26 Blocker Fix
+
+- Fixed PR #26 blocker requiring Task 008G local validation to reject schema-documented `auto_applied = true` at both top-level and nested `learning_proposal` level, alongside other stored states that imply auto-application.
+- Fixed PR #26 blocker requiring `simulation_origin = user_recorded` to be sufficient without `paper_order_origin`, while preserving alias conflict rejection whenever `paper_order_origin` is supplied.
+- Preserved Task 008G local-only scope with no endpoint runtime, persistence writes, migrations, production Supabase, Supabase client, broker execution, live market data, deployment, secrets, autonomous execution, or real-money trading.

@@ -25,6 +25,7 @@ SIMULATION_ORIGIN_BOUNDARY_FLAGS = (
 LEARNING_PROPOSAL_BEHAVIOR = {
     "proposals_reviewable": True,
     "proposals_auto_applied": False,
+    "auto_applied": False,
 }
 
 LOSS_VISIBILITY_BEHAVIOR = {
@@ -45,7 +46,6 @@ USER_RECORDED_REQUIRED_FIELDS = (
     "user_id",
     "user_recorded_notes",
     "user_decision_rationale",
-    "paper_order_origin",
 )
 
 SYSTEM_GENERATED_LEARNING_REQUIRED_FIELDS = (
@@ -71,6 +71,26 @@ REQUIRED_ORIGINAL_SCORE_FIELDS = (
 ORIGIN_CREATED_BY_TYPE = {
     USER_RECORDED_ORIGIN: "human_user",
     SYSTEM_GENERATED_LEARNING_ORIGIN: "simulation_investment_desk",
+}
+
+AUTO_APPLICATION_FIELDS = (
+    "auto_apply",
+    "auto_applied",
+    "proposals_auto_applied",
+)
+
+STORED_AUTO_APPLICATION_MARKERS = (
+    "applied_at",
+    "applied_by",
+    "applied_changes",
+    "auto_applied_at",
+    "production_logic_updated",
+)
+
+AUTO_APPLICATION_STATUS_VALUES = {
+    "applied",
+    "auto_applied",
+    "silently_applied",
 }
 
 
@@ -141,14 +161,39 @@ def _require_boundary_flags(payload: Mapping[str, object]) -> dict[str, bool]:
     return flags
 
 
+def _require_no_auto_application_state(
+    proposal_state: Mapping[str, object],
+    field_prefix: str,
+) -> None:
+    for field_name in AUTO_APPLICATION_FIELDS:
+        if field_name in proposal_state:
+            _require(
+                proposal_state[field_name] is False,
+                f"{field_prefix}{field_name} must be false",
+            )
+
+    for marker_name in STORED_AUTO_APPLICATION_MARKERS:
+        marker_value = proposal_state.get(marker_name)
+        _require(
+            marker_value in (None, False, ""),
+            f"{field_prefix}{marker_name} must not imply auto-application",
+        )
+
+    status = proposal_state.get("status")
+    if isinstance(status, str):
+        _require(
+            status not in AUTO_APPLICATION_STATUS_VALUES,
+            f"{field_prefix}status must not imply auto-application",
+        )
+
+
 def _require_learning_behavior(payload: Mapping[str, object]) -> dict[str, bool]:
     proposals_reviewable = payload.get("proposals_reviewable", True)
     proposals_auto_applied = payload.get("proposals_auto_applied", False)
-    if "proposals_auto_applied" in payload:
-        _require(
-            payload["proposals_auto_applied"] is False,
-            "proposals_auto_applied must be false",
-        )
+    auto_applied = payload.get("auto_applied", False)
+
+    _require_no_auto_application_state(payload, "")
+
     if "proposals_reviewable" in payload:
         _require(payload["proposals_reviewable"] is True, "proposals_reviewable must be true")
     if "learning_proposal" in payload:
@@ -158,18 +203,16 @@ def _require_learning_behavior(payload: Mapping[str, object]) -> dict[str, bool]
             "proposals_auto_applied",
             proposals_auto_applied,
         )
-        if "auto_apply" in learning_proposal:
-            _require(
-                learning_proposal["auto_apply"] is False,
-                "learning proposal auto_apply must be false",
-            )
-    if "auto_apply" in payload:
-        _require(payload["auto_apply"] is False, "learning proposal auto_apply must be false")
+        auto_applied = learning_proposal.get("auto_applied", auto_applied)
+        _require_no_auto_application_state(learning_proposal, "learning_proposal.")
+
     _require(proposals_reviewable is True, "proposals_reviewable must be true")
     _require(proposals_auto_applied is False, "proposals_auto_applied must be false")
+    _require(auto_applied is False, "auto_applied must be false")
     return {
         "proposals_reviewable": True,
         "proposals_auto_applied": False,
+        "auto_applied": False,
     }
 
 
@@ -192,14 +235,6 @@ def _validate_user_recorded(payload: Mapping[str, object]) -> dict[str, object]:
     _require_non_empty_string(payload.get("user_id"), "user_id")
     _require_non_empty_string(payload.get("user_recorded_notes"), "user_recorded_notes")
     _require_non_empty_string(payload.get("user_decision_rationale"), "user_decision_rationale")
-    paper_order_origin = _require_non_empty_string(
-        payload.get("paper_order_origin"),
-        "paper_order_origin",
-    )
-    _require(
-        paper_order_origin == USER_RECORDED_ORIGIN,
-        "paper_order_origin must be user_recorded",
-    )
     source_recommendation_id = payload.get("source_recommendation_id")
     if source_recommendation_id is not None:
         _require_non_empty_string(source_recommendation_id, "source_recommendation_id")
@@ -343,6 +378,7 @@ def build_simulation_origin_sample_payload(origin: str) -> SimulationOriginPaylo
                 "proposals_reviewable": True,
                 "proposals_auto_applied": False,
                 "auto_apply": False,
+                "auto_applied": False,
             },
         }
     )

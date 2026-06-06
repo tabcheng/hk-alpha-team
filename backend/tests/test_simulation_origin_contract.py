@@ -56,12 +56,42 @@ def test_task_008g_invalid_origin_fails() -> None:
         validate_simulation_origin_payload(payload)
 
 
-def test_task_008g_conflicting_paper_order_origin_alias_fails() -> None:
-    payload = _payload(SYSTEM_GENERATED_LEARNING_ORIGIN)
-    payload["paper_order_origin"] = USER_RECORDED_ORIGIN
+@pytest.mark.parametrize(
+    ("origin", "conflicting_alias"),
+    [
+        (USER_RECORDED_ORIGIN, SYSTEM_GENERATED_LEARNING_ORIGIN),
+        (SYSTEM_GENERATED_LEARNING_ORIGIN, USER_RECORDED_ORIGIN),
+    ],
+)
+def test_task_008g_conflicting_paper_order_origin_alias_fails(
+    origin: str,
+    conflicting_alias: str,
+) -> None:
+    payload = _payload(origin)
+    payload["paper_order_origin"] = conflicting_alias
 
     with pytest.raises(ValueError, match="paper_order_origin must match simulation_origin"):
         validate_simulation_origin_payload(payload)
+
+
+def test_task_008g_user_recorded_payload_without_paper_order_origin_passes() -> None:
+    payload = _payload(USER_RECORDED_ORIGIN)
+    payload.pop("paper_order_origin")
+
+    result = validate_simulation_origin_payload(payload)
+
+    assert result["validation_status"] == "passed"
+    assert result["simulation_origin"] == USER_RECORDED_ORIGIN
+
+
+def test_task_008g_system_generated_learning_without_paper_order_origin_passes() -> None:
+    payload = _payload(SYSTEM_GENERATED_LEARNING_ORIGIN)
+    payload.pop("paper_order_origin", None)
+
+    result = validate_simulation_origin_payload(payload)
+
+    assert result["validation_status"] == "passed"
+    assert result["simulation_origin"] == SYSTEM_GENERATED_LEARNING_ORIGIN
 
 
 def test_task_008g_created_by_type_must_match_origin() -> None:
@@ -74,7 +104,7 @@ def test_task_008g_created_by_type_must_match_origin() -> None:
 
 @pytest.mark.parametrize(
     "field_name",
-    ["user_id", "user_recorded_notes", "user_decision_rationale", "paper_order_origin"],
+    ["user_id", "user_recorded_notes", "user_decision_rationale"],
 )
 def test_task_008g_user_recorded_payload_requires_user_source_fields(field_name: str) -> None:
     payload = _payload(USER_RECORDED_ORIGIN)
@@ -154,6 +184,10 @@ def test_task_008g_system_generated_learning_requires_human_review_true() -> Non
     "auto_apply_payload",
     [
         {"auto_apply": True},
+        {"auto_applied": True},
+        {"proposals_auto_applied": True},
+        {"status": "auto_applied"},
+        {"applied_at": "2026-06-06T00:00:00Z"},
         {
             "learning_proposal": {
                 "proposals_reviewable": True,
@@ -161,7 +195,20 @@ def test_task_008g_system_generated_learning_requires_human_review_true() -> Non
                 "auto_apply": True,
             }
         },
-        {"proposals_auto_applied": True},
+        {
+            "learning_proposal": {
+                "proposals_reviewable": True,
+                "proposals_auto_applied": False,
+                "auto_applied": True,
+            }
+        },
+        {
+            "learning_proposal": {
+                "proposals_reviewable": True,
+                "proposals_auto_applied": False,
+                "status": "applied",
+            }
+        },
     ],
 )
 def test_task_008g_learning_proposal_auto_apply_true_fails(
@@ -170,8 +217,27 @@ def test_task_008g_learning_proposal_auto_apply_true_fails(
     payload = _payload(SYSTEM_GENERATED_LEARNING_ORIGIN)
     payload.update(auto_apply_payload)
 
-    with pytest.raises(ValueError, match="auto_apply|proposals_auto_applied"):
+    with pytest.raises(
+        ValueError,
+        match="auto_apply|auto_applied|proposals_auto_applied|applied_at|status",
+    ):
         validate_simulation_origin_payload(payload)
+
+
+def test_task_008g_nested_learning_proposal_false_auto_apply_fields_pass() -> None:
+    payload = _payload(SYSTEM_GENERATED_LEARNING_ORIGIN)
+    payload["learning_proposal"] = {
+        "proposals_reviewable": True,
+        "proposals_auto_applied": False,
+        "auto_apply": False,
+        "auto_applied": False,
+    }
+
+    result = validate_simulation_origin_payload(payload)
+
+    assert result["validation_status"] == "passed"
+    assert result["auto_applied"] is False
+    assert result["proposals_auto_applied"] is False
 
 
 @pytest.mark.parametrize(
