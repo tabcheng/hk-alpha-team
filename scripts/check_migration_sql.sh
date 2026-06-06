@@ -46,9 +46,9 @@ if [[ "${TABLE_COUNT}" != "18" ]]; then
 fi
 
 echo "[check] validating required critical constraints"
-CONSTRAINT_COUNT="$(psql -v ON_ERROR_STOP=1 -d "${PGDATABASE}" -tAc "select count(*) from pg_constraint where conname in ('ck_strategy_recommendations_confidence_level_range','ck_agent_runs_status','ck_learning_proposals_auto_apply_false');" | tr -d '[:space:]')"
-if [[ "${CONSTRAINT_COUNT}" != "3" ]]; then
-  echo "ERROR: expected 3 required constraints, found ${CONSTRAINT_COUNT}" >&2
+CONSTRAINT_COUNT="$(psql -v ON_ERROR_STOP=1 -d "${PGDATABASE}" -tAc "select count(*) from pg_constraint where conname in ('ck_strategy_recommendations_confidence_level_range','ck_agent_runs_status','ck_learning_proposals_auto_apply_false','fk_paper_orders_source_recommendation_id','fk_paper_orders_learning_proposal_id','fk_learning_proposals_source_recommendation_id');" | tr -d '[:space:]')"
+if [[ "${CONSTRAINT_COUNT}" != "6" ]]; then
+  echo "ERROR: expected 6 required constraints, found ${CONSTRAINT_COUNT}" >&2
   exit 1
 fi
 
@@ -61,15 +61,52 @@ COLUMN_COUNT="$(psql -v ON_ERROR_STOP=1 -d "${PGDATABASE}" -tAc "
       ('paper_orders', 'simulation_origin'),
       ('paper_orders', 'paper_order_origin'),
       ('paper_orders', 'boundary_flags_json'),
+      ('paper_orders', 'source_recommendation_id'),
+      ('paper_orders', 'learning_proposal_id'),
       ('paper_positions', 'simulation_origin'),
       ('portfolio_snapshots', 'simulation_origin_summary_json'),
       ('trade_reviews', 'simulation_origin'),
       ('learning_proposals', 'auto_apply'),
+      ('learning_proposals', 'source_recommendation_id'),
       ('audit_events', 'simulation_origin')
     );
 " | tr -d '[:space:]')"
-if [[ "${COLUMN_COUNT}" != "8" ]]; then
-  echo "ERROR: expected 8 Task 008J additive columns, found ${COLUMN_COUNT}" >&2
+if [[ "${COLUMN_COUNT}" != "11" ]]; then
+  echo "ERROR: expected 11 Task 008J additive columns, found ${COLUMN_COUNT}" >&2
+  exit 1
+fi
+
+
+echo "[check] validating Task 008J lineage column types"
+UUID_LINEAGE_COLUMN_COUNT="$(psql -v ON_ERROR_STOP=1 -d "${PGDATABASE}" -tAc "
+  select count(*)
+  from information_schema.columns
+  where table_schema = 'public'
+    and data_type = 'uuid'
+    and (table_name, column_name) in (
+      ('paper_orders', 'source_recommendation_id'),
+      ('paper_orders', 'learning_proposal_id'),
+      ('learning_proposals', 'source_recommendation_id')
+    );
+" | tr -d '[:space:]')"
+if [[ "${UUID_LINEAGE_COLUMN_COUNT}" != "3" ]]; then
+  echo "ERROR: expected 3 UUID lineage columns, found ${UUID_LINEAGE_COLUMN_COUNT}" >&2
+  exit 1
+fi
+
+echo "[check] validating Task 008J lineage foreign keys"
+LINEAGE_FK_COUNT="$(psql -v ON_ERROR_STOP=1 -d "${PGDATABASE}" -tAc "
+  select count(*)
+  from pg_constraint
+  where contype = 'f'
+    and conname in (
+      'fk_paper_orders_source_recommendation_id',
+      'fk_paper_orders_learning_proposal_id',
+      'fk_learning_proposals_source_recommendation_id'
+    );
+" | tr -d '[:space:]')"
+if [[ "${LINEAGE_FK_COUNT}" != "3" ]]; then
+  echo "ERROR: expected 3 Task 008J lineage foreign keys, found ${LINEAGE_FK_COUNT}" >&2
   exit 1
 fi
 

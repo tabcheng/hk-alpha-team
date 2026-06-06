@@ -5,14 +5,14 @@
 -- Date: 2026-06-06
 
 alter table paper_orders
-  add column if not exists source_recommendation_id text,
+  add column if not exists source_recommendation_id uuid,
   add column if not exists simulation_origin text check (simulation_origin in ('user_recorded', 'system_generated_learning')),
   add column if not exists paper_order_origin text check (paper_order_origin in ('user_recorded', 'system_generated_learning')),
   add column if not exists created_by_type text,
   add column if not exists user_recorded_notes text,
   add column if not exists system_learning_reason text,
   add column if not exists requires_human_review boolean not null default false,
-  add column if not exists learning_proposal_id text,
+  add column if not exists learning_proposal_id uuid,
   add column if not exists boundary_flags_json jsonb not null default '{}'::jsonb,
   add column if not exists outcome_preview_json jsonb not null default '{}'::jsonb,
   add column if not exists source_metadata_json jsonb not null default '{}'::jsonb;
@@ -31,7 +31,7 @@ alter table trade_reviews
   add column if not exists requires_human_review boolean not null default false;
 
 alter table learning_proposals
-  add column if not exists source_recommendation_id text,
+  add column if not exists source_recommendation_id uuid,
   add column if not exists simulation_origin text check (simulation_origin in ('user_recorded', 'system_generated_learning')),
   add column if not exists requires_human_review boolean not null default true,
   add column if not exists auto_apply boolean not null default false;
@@ -45,6 +45,36 @@ begin
   ) then
     alter table learning_proposals
       add constraint ck_learning_proposals_auto_apply_false check (auto_apply is false);
+  end if;
+
+  if not exists (
+    select 1
+    from pg_constraint
+    where conname = 'fk_paper_orders_source_recommendation_id'
+  ) then
+    alter table paper_orders
+      add constraint fk_paper_orders_source_recommendation_id
+      foreign key (source_recommendation_id) references strategy_recommendations(id);
+  end if;
+
+  if not exists (
+    select 1
+    from pg_constraint
+    where conname = 'fk_paper_orders_learning_proposal_id'
+  ) then
+    alter table paper_orders
+      add constraint fk_paper_orders_learning_proposal_id
+      foreign key (learning_proposal_id) references learning_proposals(id);
+  end if;
+
+  if not exists (
+    select 1
+    from pg_constraint
+    where conname = 'fk_learning_proposals_source_recommendation_id'
+  ) then
+    alter table learning_proposals
+      add constraint fk_learning_proposals_source_recommendation_id
+      foreign key (source_recommendation_id) references strategy_recommendations(id);
   end if;
 end;
 $$;

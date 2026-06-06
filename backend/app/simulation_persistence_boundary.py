@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from copy import deepcopy
 from typing import Any, Mapping
+from uuid import UUID
 
 APPROVED_SIMULATION_ORIGINS = ("user_recorded", "system_generated_learning")
 
@@ -83,6 +84,19 @@ def _validate_runtime_safety(record: Mapping[str, Any], *, require_learning_loss
         _require(proposal.get("auto_apply") is False, "learning proposal preview must not auto-apply")
 
 
+def _uuid_text_or_none(value: Any) -> str | None:
+    if value is None:
+        return None
+    if isinstance(value, UUID):
+        return str(value)
+    if isinstance(value, str):
+        try:
+            return str(UUID(value))
+        except ValueError:
+            return None
+    return None
+
+
 def _intent_base(target_table: str, simulation_origin: str) -> dict[str, Any]:
     return {
         "target_table": target_table,
@@ -120,11 +134,15 @@ def build_paper_order_persistence_payload(runtime_record: Mapping[str, Any]) -> 
     _require(isinstance(historical_fields, Mapping), "historical_recommendation_fields must be a mapping")
     _require(isinstance(source_metadata, Mapping), "source_metadata must be a mapping")
 
-    source_recommendation_id = historical_fields.get("source_recommendation_id")
+    source_recommendation_id = _uuid_text_or_none(historical_fields.get("source_recommendation_id"))
     learning_preview = record.get("learning_proposal_preview")
     learning_proposal_id = None
     if isinstance(learning_preview, Mapping):
-        learning_proposal_id = learning_preview.get("learning_proposal_preview_id") or learning_preview.get("proposal_id")
+        learning_proposal_id = _uuid_text_or_none(
+            learning_preview.get("learning_proposal_id")
+            or learning_preview.get("learning_proposal_preview_id")
+            or learning_preview.get("proposal_id")
+        )
 
     return {
         **_intent_base("paper_orders", origin),
@@ -168,7 +186,7 @@ def build_learning_proposal_persistence_payload(runtime_record: Mapping[str, Any
     return {
         **_intent_base("learning_proposals", origin),
         "learning_proposal_preview_id": preview.get("learning_proposal_preview_id"),
-        "source_recommendation_id": preview.get("source_recommendation_id"),
+        "source_recommendation_id": _uuid_text_or_none(preview.get("source_recommendation_id")),
         "proposal_type": preview.get("proposal_type"),
         "status": preview.get("status"),
         "requires_human_review": True,

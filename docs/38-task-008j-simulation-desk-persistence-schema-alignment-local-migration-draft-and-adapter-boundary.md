@@ -78,11 +78,11 @@ The adapter boundary is intentionally not a database adapter. It is a pre-persis
 | `paper_order_id` | N/A | Runtime identifier carried in intent metadata | Future `opened_from_order_id` lineage bridge | Recent order summary | Review order lineage | Source payload lineage | `entity_id` in preview payload |
 | `simulation_origin` | Portfolio may aggregate mixed origins | `simulation_origin`, `paper_order_origin` | `simulation_origin` | `simulation_origin_summary_json` | `simulation_origin` | `simulation_origin` | `simulation_origin` |
 | `created_by_type` | N/A | `created_by_type` | Future actor metadata | Summary metadata | Reviewer/actor context | Source actor context | `actor_type` |
-| `source_recommendation_id` | N/A | `source_recommendation_id` | Future position lineage | Summary metadata | Review lineage | `source_recommendation_id` | Event payload metadata |
+| `source_recommendation_id` | N/A | Canonical UUID FK when available; runtime fixture strings remain in `historical_recommendation_fields_json` / `source_metadata_json` | Future position lineage | Summary metadata | Review lineage | Canonical UUID FK when available; runtime fixture strings remain in `proposal_payload_json` | Event payload metadata |
 | `strategy_recommendation_id` | N/A | Existing canonical FK remains; runtime string is preserved as lineage metadata until FK resolution is approved. | Future position lineage | Summary metadata | Review lineage | Source payload lineage | Event payload metadata |
 | `user_recorded_notes` | N/A | `user_recorded_notes`, `source_metadata_json` | Future notes context | Summary metadata | `user_recorded_notes` | N/A | Event payload metadata |
 | `system_learning_reason` | N/A | `system_learning_reason`, `source_metadata_json` | Future learning context | Summary metadata | `system_learning_reason` | Proposal reason/payload | Event payload metadata |
-| `learning_proposal_preview` | N/A | `learning_proposal_id` preview bridge | N/A | Summary metadata | Improvement context | Reviewable `learning_proposals` intent | Event payload metadata |
+| `learning_proposal_preview` | N/A | Canonical UUID `learning_proposal_id` only when a persisted proposal ID exists; preview string IDs remain in JSON metadata | N/A | Summary metadata | Improvement context | Reviewable `learning_proposals` intent | Event payload metadata |
 | `audit_event_preview` | N/A | N/A | N/A | Snapshot audit preview count | Review audit context | Proposal audit context | Append-only `event_payload_json` intent |
 | `outcome_preview` | N/A | `outcome_preview_json` | Future realized/unrealized outcome context | Summary metadata | Future outcome review context | Learning evidence payload | Event payload metadata |
 | `boundary_flags` | Governance metadata | `boundary_flags_json` | Future boundary metadata | Snapshot boundary metadata | Review boundary metadata | Proposal boundary metadata | Event payload metadata |
@@ -134,11 +134,11 @@ The existing `0001_create_core_schema.sql` creates the canonical simulation tabl
 
 | Table | 0001 gap | 008J local/test-only bridge |
 |---|---|---|
-| `paper_orders` | No explicit dual-origin fields, created-by type, source recommendation text lineage, user-recorded notes, system learning reason, human-review flag, learning-proposal preview bridge, boundary flag JSON, outcome preview JSON, or source metadata JSON. | `0002` additively drafts these columns. |
+| `paper_orders` | No explicit dual-origin fields, created-by type, canonical UUID source recommendation lineage, user-recorded notes, system learning reason, human-review flag, canonical UUID learning-proposal bridge, boundary flag JSON, outcome preview JSON, or source metadata JSON. | `0002` additively drafts these columns and keeps runtime string fixture lineage in JSON metadata rather than canonical UUID FK fields. |
 | `paper_positions` | No explicit `simulation_origin`. | `0002` additively drafts `simulation_origin`. |
 | `portfolio_snapshots` | No origin summary for mixed-origin runtime snapshots. | `0002` additively drafts `simulation_origin_summary_json`. |
 | `trade_reviews` | Does not carry explicit origin, user/system notes, improvement suggestions, or human-review requirement aligned to runtime learning previews. | `0002` additively drafts these fields while preserving existing review JSON columns. |
-| `learning_proposals` | No source recommendation text lineage, origin, required human-review flag, or explicit non-auto-apply field. | `0002` additively drafts these fields and constrains `auto_apply` false in the local/test draft. |
+| `learning_proposals` | No canonical UUID source recommendation lineage, origin, required human-review flag, or explicit non-auto-apply field. | `0002` additively drafts these fields, constrains `auto_apply` false in the local/test draft, and keeps runtime string fixture lineage in proposal JSON metadata. |
 | `audit_events` | No first-class `simulation_origin` column. | `0002` additively drafts `simulation_origin`; existing `event_payload_json` remains append-only metadata carrier. |
 
 ## Local/Test-Only Migration Draft Boundary
@@ -147,8 +147,7 @@ The existing `0001_create_core_schema.sql` creates the canonical simulation tabl
 
 The draft:
 
-- Adds columns only.
-- Adds indexes only.
+- Adds additive columns, check constraints, foreign key constraints for canonical UUID lineage fields, and indexes only.
 - Does not rename canonical tables.
 - Does not drop columns.
 - Does not backfill production data.
@@ -219,7 +218,7 @@ Task 008J does not add or approve:
 ## Risk Areas
 
 - A future implementation could mistakenly treat persistence-intent payloads as completed writes. The payloads explicitly state `persistence_intent_only = true` and `persistence_write_performed = false` to prevent that confusion.
-- Future FK resolution must decide how runtime string lineage maps to UUID-backed canonical tables without losing auditability.
+- Future FK resolution must preserve the Task 008J split between canonical UUID FK columns and runtime string fixture lineage carried in JSON metadata without losing auditability.
 - The local/test-only `0002` draft must not be applied to production Supabase without a separate explicit PR, Evidence Closure, and Harness Engineering approval.
 - Future persistence must preserve both origins, learning guardrails, audit lineage, and losing outcome visibility together; partial persistence would be unsafe.
 

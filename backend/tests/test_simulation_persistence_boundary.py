@@ -61,7 +61,8 @@ def test_system_generated_learning_runtime_record_maps_to_paper_orders_intent() 
     assert payload["target_table"] == "paper_orders"
     assert payload["simulation_origin"] == "system_generated_learning"
     assert payload["paper_order_origin"] == "system_generated_learning"
-    assert payload["source_recommendation_id"] == "fixture-strategy-recommendation-001"
+    assert payload["source_recommendation_id"] is None
+    assert payload["historical_recommendation_fields_json"]["source_recommendation_id"] == "fixture-strategy-recommendation-001"
     assert payload["strategy_recommendation_id"] == "fixture-strategy-recommendation-001"
     assert payload["system_learning_reason"] == record["source_metadata"]["system_learning_reason"]
     assert payload["requires_human_review"] is True
@@ -81,6 +82,23 @@ def test_learning_proposal_preview_maps_to_reviewable_non_auto_applied_intent() 
     assert payload["proposals_reviewable"] is True
     assert payload["proposals_auto_applied"] is False
     assert payload["proposal_payload_json"]["status"] == "preview_only_not_applied"
+
+
+def test_uuid_lineage_values_map_to_canonical_db_id_fields_when_available() -> None:
+    record = _runtime_record("system_generated_learning")
+    recommendation_uuid = "11111111-1111-4111-8111-111111111111"
+    proposal_uuid = "22222222-2222-4222-8222-222222222222"
+    record["historical_recommendation_fields"]["source_recommendation_id"] = recommendation_uuid
+    record["learning_proposal_preview"]["learning_proposal_id"] = proposal_uuid
+    record["learning_proposal_preview"]["source_recommendation_id"] = recommendation_uuid
+
+    order_payload = build_paper_order_persistence_payload(record)
+    proposal_payload = build_learning_proposal_persistence_payload(record)
+
+    assert order_payload["source_recommendation_id"] == recommendation_uuid
+    assert order_payload["learning_proposal_id"] == proposal_uuid
+    assert proposal_payload is not None
+    assert proposal_payload["source_recommendation_id"] == recommendation_uuid
 
 
 def test_user_recorded_has_no_learning_proposal_intent() -> None:
@@ -125,7 +143,8 @@ def test_origin_lineage_notes_loss_visibility_and_historical_fields_are_preserve
     bundle = build_persistence_payload_bundle(record)
 
     assert bundle["simulation_origin"] == "system_generated_learning"
-    assert bundle["paper_order"]["source_recommendation_id"] == "fixture-strategy-recommendation-001"
+    assert bundle["paper_order"]["source_recommendation_id"] is None
+    assert bundle["paper_order"]["historical_recommendation_fields_json"]["source_recommendation_id"] == "fixture-strategy-recommendation-001"
     assert bundle["paper_order"]["source_metadata_json"]["system_learning_reason"]
     assert bundle["paper_order"]["outcome_preview_json"]["losing_outcome_visible"] is True
     assert bundle["paper_order"]["historical_recommendation_fields_json"]["original_recommendation"] == "WAIT_FOR_PULLBACK"

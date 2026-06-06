@@ -50,3 +50,14 @@ Date: 2026-06-06
 - Canonical table names must not be renamed by migration drafts.
 - Destructive schema changes, column drops, production data rewrites, secrets, vendor/API calls, broker integrations, and real-money execution remain prohibited.
 - Local/CI SQL validation should execute migration files in lexical order so `0001` and `0002` are validated together where PostgreSQL is available.
+
+## Task 008J Blocker Closure — Canonical Lineage Field Types
+
+Date: 2026-06-06
+
+- Task 008J lineage columns that imply canonical database IDs use UUID-compatible fields in the local/test-only `0002` draft.
+- `paper_orders.source_recommendation_id` references `strategy_recommendations(id)`.
+- `paper_orders.learning_proposal_id` references `learning_proposals(id)`.
+- `learning_proposals.source_recommendation_id` references `strategy_recommendations(id)`.
+- Runtime fixture lineage strings remain preserved in JSON intent metadata rather than being stored in canonical UUID FK columns.
+- Local SQL validation must check both UUID data types and lineage foreign-key constraints where PostgreSQL tooling is available.

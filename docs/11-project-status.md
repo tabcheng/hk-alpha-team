@@ -86,7 +86,8 @@
 - Production third-party service dependency added: **No**
 - Paper-portfolio runtime added: **Yes — non-production in-memory snapshot only for `GET /api/v1/paper-portfolios/{portfolio_id}`**
 - Persistence writes added: **No**
-- SQL migration added: **No**
+- SQL migration draft added: **Yes — local/test-only additive draft only (`0002`)**
+- Production migration applied: **No**
 - Supabase client added: **No**
 - Endpoint runtime added: **Yes — limited to Task 008I Simulation Desk in-memory endpoints**
 - Real-money trading automation added: **No**
@@ -105,6 +106,7 @@
 ## Task 008J Boundary Snapshot
 
 - SQL migration draft added: **Yes — local/test-only additive draft (`0002`)**
+- Production migration applied: **No**
 - Production Supabase connection: **No**
 - Supabase client: **No**
 - Runtime persistence writes: **No**

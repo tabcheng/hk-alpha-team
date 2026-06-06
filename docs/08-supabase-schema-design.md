@@ -260,8 +260,9 @@ The schema remains advisory-only and paper-only. Real-money trading, autonomous 
 
 ## Migration Planning Note
 
-Production SQL migrations must be created in a later task after this schema design is reviewed.
-Do not create `supabase/migrations/` files in this PR.
+The original schema-design PR was documentation-only: production SQL migrations were intentionally deferred and that earlier PR was not allowed to create `supabase/migrations/` files.
+
+Task 008J is a later, implementation-limited schema-alignment task and is allowed to add `supabase/migrations/0002_align_simulation_desk_persistence_fields.sql` as a local/test-only additive migration draft. The draft may be executed by local/CI validation only. It must not be applied to production Supabase without later explicit Harness Engineering approval, a separate PR scope, and Evidence Closure.
 
 ## Task 008J Schema Alignment Note — Local/Test-Only Persistence Draft
 
@@ -276,11 +277,11 @@ The additive draft migration `supabase/migrations/0002_align_simulation_desk_per
 | Canonical table | Gap in `0001_create_core_schema.sql` relative to Task 008I runtime | Task 008J additive draft alignment |
 |---|---|---|
 | `paper_portfolios` | Canonical table exists, but Task 008I runtime portfolio IDs remain process-local strings and are not persisted. | No destructive change; future adapter must resolve portfolio identity explicitly. |
-| `paper_orders` | Missing explicit `simulation_origin`, `paper_order_origin`, `created_by_type`, `source_recommendation_id`, user-recorded notes, system learning reason, human-review flag, learning-proposal preview bridge, boundary flags, outcome preview, and source metadata fields. | `0002` additively drafts these fields. |
+| `paper_orders` | Missing explicit `simulation_origin`, `paper_order_origin`, `created_by_type`, canonical UUID `source_recommendation_id`, user-recorded notes, system learning reason, human-review flag, canonical UUID `learning_proposal_id`, boundary flags, outcome preview, and source metadata fields. | `0002` additively drafts these fields; runtime string fixture lineage remains in JSON metadata rather than canonical UUID FK columns. |
 | `paper_positions` | Missing `simulation_origin`, so future positions could lose whether they came from `user_recorded` or `system_generated_learning` records. | `0002` additively drafts `simulation_origin`. |
 | `portfolio_snapshots` | Missing mixed-origin summary metadata for Task 008I runtime snapshots. | `0002` additively drafts `simulation_origin_summary_json`. |
 | `trade_reviews` | Missing explicit origin, user/system note fields, improvement suggestions, and human-review flag aligned to Simulation Desk learning semantics. | `0002` additively drafts these fields while preserving existing review JSON fields. |
-| `learning_proposals` | Missing source recommendation text lineage, origin, required human-review field, and explicit non-auto-apply field. | `0002` additively drafts `source_recommendation_id`, `simulation_origin`, `requires_human_review`, and `auto_apply`. |
+| `learning_proposals` | Missing canonical UUID source recommendation lineage, origin, required human-review field, and explicit non-auto-apply field. | `0002` additively drafts UUID `source_recommendation_id`, `simulation_origin`, `requires_human_review`, and `auto_apply`; runtime string fixture lineage remains in proposal JSON metadata. |
 | `audit_events` | Existing `event_payload_json` can carry metadata, but there is no first-class `simulation_origin`. | `0002` additively drafts `simulation_origin`; `event_payload_json` remains append-only metadata carrier. |
 
 ### Runtime Boundary Fields to Preserve Before Persistence

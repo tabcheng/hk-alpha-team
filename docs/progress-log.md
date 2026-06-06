@@ -300,3 +300,10 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Added deterministic tests for both approved simulation origins, unsafe boundary rejection, reviewable/non-auto-applied learning proposal previews, append-only audit event previews, portfolio snapshot mapping, no Supabase/vendor/network/disk dependency, and runtime response envelope continuity.
 - Updated local SQL validation to execute migration files in lexical order so `0001` and `0002` are validated together where PostgreSQL is available.
 - Task 008 / M5 remains In Progress; production Supabase, Supabase client runtime, runtime persistence writes, vendor/API integration, broker integration, billing/auth/deployment runtime, secrets, autonomous real-money execution, and real-money trading remain out of scope.
+
+## 2026-06-06 — Task 008J PR #30 Blocker Closure
+
+- Resolved the `docs/08` migration-planning contradiction by clarifying that the earlier schema-design PR was documentation-only, while Task 008J may add a local/test-only additive migration draft that is not approved for production Supabase.
+- Resolved `docs/11` status drift by distinguishing a local/test-only SQL migration draft from production migration application, production Supabase connection, Supabase client runtime, and runtime persistence writes.
+- Aligned `0002` lineage fields with canonical UUID/FK semantics and preserved runtime string fixture lineage in JSON intent metadata.
+- Expanded migration validation expectations to check Task 008J UUID lineage column types and foreign-key constraints where PostgreSQL tooling is available.
