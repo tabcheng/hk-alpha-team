@@ -36,6 +36,13 @@ RUNTIME_TRUE_BOUNDARY_FLAGS = (
     "human_in_the_loop",
 )
 
+LEARNING_LOSS_GUARDRAIL_EXPECTATIONS = {
+    "proposals_reviewable": True,
+    "proposals_auto_applied": False,
+    "losing_outcomes_remain_visible": True,
+    "historical_recommendations_overwritten": False,
+}
+
 RUNTIME_WARNINGS = [
     "Simulation Desk runtime is paper-only and advisory-only; all real-money decisions remain human-controlled.",
     "No real-money order is placed, no broker API is called, and autonomous real-money execution is disabled.",
@@ -118,15 +125,20 @@ def _merge_boundary_flags(payload: dict[str, Any]) -> dict[str, bool]:
         if flag_name in nested:
             _require(nested[flag_name] is False, f"boundary_flags.{flag_name} must be false")
 
+    for flag_name, expected in LEARNING_LOSS_GUARDRAIL_EXPECTATIONS.items():
+        if flag_name in payload:
+            _require(
+                payload[flag_name] is expected,
+                f"{flag_name} must be {str(expected).lower()}",
+            )
+
     merged = {flag_name: False for flag_name in RUNTIME_FALSE_BOUNDARY_FLAGS}
     payload["boundary_flags"] = merged
     payload["paper_only"] = True
     payload["advisory_only"] = True
     payload["human_in_the_loop"] = True
-    payload["proposals_reviewable"] = True
-    payload["proposals_auto_applied"] = False
-    payload["losing_outcomes_remain_visible"] = True
-    payload["historical_recommendations_overwritten"] = False
+    for flag_name, expected in LEARNING_LOSS_GUARDRAIL_EXPECTATIONS.items():
+        payload[flag_name] = expected
     return merged
 
 

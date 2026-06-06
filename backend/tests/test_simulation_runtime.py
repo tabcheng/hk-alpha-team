@@ -155,6 +155,31 @@ def test_missing_system_generated_learning_lineage_fields_fail(field_name: str, 
     assert expected_message in error_details_text(error_payload)
 
 
+@pytest.mark.parametrize(
+    ("field_name", "unsafe_value"),
+    [
+        ("proposals_reviewable", False),
+        ("proposals_auto_applied", True),
+        ("losing_outcomes_remain_visible", False),
+        ("historical_recommendations_overwritten", True),
+        ("learning_proposal_auto_apply", True),
+    ],
+)
+def test_unsafe_top_level_learning_loss_guardrails_return_validation_error(
+    field_name: str,
+    unsafe_value: bool,
+) -> None:
+    payload = _payload("system_generated_learning")
+    payload[field_name] = unsafe_value
+
+    response = client.post("/api/v1/simulation/paper-orders", json=payload)
+
+    assert response.status_code == 422
+    error_payload = response.json()
+    assert_error_envelope(error_payload, code="VALIDATION_ERROR")
+    assert field_name in error_details_text(error_payload)
+
+
 def test_system_generated_learning_rejects_invalid_original_scores() -> None:
     payload = _payload("system_generated_learning")
     payload["original_scores"]["market_score"] = 101
