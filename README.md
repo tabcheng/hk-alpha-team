@@ -16,6 +16,10 @@ HK Alpha Team is **not** an automated trading system.
 
 All real-money decisions remain under human control.
 
+## Commercial Readiness Governance
+
+Harness Engineering treats HK Alpha Team as a serious commercial product candidate that may later support membership or subscription offerings. Commercial readiness remains governance/planning-only until explicit future PRs approve runtime, persistence, membership, subscription, billing, deployment, or user-facing product work; advisory-only, human-in-the-loop, no-guaranteed-return, and no-real-money-trading boundaries remain mandatory. See `docs/36-commercial-readiness-and-subscription-product-governance.md`.
+
 ## Human-in-the-Loop Governance
 
 The human user acts as **Harness Engineering** and is responsible for:
