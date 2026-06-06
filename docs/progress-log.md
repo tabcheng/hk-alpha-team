@@ -307,3 +307,10 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Resolved `docs/11` status drift by distinguishing a local/test-only SQL migration draft from production migration application, production Supabase connection, Supabase client runtime, and runtime persistence writes.
 - Aligned `0002` lineage fields with canonical UUID/FK semantics and preserved runtime string fixture lineage in JSON intent metadata.
 - Expanded migration validation expectations to check Task 008J UUID lineage column types and foreign-key constraints where PostgreSQL tooling is available.
+
+## 2026-06-06 — Task 008J PR #30 SQL Validation Runbook Closure
+
+- Updated `docs/16-local-sql-validation.md` to match the current `scripts/check_migration_sql.sh` behavior after Task 008J.
+- Clarified that PR #5 introduced baseline local/test SQL validation for `0001`, while Task 008J expands validation to all migration files in lexical order, including local/test-only `0002`.
+- Documented Task 008J validation coverage for additive columns, UUID lineage column types, lineage foreign keys, and additive indexes.
+- Reconfirmed that local SQL validation does not approve production Supabase application, Supabase client runtime, runtime persistence writes, secrets, vendor/API calls, broker integration, deployment, billing/payment/auth runtime, real-money trading, or autonomous real-money execution.
