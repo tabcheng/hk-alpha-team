@@ -62,7 +62,7 @@
 - Harness Engineering non-real-money productization approval baseline recorded: **Yes — non-real-money productization is approved in principle and may proceed through scoped PRs with tests, validation, Evidence Closure, security/secret handling, current-source verification where facts may change, and post-merge verification**
 - Task 008K local/test PostgreSQL adapter direction recorded: **Yes — move toward a local/test persistence adapter and write/read roundtrip unless review finds blockers**
 - Production deployment added: **No**
-- Production/service/vendor/auth/billing/deployment categories approved in principle for non-real-money scoped PRs: **Yes — not categorically blocked, but each PR still needs scope, validation evidence, Evidence Closure, current-source verification where facts may change, security/secret handling, and post-merge verification**
+- Production/service/vendor/auth/billing/deployment categories approved in principle for non-real-money scoped PRs: **Yes — not categorically blocked, but each PR still needs scope, tests, validation evidence, Evidence Closure, current-source verification where facts may change, security/secret handling, and post-merge verification**
 - Vendor/API capability future direction approved in principle: **Yes — every specific vendor/API/provider still requires separate discussion and explicit Harness Engineering approval in the scoped PR before it is selected, connected, implemented, required, or made production-facing/user-facing, plus current-source verification where facts may change, security/secret handling, validation evidence, Evidence Closure, and post-merge verification**
 - Production Supabase connection added: **No**
 - Backend Phase 4A deterministic workflow skeleton completed: **Yes**

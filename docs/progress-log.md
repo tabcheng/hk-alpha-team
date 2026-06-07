@@ -319,6 +319,6 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 
 - Clarified the standing non-real-money productization approval baseline so GitHub source-of-truth docs no longer read as if production/service/vendor/auth/billing/deployment work is categorically blocked by default.
 - Removed the over-conservative documentation interpretation that blocked product progress after Harness Engineering approved non-real-money scope in principle.
-- Prepared Task 008K direction toward a local/test PostgreSQL persistence adapter with a write/read roundtrip unless review finds blockers.
+- Prepared Task 008K direction toward a local/test PostgreSQL persistence adapter and write/read roundtrip unless review finds blockers.
 - Preserved the per-vendor explicit approval gate: every specific vendor/API/provider requires separate discussion and explicit Harness Engineering approval in the scoped PR before it is selected, connected, implemented, required, or made production-facing/user-facing.
 - Reconfirmed current implementation status: no production Supabase connection, Supabase client, runtime persistence writes, vendor/API integration, payment/auth/deployment runtime, broker integration, real-money automation, or committed secrets.
