@@ -2,7 +2,7 @@
 
 ## Snapshot Date
 
-2026-06-06
+2026-06-07
 
 ## Current Phase
 
@@ -19,7 +19,7 @@
 | 005 | Create Supabase Migration Draft | Completed | Completed by PR #5 with local/test SQL execution validation and CI migration check workflow. |
 | 006 | Backend Skeleton | Completed | PR #8 merged the analyze-stock stub, validation envelope handling, backend tests, and mobile-first strategy notes, completing M3 readiness for Phase 4. |
 | 007 | First Analysis Workflow | Completed | Completed by Phase 4G closeout readiness review after Phase 4A deterministic local-only workflow skeleton, Phase 4B deterministic department adapters, Phase 4C local-only handoff mapping, Phase 4D internal-only handoff preview decision, Phase 4E internal workflow validation, and Phase 4F fixture-backed validation/M4 readiness evidence. Public handoff previews, live research, persistence, production Supabase, broker execution, paper orders, and real-money trading remain out of scope. |
-| 008 | Simulation Desk MVP | In Progress | Task 008J adds Simulation Desk persistence schema alignment, a local/test-only additive migration draft, and a local-only persistence-intent adapter boundary after Task 008I. Dual origins (`user_recorded` and `system_generated_learning`) remain distinguishable and advisory-only. Production Supabase connection, Supabase client runtime, runtime persistence writes, deployment, billing/payment, membership/subscription runtime, auth runtime, live market data, vendor integrations, external APIs, paid data providers, broker APIs, payment providers, authentication providers, production third-party services, secrets, autonomous real-money execution, and real-money trading remain prohibited/out of scope. |
+| 008 | Simulation Desk MVP | In Progress | Task 008K-Baseline aligns source-of-truth status with Harness Engineering's clarified approval: non-real-money productization is approved in principle and may proceed through scoped implementation PRs with tests, validation, Evidence Closure, current-source verification where facts may change, security/secret handling, and post-merge verification. Task 008K should move toward a local/test PostgreSQL persistence adapter and write/read roundtrip unless review finds blockers. Dual origins (`user_recorded` and `system_generated_learning`) remain distinguishable and advisory-only. Real-money trading, autonomous real-money execution, autonomous broker execution, real-money account connectivity, secrets leakage, and hidden/irreversible investment actions remain prohibited. |
 | 009 | Simple UI or Report Output | Planned | Minimal output layer for strategy reports. |
 | 010 | Review and Learning Loop | Planned | Trade reviews, proposals, and audit continuity. |
 
@@ -41,10 +41,10 @@
 - Canonical schema table names are locked unless same-PR decision-log justification is added.
 - MVP endpoint names and required response envelope are locked for implementation continuity.
 - v1 remains advisory-only and human-in-the-loop.
-- Real-money execution and brokerage API integration remain explicitly out of scope.
+- Real-money execution, autonomous broker execution, and real-money account connectivity remain explicitly out of scope.
 - Codex PR Factory governance defines role separation, gates, PR body evidence expectations, and source-of-truth-based follow-up handling.
 - Phase 4C handoff previews remain internal-only for now; Phase 4E validates this boundary locally, Phase 4F adds fixture-backed internal validation scenarios plus an M4 readiness matrix, and Phase 4G records M4 closeout readiness. Public exposure through `POST /api/v1/analyze-stock` requires explicit future approval and same-PR contract/runtime/test updates.
-- Task 008G records Harness Engineering approval for non-real-money productization gates and adopts the dual simulation-origin product model: `user_recorded` paper trades and `system_generated_learning` simulations remain distinguishable and auditable. Task 008H adds commercial-readiness governance for possible future membership/subscription offerings through explicit PRs and evidence-based review. Task 008I adds a non-production in-memory backend runtime slice for `POST /api/v1/simulation/paper-orders` and `GET /api/v1/paper-portfolios/{portfolio_id}` only. Task 008J adds persistence schema alignment, a local/test-only additive migration draft, and a local-only persistence-intent adapter boundary. It does not authorize production Supabase, Supabase client runtime, runtime persistence writes, deployment, subscription billing, payment processing, live data, vendor integration, external APIs, paid data providers, broker APIs, payment providers, authentication providers, production third-party services, autonomous real-money execution, or real-money trading; Task 008 / M5 remains In Progress.
+- Task 008G records Harness Engineering approval for non-real-money productization gates and adopts the dual simulation-origin product model: `user_recorded` paper trades and `system_generated_learning` simulations remain distinguishable and auditable. Task 008H adds commercial-readiness governance for possible future membership/subscription offerings through explicit PRs and evidence-based review. Task 008I adds a non-production in-memory backend runtime slice for `POST /api/v1/simulation/paper-orders` and `GET /api/v1/paper-portfolios/{portfolio_id}` only. Task 008J adds persistence schema alignment, a local/test-only additive migration draft, and a local-only persistence-intent adapter boundary. Task 008K-Baseline clarifies that production/service/vendor/auth/billing/deployment categories are not categorically blocked: non-real-money productization may proceed through scoped PRs with Evidence Closure, current-source verification where facts may change, tests/validation, security/secret handling, and post-merge verification. Current implementation still has no production Supabase, Supabase client runtime, runtime persistence writes, deployment, subscription billing, payment processing, live data, vendor/API integration, payment/auth providers, broker integration, secrets, autonomous real-money execution, or real-money trading; Task 008 / M5 remains In Progress.
 
 ## Scope Compliance Snapshot
 
@@ -59,9 +59,11 @@
 - Task 008H commercial-readiness governance baseline added: **Yes — documentation-only commercial-readiness and subscription-product governance planning**
 - Task 008I dual-origin Simulation Desk runtime slice added: **Yes — non-production, in-memory backend runtime only**
 - Task 008J persistence schema alignment added: **Yes — schema mapping, local/test-only additive migration draft, and local-only persistence-intent adapter boundary**
-- Harness Engineering non-real-money productization gate approval recorded: **Yes — schema/contract alignment, planning, recordkeeping, system-generated learning simulations, audit events, and future non-real-money sequencing only**
+- Harness Engineering non-real-money productization approval baseline recorded: **Yes — non-real-money productization is approved in principle and may proceed through scoped PRs with tests, validation, Evidence Closure, security/secret handling, current-source verification where facts may change, and post-merge verification**
+- Task 008K local/test PostgreSQL adapter direction recorded: **Yes — move toward a local/test persistence adapter and write/read roundtrip unless review finds blockers**
 - Production deployment added: **No**
-- Vendor/API capability future direction approved in principle: **Yes — every specific vendor/API still requires separate discussion, current-source verification, and explicit Harness Engineering approval before implementation**
+- Production/service/vendor/auth/billing/deployment categories approved in principle for non-real-money scoped PRs: **Yes — not categorically blocked, but each PR still needs scope, validation evidence, Evidence Closure, current-source verification where facts may change, security/secret handling, and post-merge verification**
+- Vendor/API capability future direction approved in principle: **Yes — every specific vendor/API/provider still requires separate discussion and explicit Harness Engineering approval in the scoped PR before it is selected, connected, implemented, required, or made production-facing/user-facing, plus current-source verification where facts may change, security/secret handling, validation evidence, Evidence Closure, and post-merge verification**
 - Production Supabase connection added: **No**
 - Backend Phase 4A deterministic workflow skeleton completed: **Yes**
 - Phase 4B deterministic department adapters completed: **Yes**
@@ -91,27 +93,31 @@
 - Supabase client added: **No**
 - Endpoint runtime added: **Yes — limited to Task 008I Simulation Desk in-memory endpoints**
 - Real-money trading automation added: **No**
-- Brokerage API integration added: **No**
+- Broker integration added: **No**
 - Secrets committed: **No**
 
 ## Latest Review Update
 
 - Task 007 / Milestone M4 is completed by the Phase 4G M4 closeout readiness review after Phase 4A through Phase 4F evidence review and required validation.
 - Phase 4C handoff previews remain internal-only for M4 closeout; public exposure is not required for closing M4 and remains a separate contract-changing PR requiring Harness Engineering approval plus same-PR `docs/09-api-and-agent-contracts.md`, runtime, and API test updates.
-- Task 008 Simulation Desk MVP and M5 remain In Progress. Task 008I adds non-production in-memory endpoint runtime for the locked Simulation Desk paper-order and paper-portfolio endpoints after Task 008G/008H; it does not implement SQL migration, persistence writes outside process memory, Supabase client, production Supabase, vendor integration, external APIs, paid data providers, broker integration, live market data, deployment, authentication providers/runtime, payment providers, membership/subscription runtime, billing/payment integration, production third-party services, autonomous real-money execution, or real-money trading automation.
+- Task 008 Simulation Desk MVP and M5 remain In Progress. Task 008I adds non-production in-memory endpoint runtime for the locked Simulation Desk paper-order and paper-portfolio endpoints after Task 008G/008H, and Task 008J adds a local/test-only migration draft plus a local-only persistence-intent adapter boundary. Task 008K should move toward a local/test PostgreSQL persistence adapter and write/read roundtrip unless review finds blockers. These facts describe current implementation status, not a categorical approval block on future non-real-money production/service/vendor/auth/billing/deployment work.
 - The locked endpoint names and success/error envelope remain unchanged; Task 008I implements existing locked Simulation Desk endpoints without renaming MVP endpoints or changing the required response envelope.
 - The Codex PR Factory governance workflow is recorded in `docs/20-codex-pr-factory.md`.
-- Task 007 remains Completed and M4 remains Completed; Task 008 / M5 remains In Progress and has progressed through Task 008I dual-origin Simulation Desk runtime after Task 008G dual simulation-origin contract/schema foundation and Task 008H commercial-readiness governance, while preserving advisory-only and paper-only scope with only a local/test-only additive SQL migration draft and no runtime persistence writes, Supabase client, production Supabase, vendor integration, external APIs, paid data providers, broker execution, live market data, secrets, deployment, payment providers, authentication providers/runtime, membership/subscription runtime, billing/payment integration, production third-party services, production infrastructure, real-money trading, or autonomous real-money execution.
+- Task 007 remains Completed and M4 remains Completed; Task 008 / M5 remains In Progress and has progressed through Task 008I dual-origin Simulation Desk runtime, Task 008J persistence alignment, and Task 008K-Baseline source-of-truth approval alignment. Current implementation has only a local/test-only additive SQL migration draft and no runtime persistence writes, Supabase client, production Supabase, vendor/API integration, external APIs, paid data providers, broker execution, live market data, secrets, deployment, payment providers, authentication providers/runtime, membership/subscription runtime, billing/payment integration, production third-party services, production infrastructure, real-money trading, or autonomous real-money execution. Non-real-money production/service/vendor/auth/billing/deployment capabilities may proceed through future scoped PRs with Evidence Closure, current-source verification where facts may change, security/secret handling, and post-merge verification.
 
-## Task 008J Boundary Snapshot
+## Task 008K-Baseline Boundary Snapshot
 
+- Non-real-money productization approved in principle: **Yes — future scoped PRs may implement non-real-money product capabilities with tests, validation, Evidence Closure, current-source verification where facts may change, security/secret handling, and post-merge verification**
+- Task 008K direction: **Local/test PostgreSQL persistence adapter plus write/read roundtrip unless review finds blockers**
 - SQL migration draft added: **Yes — local/test-only additive draft (`0002`)**
 - Production migration applied: **No**
-- Production Supabase connection: **No**
-- Supabase client: **No**
-- Runtime persistence writes: **No**
-- Vendor/API integration: **No**
-- Broker integration: **No**
-- Real-money trading automation: **No**
+- Production Supabase connection added: **No**
+- Supabase client added: **No**
+- Runtime persistence writes added: **No**
+- Vendor/API integration added: **No**
+- Payment/auth/deployment added: **No**
+- Broker integration added: **No**
+- Real-money trading automation added: **No**
 - Secrets committed: **No**
+- Hard prohibitions: **Real-money trading, autonomous real-money execution, autonomous broker execution, real-money account connectivity, secrets leakage, and hidden/irreversible investment actions**
 - Task 008 / M5 status: **In Progress**

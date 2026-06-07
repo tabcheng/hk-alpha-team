@@ -314,3 +314,11 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Clarified that PR #5 introduced baseline local/test SQL validation for `0001`, while Task 008J expands validation to all migration files in lexical order, including local/test-only `0002`.
 - Documented Task 008J validation coverage for additive columns, UUID lineage column types, lineage foreign keys, and additive indexes.
 - Reconfirmed that local SQL validation does not approve production Supabase application, Supabase client runtime, runtime persistence writes, secrets, vendor/API calls, broker integration, deployment, billing/payment/auth runtime, real-money trading, or autonomous real-money execution.
+
+## 2026-06-07 — PR #31 Source-of-Truth Approval Alignment
+
+- Clarified the standing non-real-money productization approval baseline so GitHub source-of-truth docs no longer read as if production/service/vendor/auth/billing/deployment work is categorically blocked by default.
+- Removed the over-conservative documentation interpretation that blocked product progress after Harness Engineering approved non-real-money scope in principle.
+- Prepared Task 008K direction toward a local/test PostgreSQL persistence adapter with a write/read roundtrip unless review finds blockers.
+- Preserved the per-vendor explicit approval gate: every specific vendor/API/provider requires separate discussion and explicit Harness Engineering approval in the scoped PR before it is selected, connected, implemented, required, or made production-facing/user-facing.
+- Reconfirmed current implementation status: no production Supabase connection, Supabase client, runtime persistence writes, vendor/API integration, payment/auth/deployment runtime, broker integration, real-money automation, or committed secrets.

@@ -89,7 +89,7 @@ Harness Engineering approves vendor/API capability as a future product direction
 
 Task 008I does not select, connect, implement, require, or depend on any specific vendor or vendor API. It does not call live market data, call external APIs, add API keys or secrets, add vendor SDKs, create production third-party dependencies, or add payment provider, auth provider, broker provider, deployment provider, market data provider, news provider, financial data provider, or AI/model vendor integration.
 
-Every future specific vendor or vendor API requires separate discussion, current-source/web verification where facts may change, documented pricing/terms/privacy/security/failure-mode implications, Evidence Closure classification, and explicit Harness Engineering approval before implementation. Until then, implementation may include only local interfaces, mock adapters, deterministic fixtures, or placeholder contracts that do not call a vendor, require secrets, fetch live data, incur cost, or create production dependency.
+Every future specific vendor, vendor API, or provider requires separate discussion, current-source/web verification where facts may change, documented pricing/terms/privacy/security/failure-mode implications, Evidence Closure classification, and explicit Harness Engineering approval in the scoped PR before it is selected, connected, implemented, required, or made production-facing or user-facing. Until that per-vendor/provider approval is recorded, implementation may include only local interfaces, mock adapters, deterministic fixtures, or placeholder contracts that do not call a vendor, require secrets, fetch live data, incur cost, or create production dependency.
 
 ## Explicit Non-Goals
 
@@ -127,7 +127,7 @@ Task 008I does not implement:
 
 Harness Engineering has approved non-real-money productization, so Task 008I intentionally moves beyond documentation-only planning.
 
-The approved product step is limited to a backend, in-memory, non-production Simulation Desk runtime slice that can be exercised locally and in tests before any later explicit approval for persistence, production Supabase, deployment, commercial runtime, auth, live data, broker, or real-money capabilities.
+The Task 008I product step is limited to a backend, in-memory, non-production Simulation Desk runtime slice that can be exercised locally and in tests. Later non-real-money persistence, production Supabase, deployment, commercial runtime, auth, live data, and vendor/API capabilities are approved in principle and may proceed only through scoped PRs with tests, validation evidence, Evidence Closure, security/secret handling, current-source verification where facts may change, post-merge verification, and any required explicit per-vendor/provider approval. Real-money trading, autonomous real-money execution, autonomous broker execution, real-money account connectivity, secrets leakage, and hidden/irreversible investment actions remain prohibited.
 
 ## Status
 

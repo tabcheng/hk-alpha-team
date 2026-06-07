@@ -308,3 +308,22 @@ Boundaries:
 - No vendor/API calls, broker integrations, deployment, billing/auth runtime, membership runtime, secrets, real-money trading, or autonomous real-money execution are approved.
 - Future production persistence or a Supabase adapter requires a separate explicit PR scope and Evidence Closure.
 - Codex does not self-approve this governance-sensitive change.
+
+## 2026-06-07 — Decision: Standing Non-Real-Money Productization Approval Baseline
+
+**Decision:** Harness Engineering approves non-real-money productization categories to proceed through scoped implementation PRs. This standing approval covers non-real-money product capabilities in principle; it does not claim those capabilities are already implemented and does not remove per-PR review requirements.
+
+**Approved in-principle examples:**
+
+- local/test persistence;
+- Supabase adapter / production Supabase work;
+- endpoint runtime expansion;
+- deployment preparation;
+- auth/account flows;
+- membership/subscription/billing work;
+- vendor/API integration;
+- live data integration.
+
+**Required for each PR:** Every productization PR still needs a scoped implementation PR, validation/tests, Evidence Closure, security/secrets handling, current-source verification where facts may change, and post-merge verification. PRs that rely on current, external, legal, vendor, pricing, availability, security, deployment, billing, auth, or compliance facts must verify those facts against current sources before making product claims or implementation choices. Every specific vendor/API/provider also requires separate discussion and explicit Harness Engineering approval in the scoped PR before it is selected, connected, implemented, required, or made production-facing/user-facing.
+
+**Hard prohibitions:** This standing approval does not authorize real-money trading, autonomous real-money execution, autonomous broker execution, real-money account connection, secrets leakage, or hidden or irreversible investment action.

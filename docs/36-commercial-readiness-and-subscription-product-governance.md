@@ -52,6 +52,7 @@ The standing hard prohibition remains:
 - no autonomous real-money execution;
 - no autonomous broker execution;
 - no real-money account connection;
+- no secrets leakage;
 - no hidden or irreversible investment action.
 
 ## Market, Membership, and Subscription Readiness Framing
@@ -95,9 +96,11 @@ When verification is performed, the PR should identify the source type used, the
 
 HK Alpha Team is expected to require external vendors, vendor APIs, online data sources, or third-party services over time. These may include market data providers, financial statement/fundamentals providers, news and sentiment providers, AI/model providers, search/web data providers, payment/billing providers, authentication providers, deployment/hosting providers, notification providers, and broker or broker-sandbox providers.
 
-Harness Engineering approves the product architecture to include vendor/API integration capability in principle. Specific vendor/API work may proceed through scoped PRs, but the responsible PR must identify the vendor/service, current-source evidence, cost/licensing/security implications, secret-management approach, and Evidence Closure. If multiple viable vendors exist or the choice has product/cost/licensing impact, ChatGPT and Harness Engineering should discuss the options before implementation begins.
+Harness Engineering approves the product architecture to include vendor/API integration capability in principle. Every specific vendor, vendor API, provider, paid data source, production external service, broker-sandbox provider, payment provider, authentication provider, live-data provider, deployment provider, or third-party service still requires separate discussion and explicit Harness Engineering approval in the scoped PR before it is selected, connected, implemented, required, or made production-facing or user-facing. This explicit per-vendor/provider approval gate is mandatory for single-vendor and multi-vendor cases; vendor discussion is not optional merely because only one vendor appears viable.
 
-Before connecting any vendor or vendor API, the responsible PR must document:
+The responsible scoped PR must identify the vendor/service, current-source evidence where facts may change, cost/licensing/security implications, secret-management approach, validation evidence, Evidence Closure classification, and post-merge verification plan.
+
+Before selecting, connecting, implementing, requiring, or making production-facing/user-facing any vendor, vendor API, or provider, the responsible PR must document:
 
 1. vendor name and service category;
 2. intended product use;
@@ -280,4 +283,4 @@ ChatGPT / Harness Engineering performs full review, evidence closure, final appr
 
 Task 008H was documentation-only. It recorded commercial-readiness governance before broader productization work began.
 
-Task 008K-Baseline supersedes any reading that non-real-money productization is generally blocked. Non-real-money productization is approved in principle and may proceed through scoped PRs with Evidence Closure. Real-money trading and autonomous real-money execution remain prohibited.
+Task 008K-Baseline supersedes any reading that non-real-money productization is generally blocked. Non-real-money productization is approved in principle and may proceed through scoped PRs with Evidence Closure. Real-money trading, autonomous real-money execution, autonomous broker execution, real-money account connectivity, secrets leakage, and hidden or irreversible investment actions remain prohibited.

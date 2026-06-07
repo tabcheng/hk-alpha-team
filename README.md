@@ -18,7 +18,7 @@ All real-money decisions remain under human control.
 
 ## Commercial Readiness Governance
 
-Harness Engineering treats HK Alpha Team as a serious commercial product candidate that may later support membership or subscription offerings. Commercial readiness remains governance/planning-only until explicit future PRs approve runtime, persistence, membership, subscription, billing, deployment, or user-facing product work; advisory-only, human-in-the-loop, no-guaranteed-return, and no-real-money-trading boundaries remain mandatory. See `docs/36-commercial-readiness-and-subscription-product-governance.md`.
+Harness Engineering treats HK Alpha Team as a serious commercial product candidate that may later support membership or subscription offerings. Non-real-money productization is approved in principle and may proceed through scoped PRs with tests, validation evidence, Evidence Closure, security/secret handling, current-source verification where facts may change, and post-merge verification. Actual runtime, persistence, membership, subscription, billing, deployment, user-facing, vendor/API, auth/account, or production capabilities are implemented only when merged by scoped PRs; current status snapshots must distinguish **not implemented yet** from **not approved**. Real-money trading, autonomous real-money execution, autonomous broker execution, real-money account connectivity, secrets leakage, and hidden/irreversible investment actions remain prohibited. See `docs/36-commercial-readiness-and-subscription-product-governance.md`.
 
 ## Human-in-the-Loop Governance
 
