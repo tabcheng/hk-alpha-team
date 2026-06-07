@@ -224,11 +224,30 @@ Task 008J does not add or approve:
 
 ## Task 008K Entry Criteria
 
-A future Task 008K may only start after:
+The standing non-real-money productization approval baseline recorded on 2026-06-07 satisfies the approval gate for the next Task 008K scope: a local/test PostgreSQL persistence adapter and write/read roundtrip. Task 008K no longer requires an additional generic approval merely to start that local/test persistence-adapter PR, provided the PR stays within the boundaries below.
 
-1. Task 008J tests and migration validation pass locally/CI.
-2. Harness Engineering explicitly approves the next persistence scope.
-3. Evidence Closure identifies the latest reviewed head SHA, CI status, changed files, and unresolved review-thread status.
-4. The future PR states whether it is still intent-only or introduces a real local/test persistence write path.
-5. Any Supabase adapter remains separately scoped and must not be introduced implicitly.
-6. Real-money trading, broker execution APIs, autonomous real-money execution, production vendor/API connections, and secrets remain prohibited unless an explicit future governance decision changes the boundary.
+Task 008K must still be scoped in its own PR and must include:
+
+1. explicit scope and out-of-scope statements;
+2. tests and CI validation for the local/test PostgreSQL write/read roundtrip;
+3. Evidence Closure identifying the latest reviewed head SHA, CI status, changed files, residual limitations, and unresolved review-thread status;
+4. security/secret handling confirming no credentials, tokens, Supabase hosted project keys, broker credentials, or real-money account information are committed or required;
+5. current-source verification where facts may change;
+6. post-merge source-of-truth verification.
+
+Task 008K must remain local/test-only and must not add:
+
+- production Supabase connection;
+- Supabase hosted project credentials;
+- Supabase adapter / production persistence work beyond the local/test adapter scope;
+- secrets;
+- vendor/API calls;
+- live market data;
+- broker integration;
+- real-money trading;
+- autonomous real-money execution;
+- autonomous broker execution;
+- real-money account connectivity;
+- hidden or irreversible investment actions.
+
+Supabase adapter / production persistence, vendor/API integration, deployment, authentication, billing, membership/subscription runtime, and other production-facing capabilities remain approved in principle only as future scoped PRs with their own validation, Evidence Closure, security/secret handling, current-source verification where facts may change, and post-merge verification. They must not be introduced implicitly as part of Task 008K.
