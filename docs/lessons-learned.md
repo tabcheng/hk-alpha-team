@@ -165,3 +165,16 @@
 
 - Future persistence work must not partially persist Task 008I runtime fields. Origin, guardrails, audit lineage, recommendation lineage, reviewable learning proposals, and losing outcome visibility must move together.
 - Future Supabase adapter work should start from the Task 008J intent payloads and require separate approval, Evidence Closure, and tests proving that no unsafe production, vendor, broker, secret, auto-apply, loss-hiding, or overwrite behavior is introduced.
+
+## 2026-06-07 — Non-Real-Money Approval Language Must Not Freeze Productization
+
+### What Worked
+
+- Rechecking source-of-truth language against Harness Engineering's approval clarified that non-real-money productization is approved in principle while real-money and autonomous execution boundaries remain hard prohibitions.
+
+### What to Improve
+
+- Governance docs must not accidentally freeze productization after Harness Engineering approves non-real-money scope.
+- Future prompts and PR text should distinguish **not implemented yet** from **not approved** so current status snapshots do not become unintended product blockers.
+- Per-vendor explicit approval remains mandatory: every specific vendor/API/provider requires separate discussion and explicit Harness Engineering approval in the scoped PR before selection, connection, implementation, requirement, or production/user-facing use.
+- Real-money trading, autonomous real-money execution, autonomous broker execution, and real-money account connectivity remain the standing investment/action prohibitions; secrets leakage and hidden or irreversible investment actions also remain prohibited. Other non-real-money product capabilities should move through scoped PRs and Evidence Closure instead of remaining frozen by default.

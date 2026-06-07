@@ -2,9 +2,9 @@
 
 ## Purpose
 
-Task 008H establishes a documentation-only commercial-readiness governance baseline for HK Alpha Team before any further move into runtime, persistence, membership, subscription, billing, deployment, or user-facing product work.
+Task 008H established a commercial-readiness governance baseline for HK Alpha Team. Task 008K-Baseline clarifies the current Harness Engineering productization decision after Tasks 008I and 008J: **non-real-money productization is approved in principle and should move forward through scoped implementation PRs.**
 
-This page records that Harness Engineering is treating HK Alpha Team as a serious market-bound product candidate that may later support membership or subscription offerings. It does not authorize implementation of subscription billing, payment processing, authentication runtime, entitlement runtime, deployment, production Supabase connection, live market data, broker integration, persistence writes, or real-money trading.
+This page records that Harness Engineering is treating HK Alpha Team as a serious market-bound product candidate that may later support membership or subscription offerings. It also records that real-money trading, autonomous real-money execution, and autonomous broker execution remain the hard prohibition. Other non-real-money productization work may proceed when each PR clearly states scope, evidence, tests, security handling, and post-merge verification.
 
 ## Product Seriousness Statement
 
@@ -16,15 +16,54 @@ HK Alpha Team should be governed as a serious commercial product candidate even 
 - Future membership or subscription positioning must not imply guaranteed returns, automated wealth generation, or autonomous investment execution.
 - Commercial features must be introduced through explicit PRs with scope, risks, validation evidence, and review closure.
 
+## Non-Real-Money Productization Approval Baseline
+
+Harness Engineering has approved HK Alpha Team to move beyond planning into real non-real-money product development. This approval covers scoped implementation PRs for product capabilities such as:
+
+- local/test database persistence;
+- Supabase adapter design and later non-production/prod Supabase integration;
+- backend service layers;
+- endpoint runtime expansion;
+- Simulation Desk write/read workflows;
+- paper portfolio and paper trade recordkeeping;
+- audit-event persistence;
+- reviewable learning proposal persistence;
+- deployment preparation;
+- authentication and account models;
+- membership/subscription and billing planning/runtime;
+- vendor/API architecture and integrations;
+- live market/fundamentals/news/search data integrations;
+- non-real-money broker-sandbox research or paper-only broker-sandbox workflows.
+
+This approval is not a blanket permission to merge unsafe or vague changes. Every implementation PR must still:
+
+1. define exact scope and out-of-scope items;
+2. preserve advisory-only, human-in-the-loop, and no-guaranteed-return framing;
+3. preserve locked contracts unless the PR explicitly proposes a governance-sensitive contract change;
+4. include tests and validation evidence proportional to risk;
+5. update status, progress, decisions, and lessons in the same PR when product state changes;
+6. classify evidence under the Evidence Closure Protocol;
+7. avoid committing secrets, credentials, tokens, private keys, or real-money account information;
+8. include post-merge source-of-truth verification.
+
+The standing hard prohibition remains:
+
+- no real-money trading;
+- no autonomous real-money execution;
+- no autonomous broker execution;
+- no real-money account connection;
+- no secrets leakage;
+- no hidden or irreversible investment action.
+
 ## Market, Membership, and Subscription Readiness Framing
 
-Future membership or subscription offerings may be considered only after explicit governance, security, privacy, compliance, entitlement, billing, support, and deployment work is approved in separate PRs.
+Future membership or subscription offerings may proceed through scoped implementation PRs after the relevant product, security, privacy, entitlement, billing, support, and deployment assumptions are documented and validated.
 
-Commercial readiness is therefore a planning posture, not an implementation claim:
+Commercial readiness is a productization posture, not a claim that all commercial runtime already exists:
 
-- **Allowed now:** documentation, governance, readiness criteria, review protocols, product boundary language, and future-roadmap planning.
-- **Not implemented by this task:** paid memberships, subscription plans, billing providers, payment collection, entitlement enforcement, authentication runtime, user dashboards, production deployment, live-data services, or runtime persistence.
-- **Required later:** explicit implementation task, Harness Engineering approval, reviewed PR, validation evidence, and evidence closure for every commercial runtime capability.
+- **Allowed now:** scoped non-real-money implementation work, local/test persistence, service adapters, deployment preparation, account/auth planning, entitlement/billing work, vendor/API integration work, and commercial-readiness documentation.
+- **Still not implemented unless a PR adds it:** paid memberships, subscription plans, billing providers, payment collection, entitlement enforcement, authentication runtime, user dashboards, production deployment, live-data services, runtime persistence, or production Supabase.
+- **Still required for every capability:** explicit implementation task, reviewed PR, validation evidence, Evidence Closure, and post-merge verification.
 
 ## GitHub Main Source-of-Truth Rule
 
@@ -53,14 +92,15 @@ Examples of facts requiring verification include:
 
 When verification is performed, the PR should identify the source type used, the date checked, and any remaining uncertainty. Repository docs should not overstate certainty based only on memory or unverified assumptions.
 
-
 ## Vendor / External Data Source Approval Gate
 
 HK Alpha Team is expected to require external vendors, vendor APIs, online data sources, or third-party services over time. These may include market data providers, financial statement/fundamentals providers, news and sentiment providers, AI/model providers, search/web data providers, payment/billing providers, authentication providers, deployment/hosting providers, notification providers, and broker or broker-sandbox providers.
 
-Harness Engineering approves the product architecture to include vendor/API integration capability in principle. However, no specific vendor, vendor API, paid data source, production external service, broker integration, payment provider, authentication provider, live data provider, deployment provider, or third-party service may be selected, connected, implemented, or required without separate discussion and explicit Harness Engineering approval.
+Harness Engineering approves the product architecture to include vendor/API integration capability in principle. Every specific vendor, vendor API, provider, paid data source, production external service, broker-sandbox provider, payment provider, authentication provider, live-data provider, deployment provider, or third-party service still requires separate discussion and explicit Harness Engineering approval in the scoped PR before it is selected, connected, implemented, required, or made production-facing or user-facing. This explicit per-vendor/provider approval gate is mandatory for single-vendor and multi-vendor cases; vendor discussion is not optional merely because only one vendor appears viable.
 
-Before connecting any vendor or vendor API, the responsible PR must document:
+The responsible scoped PR must identify the vendor/service, current-source evidence where facts may change, cost/licensing/security implications, secret-management approach, validation evidence, Evidence Closure classification, and post-merge verification plan.
+
+Before selecting, connecting, implementing, requiring, or making production-facing/user-facing any vendor, vendor API, or provider, the responsible PR must document:
 
 1. vendor name and service category;
 2. intended product use;
@@ -74,7 +114,7 @@ Before connecting any vendor or vendor API, the responsible PR must document:
 10. whether the integration could influence investment recommendations, simulations, billing, entitlements, or user-facing claims;
 11. exact validation evidence and Evidence Closure classification.
 
-Until a vendor is explicitly approved, implementation may include only local interfaces, mock adapters, deterministic fixtures, or placeholder contracts that do not call the vendor, require secrets, fetch live data, incur cost, or create production dependency.
+Until a vendor PR is approved, implementation may include local interfaces, mock adapters, deterministic fixtures, or placeholder contracts that do not call the vendor, require secrets, fetch live data, incur cost, or create production dependency.
 
 Real-money trading, autonomous real-money execution, and broker execution APIs for autonomous order placement remain prohibited unless Harness Engineering later makes a separate governance decision. v1 remains advisory-only and human-in-the-loop.
 
@@ -160,7 +200,7 @@ Mandatory guardrails:
 
 ## Commercial Readiness Roadmap
 
-The following roadmap identifies governance areas that must be planned and reviewed before commercial launch. It does not implement any of these capabilities.
+The following roadmap identifies governance areas that must be planned and reviewed before commercial launch. It does not claim these capabilities are already implemented.
 
 ### Membership and Subscription Boundary
 
@@ -233,14 +273,14 @@ Codex must not:
 - self-approve its own PR;
 - claim merge readiness without evidence closure language;
 - bypass Harness Engineering review;
-- introduce secrets or production connections;
-- implement runtime, persistence, billing, membership, auth, deployment, live data, broker integration, or real-money trading unless explicitly approved by a later task;
+- introduce secrets or production connections outside the approved task scope and secret-management plan;
+- implement real-money trading, autonomous real-money execution, autonomous broker execution, or real-money account connectivity;
 - silently change locked contracts or product boundaries.
 
 ChatGPT / Harness Engineering performs full review, evidence closure, final approval judgment, and merge decision.
 
 ## Task 008H Scope Compliance
 
-Task 008H is documentation-only. It records commercial-readiness governance before productization work begins.
+Task 008H was documentation-only. It recorded commercial-readiness governance before broader productization work began.
 
-Task 008H does not implement frontend/UI, backend runtime, FastAPI endpoints, persistence writes, SQL migrations, Supabase clients, production Supabase connections, billing/payment integration, membership/subscription runtime, authentication runtime, live market data, broker integration, deployment configuration, secrets, real-money trading, autonomous real-money execution, or locked contract renames.
+Task 008K-Baseline supersedes any reading that non-real-money productization is generally blocked. Non-real-money productization is approved in principle and may proceed through scoped PRs with Evidence Closure. Real-money trading, autonomous real-money execution, autonomous broker execution, real-money account connectivity, secrets leakage, and hidden or irreversible investment actions remain prohibited.
