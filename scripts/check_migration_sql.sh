@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-MIGRATION_FILE="${ROOT_DIR}/supabase/migrations/0001_create_core_schema.sql"
+MIGRATIONS_DIR="${ROOT_DIR}/supabase/migrations"
 
 : "${PGHOST:=127.0.0.1}"
 : "${PGPORT:=5432}"
@@ -16,8 +16,13 @@ if ! command -v psql >/dev/null 2>&1; then
   exit 1
 fi
 
-if [[ ! -f "${MIGRATION_FILE}" ]]; then
-  echo "ERROR: migration file not found: ${MIGRATION_FILE}" >&2
+if [[ ! -d "${MIGRATIONS_DIR}" ]]; then
+  echo "ERROR: migrations directory not found: ${MIGRATIONS_DIR}" >&2
+  exit 1
+fi
+mapfile -t MIGRATION_FILES < <(find "${MIGRATIONS_DIR}" -maxdepth 1 -type f -name "*.sql" | sort)
+if [[ "${#MIGRATION_FILES[@]}" -eq 0 ]]; then
+  echo "ERROR: no migration SQL files found in ${MIGRATIONS_DIR}" >&2
   exit 1
 fi
 
@@ -28,8 +33,10 @@ echo "[check] resetting validation database: ${PGDATABASE}"
 psql -v ON_ERROR_STOP=1 -d postgres -c "drop database if exists ${PGDATABASE};"
 psql -v ON_ERROR_STOP=1 -d postgres -c "create database ${PGDATABASE};"
 
-echo "[check] applying migration: ${MIGRATION_FILE}"
-psql -v ON_ERROR_STOP=1 -d "${PGDATABASE}" -f "${MIGRATION_FILE}" >/dev/null
+for migration_file in "${MIGRATION_FILES[@]}"; do
+  echo "[check] applying migration: ${migration_file}"
+  psql -v ON_ERROR_STOP=1 -d "${PGDATABASE}" -f "${migration_file}" >/dev/null
+done
 
 echo "[check] validating expected table count"
 TABLE_COUNT="$(psql -v ON_ERROR_STOP=1 -d "${PGDATABASE}" -tAc "select count(*) from information_schema.tables where table_schema='public';" | tr -d '[:space:]')"
@@ -39,9 +46,86 @@ if [[ "${TABLE_COUNT}" != "18" ]]; then
 fi
 
 echo "[check] validating required critical constraints"
-CONSTRAINT_COUNT="$(psql -v ON_ERROR_STOP=1 -d "${PGDATABASE}" -tAc "select count(*) from pg_constraint where conname in ('ck_strategy_recommendations_confidence_level_range','ck_agent_runs_status');" | tr -d '[:space:]')"
-if [[ "${CONSTRAINT_COUNT}" != "2" ]]; then
-  echo "ERROR: expected 2 required constraints, found ${CONSTRAINT_COUNT}" >&2
+CONSTRAINT_COUNT="$(psql -v ON_ERROR_STOP=1 -d "${PGDATABASE}" -tAc "select count(*) from pg_constraint where conname in ('ck_strategy_recommendations_confidence_level_range','ck_agent_runs_status','ck_learning_proposals_auto_apply_false','fk_paper_orders_source_recommendation_id','fk_paper_orders_learning_proposal_id','fk_learning_proposals_source_recommendation_id');" | tr -d '[:space:]')"
+if [[ "${CONSTRAINT_COUNT}" != "6" ]]; then
+  echo "ERROR: expected 6 required constraints, found ${CONSTRAINT_COUNT}" >&2
+  exit 1
+fi
+
+echo "[check] validating Task 008J additive migration columns"
+COLUMN_COUNT="$(psql -v ON_ERROR_STOP=1 -d "${PGDATABASE}" -tAc "
+  select count(*)
+  from information_schema.columns
+  where table_schema = 'public'
+    and (table_name, column_name) in (
+      ('paper_orders', 'simulation_origin'),
+      ('paper_orders', 'paper_order_origin'),
+      ('paper_orders', 'boundary_flags_json'),
+      ('paper_orders', 'source_recommendation_id'),
+      ('paper_orders', 'learning_proposal_id'),
+      ('paper_positions', 'simulation_origin'),
+      ('portfolio_snapshots', 'simulation_origin_summary_json'),
+      ('trade_reviews', 'simulation_origin'),
+      ('learning_proposals', 'auto_apply'),
+      ('learning_proposals', 'source_recommendation_id'),
+      ('audit_events', 'simulation_origin')
+    );
+" | tr -d '[:space:]')"
+if [[ "${COLUMN_COUNT}" != "11" ]]; then
+  echo "ERROR: expected 11 Task 008J additive columns, found ${COLUMN_COUNT}" >&2
+  exit 1
+fi
+
+
+echo "[check] validating Task 008J lineage column types"
+UUID_LINEAGE_COLUMN_COUNT="$(psql -v ON_ERROR_STOP=1 -d "${PGDATABASE}" -tAc "
+  select count(*)
+  from information_schema.columns
+  where table_schema = 'public'
+    and data_type = 'uuid'
+    and (table_name, column_name) in (
+      ('paper_orders', 'source_recommendation_id'),
+      ('paper_orders', 'learning_proposal_id'),
+      ('learning_proposals', 'source_recommendation_id')
+    );
+" | tr -d '[:space:]')"
+if [[ "${UUID_LINEAGE_COLUMN_COUNT}" != "3" ]]; then
+  echo "ERROR: expected 3 UUID lineage columns, found ${UUID_LINEAGE_COLUMN_COUNT}" >&2
+  exit 1
+fi
+
+echo "[check] validating Task 008J lineage foreign keys"
+LINEAGE_FK_COUNT="$(psql -v ON_ERROR_STOP=1 -d "${PGDATABASE}" -tAc "
+  select count(*)
+  from pg_constraint
+  where contype = 'f'
+    and conname in (
+      'fk_paper_orders_source_recommendation_id',
+      'fk_paper_orders_learning_proposal_id',
+      'fk_learning_proposals_source_recommendation_id'
+    );
+" | tr -d '[:space:]')"
+if [[ "${LINEAGE_FK_COUNT}" != "3" ]]; then
+  echo "ERROR: expected 3 Task 008J lineage foreign keys, found ${LINEAGE_FK_COUNT}" >&2
+  exit 1
+fi
+
+echo "[check] validating Task 008J additive migration indexes"
+INDEX_COUNT="$(psql -v ON_ERROR_STOP=1 -d "${PGDATABASE}" -tAc "
+  select count(*)
+  from pg_indexes
+  where schemaname = 'public'
+    and indexname in (
+      'idx_paper_orders_simulation_origin_created_at_desc',
+      'idx_paper_orders_source_recommendation_created_at_desc',
+      'idx_paper_positions_simulation_origin_status',
+      'idx_trade_reviews_simulation_origin_reviewed_at_desc',
+      'idx_learning_proposals_simulation_origin_status_created_at_desc',
+      'idx_audit_events_simulation_origin_created_at_desc'
+    );
+" | tr -d '[:space:]')"
+if [[ "${INDEX_COUNT}" != "6" ]]; then
+  echo "ERROR: expected 6 Task 008J additive indexes, found ${INDEX_COUNT}" >&2
   exit 1
 fi
 

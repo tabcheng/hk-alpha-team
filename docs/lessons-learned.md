@@ -153,3 +153,15 @@
 - Future persistence work should explicitly map Task 008G/008I additive origin and boundary fields to SQL/schema changes before any Supabase write path is approved.
 - Future Simulation Desk endpoint expansion should keep losing outcomes visible in fixtures and runtime responses, especially when portfolio valuation and review loops are added.
 - PR scopes that cross from planning into runtime should keep status/log documentation changes in the same PR so M5 progress remains auditable without claiming completion early.
+
+## 2026-06-06 — Task 008J Persistence Boundary Before Database Writes
+
+### What Worked
+
+- Introducing persistence through schema mapping, a local/test-only migration draft, and a deterministic adapter boundary creates review evidence before any database write path exists.
+- Keeping persistence-intent payloads separate from a Supabase adapter makes it easier to verify that origin, advisory-only boundaries, audit lineage, learning proposal reviewability, and loss visibility survive the transition from runtime records to future table targets.
+
+### What to Improve
+
+- Future persistence work must not partially persist Task 008I runtime fields. Origin, guardrails, audit lineage, recommendation lineage, reviewable learning proposals, and losing outcome visibility must move together.
+- Future Supabase adapter work should start from the Task 008J intent payloads and require separate approval, Evidence Closure, and tests proving that no unsafe production, vendor, broker, secret, auto-apply, loss-hiding, or overwrite behavior is introduced.

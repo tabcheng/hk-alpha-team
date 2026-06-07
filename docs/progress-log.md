@@ -291,3 +291,26 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Added the Vendor / External Data Source Approval Gate: every specific vendor, vendor API, paid data source, production external service, broker integration, payment provider, authentication provider, live data provider, deployment provider, or third-party service requires separate discussion, current-source/web verification where facts may change, Evidence Closure documentation, and explicit Harness Engineering approval before implementation.
 - Confirmed Task 008I does not connect vendors, call live market data, call external APIs, add API keys/secrets, add vendor SDKs, create production third-party dependencies, or add payment, auth, broker, deployment, market data, news, financial data, or AI/model vendor integrations.
 - Task 008 / M5 remains In Progress.
+
+## 2026-06-06 — Task 008J Simulation Desk Persistence Alignment
+
+- Added a Task 008J documentation page covering purpose, source-of-truth review, runtime-to-persistence mapping, 0001 schema gaps, local/test-only migration boundary, adapter boundary design, validation strategy, risk areas, and Task 008K entry criteria.
+- Added `supabase/migrations/0002_align_simulation_desk_persistence_fields.sql` as an additive local/test-only draft that preserves canonical table names and does not alter `0001_create_core_schema.sql`.
+- Added a local-only Simulation Desk persistence-intent boundary that builds deterministic payloads for future `paper_orders`, `portfolio_snapshots`, `learning_proposals`, and `audit_events` targets without database, disk, Supabase, vendor, or network writes.
+- Added deterministic tests for both approved simulation origins, unsafe boundary rejection, reviewable/non-auto-applied learning proposal previews, append-only audit event previews, portfolio snapshot mapping, no Supabase/vendor/network/disk dependency, and runtime response envelope continuity.
+- Updated local SQL validation to execute migration files in lexical order so `0001` and `0002` are validated together where PostgreSQL is available.
+- Task 008 / M5 remains In Progress; production Supabase, Supabase client runtime, runtime persistence writes, vendor/API integration, broker integration, billing/auth/deployment runtime, secrets, autonomous real-money execution, and real-money trading remain out of scope.
+
+## 2026-06-06 — Task 008J PR #30 Blocker Closure
+
+- Resolved the `docs/08` migration-planning contradiction by clarifying that the earlier schema-design PR was documentation-only, while Task 008J may add a local/test-only additive migration draft that is not approved for production Supabase.
+- Resolved `docs/11` status drift by distinguishing a local/test-only SQL migration draft from production migration application, production Supabase connection, Supabase client runtime, and runtime persistence writes.
+- Aligned `0002` lineage fields with canonical UUID/FK semantics and preserved runtime string fixture lineage in JSON intent metadata.
+- Expanded migration validation expectations to check Task 008J UUID lineage column types and foreign-key constraints where PostgreSQL tooling is available.
+
+## 2026-06-06 — Task 008J PR #30 SQL Validation Runbook Closure
+
+- Updated `docs/16-local-sql-validation.md` to match the current `scripts/check_migration_sql.sh` behavior after Task 008J.
+- Clarified that PR #5 introduced baseline local/test SQL validation for `0001`, while Task 008J expands validation to all migration files in lexical order, including local/test-only `0002`.
+- Documented Task 008J validation coverage for additive columns, UUID lineage column types, lineage foreign keys, and additive indexes.
+- Reconfirmed that local SQL validation does not approve production Supabase application, Supabase client runtime, runtime persistence writes, secrets, vendor/API calls, broker integration, deployment, billing/payment/auth runtime, real-money trading, or autonomous real-money execution.
