@@ -322,3 +322,12 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Prepared Task 008K direction toward a local/test PostgreSQL persistence adapter and write/read roundtrip unless review finds blockers.
 - Preserved the per-vendor explicit approval gate: every specific vendor/API/provider requires separate discussion and explicit Harness Engineering approval in the scoped PR before it is selected, connected, implemented, required, or made production-facing/user-facing.
 - Reconfirmed current implementation status: no production Supabase connection, Supabase client, runtime persistence writes, vendor/API integration, payment/auth/deployment runtime, broker integration, real-money automation, or committed secrets.
+
+## 2026-06-07 — Task 008K Local/Test PostgreSQL Persistence Adapter
+
+- Added a local/test-only PostgreSQL adapter for Simulation Desk paper-order persistence payloads using Task 008J persistence-intent shape as the input boundary.
+- Added write/read roundtrip coverage for both approved origins: `user_recorded` and `system_generated_learning`.
+- Added local/test schema alignment for `paper_orders.historical_recommendation_fields_json` so original recommendation metadata, source metadata, boundary flags, and outcome preview metadata can be preserved through PostgreSQL.
+- Added ephemeral PostgreSQL service coverage to backend CI so adapter tests run without hosted Supabase credentials or production infrastructure.
+- Reconfirmed Task 008K does not add production Supabase connection logic, Supabase hosted credentials, vendor/API calls, live market data, broker integration, broker execution APIs, real-money trading, autonomous real-money execution, real-money account connectivity, billing/payment runtime, membership runtime, auth runtime, deployment config, frontend/UI, or secrets.
+- Task 008 / M5 remains In Progress; this PR is one local/test persistence step and does not claim full Simulation Desk MVP completion.
