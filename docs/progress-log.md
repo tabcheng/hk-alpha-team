@@ -331,3 +331,12 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Added ephemeral PostgreSQL service coverage to backend CI so adapter tests run without hosted Supabase credentials or production infrastructure.
 - Reconfirmed Task 008K does not add production Supabase connection logic, Supabase hosted credentials, vendor/API calls, live market data, broker integration, broker execution APIs, real-money trading, autonomous real-money execution, real-money account connectivity, billing/payment runtime, membership runtime, auth runtime, deployment config, frontend/UI, or secrets.
 - Task 008 / M5 remains In Progress; this PR is one local/test persistence step and does not claim full Simulation Desk MVP completion.
+
+
+## 2026-06-07 — Task 008K PR #33 Destructive Reset Blocker Closure
+
+- Tightened PostgreSQL roundtrip tests so destructive reset is authorized only by `HK_ALPHA_TEST_POSTGRES_DSN`; `DATABASE_URL` alone is ignored and cannot trigger drop/create database operations.
+- Added test-only database-name guards accepting only `hk_alpha_validation`, `hk_alpha_test`, or names starting with `hk_alpha_validation_` / `hk_alpha_test_` before reset logic can run.
+- Added regression tests proving `DATABASE_URL` cannot trigger destructive reset, unsafe explicit DSNs are skipped before destructive SQL, and approved local/test database names are allowed.
+- Hardened `scripts/check_migration_sql.sh` with the same test-only database-name boundary for local SQL validation.
+- Reconfirmed the fix does not add production Supabase, hosted credentials, Supabase client runtime, vendor/API calls, live market data, broker integration, real-money trading, autonomous execution, or secrets.

@@ -10,7 +10,7 @@ Task 008K adds the first local/test-only PostgreSQL write/read adapter for Simul
 - Use Task 008J paper-order persistence-intent payloads as the adapter input shape.
 - Validate both approved Simulation Desk origins: `user_recorded` and `system_generated_learning`.
 - Preserve origin fields, actor/source metadata, JSON boundary flags, historical recommendation metadata, outcome preview metadata, and learning/loss guardrails through a database write/read roundtrip.
-- Use ephemeral local/test PostgreSQL connection details from test environment variables or local defaults only.
+- Use only `HK_ALPHA_TEST_POSTGRES_DSN` for destructive PostgreSQL roundtrip resets; `DATABASE_URL` is intentionally ignored by the test fixture.
 
 ## Boundary
 
@@ -30,4 +30,4 @@ Task 008K adds an additive local/test migration draft for `paper_orders.historic
 - `scripts/check_migration_sql.sh` with local/test PostgreSQL available
 - `git diff --check`
 
-If local PostgreSQL is unavailable and no test DSN is explicitly configured, the adapter roundtrip tests are skipped locally. When `HK_ALPHA_TEST_POSTGRES_DSN` or `DATABASE_URL` is explicitly configured, missing `psycopg` or an unreachable PostgreSQL service fails the tests so CI cannot silently skip the roundtrip evidence.
+If `HK_ALPHA_TEST_POSTGRES_DSN` is missing, the adapter roundtrip tests are skipped locally before any destructive reset is attempted. `DATABASE_URL` alone is ignored and cannot authorize destructive reset. When `HK_ALPHA_TEST_POSTGRES_DSN` is present, the database name must be `hk_alpha_validation`, `hk_alpha_test`, or start with `hk_alpha_validation_` / `hk_alpha_test_`; unsafe names are skipped before import, connection, drop, or create operations. With an approved test-only DSN, missing `psycopg` or an unreachable PostgreSQL service fails the tests so CI cannot silently skip the roundtrip evidence.

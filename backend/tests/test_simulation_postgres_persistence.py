@@ -3,7 +3,7 @@ from __future__ import annotations
 import ast
 import os
 from pathlib import Path
-from urllib.parse import urlsplit, urlunsplit
+from urllib.parse import unquote, urlsplit, urlunsplit
 
 import pytest
 
@@ -14,15 +14,32 @@ from app.simulation_store import simulation_store
 
 ROOT = Path(__file__).resolve().parents[2]
 MIGRATIONS_DIR = ROOT / "supabase" / "migrations"
-DEFAULT_DSN = "postgresql://postgres:postgres@127.0.0.1:5432/hk_alpha_validation"
+APPROVED_TEST_DATABASE_NAMES = {"hk_alpha_validation", "hk_alpha_test"}
+APPROVED_TEST_DATABASE_PREFIXES = ("hk_alpha_validation_", "hk_alpha_test_")
 
 
-def _explicit_dsn_requested() -> bool:
-    return "HK_ALPHA_TEST_POSTGRES_DSN" in os.environ or "DATABASE_URL" in os.environ
+def _configured_test_dsn() -> str | None:
+    return os.environ.get("HK_ALPHA_TEST_POSTGRES_DSN")
 
 
-def _dsn() -> str:
-    return os.environ.get("HK_ALPHA_TEST_POSTGRES_DSN") or os.environ.get("DATABASE_URL") or DEFAULT_DSN
+def _database_name_from_dsn(dsn: str) -> str:
+    return unquote(urlsplit(dsn).path.lstrip("/"))
+
+
+def _is_approved_test_database_name(database_name: str) -> bool:
+    return database_name in APPROVED_TEST_DATABASE_NAMES or database_name.startswith(APPROVED_TEST_DATABASE_PREFIXES)
+
+
+def _approved_test_database_name_or_skip(dsn: str | None) -> str:
+    if not dsn:
+        pytest.skip("HK_ALPHA_TEST_POSTGRES_DSN is required for destructive local/test PostgreSQL reset")
+    database_name = _database_name_from_dsn(dsn)
+    if not _is_approved_test_database_name(database_name):
+        pytest.skip(
+            "HK_ALPHA_TEST_POSTGRES_DSN database name must be hk_alpha_validation, hk_alpha_test, "
+            "or start with hk_alpha_validation_ / hk_alpha_test_ before destructive reset"
+        )
+    return database_name
 
 
 def _maintenance_dsn(dsn: str) -> str:
@@ -30,37 +47,68 @@ def _maintenance_dsn(dsn: str) -> str:
     return urlunsplit((parts.scheme, parts.netloc, "/postgres", parts.query, parts.fragment))
 
 
-def _database_name(dsn: str) -> str:
-    return urlsplit(dsn).path.lstrip("/") or "hk_alpha_validation"
-
-
 @pytest.fixture(scope="session")
 def postgres_dsn() -> str:
-    dsn = _dsn()
+    dsn = _configured_test_dsn()
+    dbname = _approved_test_database_name_or_skip(dsn)
+    assert dsn is not None
     try:
         import psycopg as psycopg_module
         from psycopg import sql
     except ImportError as exc:
-        if _explicit_dsn_requested():
-            raise AssertionError("psycopg is required when PostgreSQL DSN is explicitly configured") from exc
-        pytest.skip(f"psycopg is unavailable for optional local PostgreSQL roundtrip validation: {exc}")
+        raise AssertionError("psycopg is required when HK_ALPHA_TEST_POSTGRES_DSN is configured") from exc
 
     try:
         with psycopg_module.connect(_maintenance_dsn(dsn), connect_timeout=3, autocommit=True) as connection:
-            dbname = _database_name(dsn)
             with connection.cursor() as cursor:
                 cursor.execute(sql.SQL("drop database if exists {}").format(sql.Identifier(dbname)))
                 cursor.execute(sql.SQL("create database {}").format(sql.Identifier(dbname)))
     except psycopg_module.OperationalError as exc:
-        if _explicit_dsn_requested():
-            raise AssertionError("explicitly configured local/test PostgreSQL DSN is not reachable") from exc
-        pytest.skip(f"local/test PostgreSQL is unavailable for Task 008K roundtrip validation: {exc}")
+        raise AssertionError("configured local/test PostgreSQL DSN is not reachable") from exc
 
     with psycopg_module.connect(dsn, autocommit=True) as connection:
         with connection.cursor() as cursor:
             for migration_file in sorted(MIGRATIONS_DIR.glob("*.sql")):
                 cursor.execute(migration_file.read_text(encoding="utf-8"))
     return dsn
+
+
+def test_database_url_alone_is_ignored_for_destructive_roundtrip_reset(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("HK_ALPHA_TEST_POSTGRES_DSN", raising=False)
+    monkeypatch.setenv("DATABASE_URL", "postgresql://postgres:postgres@127.0.0.1:5432/production_app")
+
+    assert _configured_test_dsn() is None
+    with pytest.raises(pytest.skip.Exception, match="HK_ALPHA_TEST_POSTGRES_DSN is required"):
+        _approved_test_database_name_or_skip(_configured_test_dsn())
+
+
+def test_unsafe_hk_alpha_test_dsn_is_skipped_before_destructive_reset() -> None:
+    unsafe_dsn = "postgresql://postgres:postgres@127.0.0.1:5432/production_app"
+
+    with pytest.raises(pytest.skip.Exception, match="database name must be"):
+        _approved_test_database_name_or_skip(unsafe_dsn)
+
+
+def test_approved_test_database_names_are_allowed_before_destructive_reset() -> None:
+    approved_names = [
+        "hk_alpha_validation",
+        "hk_alpha_test",
+        "hk_alpha_validation_pr33",
+        "hk_alpha_test_roundtrip",
+    ]
+
+    for database_name in approved_names:
+        dsn = f"postgresql://postgres:postgres@127.0.0.1:5432/{database_name}"
+        assert _approved_test_database_name_or_skip(dsn) == database_name
+
+
+def test_non_approved_database_names_are_not_allowed_before_destructive_reset() -> None:
+    unsafe_names = ["postgres", "hk_alpha", "hk_alpha_prod", "production_app", "app_hk_alpha_test"]
+
+    for database_name in unsafe_names:
+        dsn = f"postgresql://postgres:postgres@127.0.0.1:5432/{database_name}"
+        with pytest.raises(pytest.skip.Exception, match="database name must be"):
+            _approved_test_database_name_or_skip(dsn)
 
 
 @pytest.fixture(autouse=True)

@@ -15,7 +15,7 @@ This runbook began with PR #5, which introduced local/test SQL validation for th
 Implementation-limited validation only:
 
 - run draft migrations against an isolated local/test PostgreSQL instance;
-- reset the local validation database before applying migrations;
+- reset only an explicitly test-named local validation database before applying migrations;
 - discover SQL migration files under `supabase/migrations/`;
 - apply all discovered migration files in lexical order, including `0001_create_core_schema.sql`, `0002_align_simulation_desk_persistence_fields.sql`, and `0003_add_paper_order_historical_recommendation_fields_json.sql`;
 - verify migration execution succeeds;
@@ -54,18 +54,29 @@ After Task 008K, `scripts/check_migration_sql.sh` validates `0001`, `0002`, and 
 `scripts/check_migration_sql.sh` currently performs the following steps:
 
 1. Reads PostgreSQL connection settings from environment variables, defaulting to a local/test validation database named `hk_alpha_validation`.
-2. Verifies `psql` is available.
-3. Confirms `supabase/migrations/` exists.
-4. Discovers `*.sql` files in `supabase/migrations/` and sorts them lexically.
-5. Verifies PostgreSQL connectivity against the `postgres` database.
-6. Drops and recreates the isolated validation database.
-7. Applies every discovered migration file in lexical order.
-8. Validates exactly **18** public tables exist.
-9. Validates required baseline and Task 008J constraints.
-10. Validates Task 008J/008K additive columns.
-11. Validates Task 008J UUID lineage column types.
-12. Validates Task 008J lineage foreign-key constraints.
-13. Validates Task 008J additive indexes.
+2. Rejects destructive reset unless `PGDATABASE` is `hk_alpha_validation`, `hk_alpha_test`, or starts with `hk_alpha_validation_` / `hk_alpha_test_`.
+3. Verifies `psql` is available.
+4. Confirms `supabase/migrations/` exists.
+5. Discovers `*.sql` files in `supabase/migrations/` and sorts them lexically.
+6. Verifies PostgreSQL connectivity against the `postgres` database.
+7. Drops and recreates the isolated validation database.
+8. Applies every discovered migration file in lexical order.
+9. Validates exactly **18** public tables exist.
+10. Validates required baseline and Task 008J constraints.
+11. Validates Task 008J/008K additive columns.
+12. Validates Task 008J UUID lineage column types.
+13. Validates Task 008J lineage foreign-key constraints.
+14. Validates Task 008J additive indexes.
+
+
+The destructive reset guard accepts only these local/test database names:
+
+- `hk_alpha_validation`
+- `hk_alpha_test`
+- names starting with `hk_alpha_validation_`
+- names starting with `hk_alpha_test_`
+
+Do not point this script at production, shared staging, hosted Supabase, or application databases.
 
 ## Current Constraint Checks
 

@@ -16,6 +16,11 @@ if [[ ! "${PGDATABASE}" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]; then
   exit 1
 fi
 
+if [[ "${PGDATABASE}" != "hk_alpha_validation" && "${PGDATABASE}" != "hk_alpha_test" && ! "${PGDATABASE}" =~ ^hk_alpha_validation_ && ! "${PGDATABASE}" =~ ^hk_alpha_test_ ]]; then
+  echo "ERROR: PGDATABASE must be hk_alpha_validation, hk_alpha_test, or start with hk_alpha_validation_ / hk_alpha_test_ for destructive local/test validation." >&2
+  exit 1
+fi
+
 if ! command -v psql >/dev/null 2>&1; then
   echo "ERROR: psql is required for SQL migration validation." >&2
   exit 1
