@@ -15,11 +15,11 @@ This runbook began with PR #5, which introduced local/test SQL validation for th
 Implementation-limited validation only:
 
 - run draft migrations against an isolated local/test PostgreSQL instance;
-- reset the local validation database before applying migrations;
+- reset only an explicitly test-named local validation database before applying migrations;
 - discover SQL migration files under `supabase/migrations/`;
-- apply all discovered migration files in lexical order, including `0001_create_core_schema.sql` and `0002_align_simulation_desk_persistence_fields.sql`;
+- apply all discovered migration files in lexical order, including `0001_create_core_schema.sql`, `0002_align_simulation_desk_persistence_fields.sql`, and `0003_add_paper_order_historical_recommendation_fields_json.sql`;
 - verify migration execution succeeds;
-- verify core schema presence, baseline constraints, and Task 008J additive schema alignment checks.
+- verify core schema presence, baseline constraints, Task 008J additive schema alignment checks, and the Task 008K historical recommendation metadata column.
 
 Out of scope:
 
@@ -47,25 +47,36 @@ PR #5 introduced `scripts/check_migration_sql.sh` for the baseline Phase 2 migra
 
 Task 008J adds `supabase/migrations/0002_align_simulation_desk_persistence_fields.sql` as a **local/test-only additive migration draft** for Simulation Desk persistence alignment. The migration remains draft-only and must not be applied to production Supabase without later explicit Harness Engineering approval, separate PR scope, and Evidence Closure.
 
-After Task 008J, `scripts/check_migration_sql.sh` validates `0001` and `0002` together by applying all migration files in lexical order.
+After Task 008K, `scripts/check_migration_sql.sh` validates `0001`, `0002`, and `0003` together by applying all migration files in lexical order.
 
 ## Validation Script Behavior
 
 `scripts/check_migration_sql.sh` currently performs the following steps:
 
 1. Reads PostgreSQL connection settings from environment variables, defaulting to a local/test validation database named `hk_alpha_validation`.
-2. Verifies `psql` is available.
-3. Confirms `supabase/migrations/` exists.
-4. Discovers `*.sql` files in `supabase/migrations/` and sorts them lexically.
-5. Verifies PostgreSQL connectivity against the `postgres` database.
-6. Drops and recreates the isolated validation database.
-7. Applies every discovered migration file in lexical order.
-8. Validates exactly **18** public tables exist.
-9. Validates required baseline and Task 008J constraints.
-10. Validates Task 008J additive columns.
-11. Validates Task 008J UUID lineage column types.
-12. Validates Task 008J lineage foreign-key constraints.
-13. Validates Task 008J additive indexes.
+2. Rejects destructive reset unless `PGDATABASE` is `hk_alpha_validation`, `hk_alpha_test`, or starts with `hk_alpha_validation_` / `hk_alpha_test_`.
+3. Verifies `psql` is available.
+4. Confirms `supabase/migrations/` exists.
+5. Discovers `*.sql` files in `supabase/migrations/` and sorts them lexically.
+6. Verifies PostgreSQL connectivity against the `postgres` database.
+7. Drops and recreates the isolated validation database.
+8. Applies every discovered migration file in lexical order.
+9. Validates exactly **18** public tables exist.
+10. Validates required baseline and Task 008J constraints.
+11. Validates Task 008J/008K additive columns.
+12. Validates Task 008J UUID lineage column types.
+13. Validates Task 008J lineage foreign-key constraints.
+14. Validates Task 008J additive indexes.
+
+
+The destructive reset guard accepts only these local/test database names:
+
+- `hk_alpha_validation`
+- `hk_alpha_test`
+- names starting with `hk_alpha_validation_`
+- names starting with `hk_alpha_test_`
+
+Do not point this script at production, shared staging, hosted Supabase, or application databases.
 
 ## Current Constraint Checks
 
@@ -80,7 +91,7 @@ The script validates the presence of these critical constraints:
 
 ## Task 008J Additive Column Checks
 
-The script validates the expected Task 008J additive columns, including Simulation Desk origin, boundary, lineage, and metadata fields across:
+The script validates the expected Task 008J/008K additive columns, including Simulation Desk origin, boundary, lineage, and metadata fields across:
 
 - `paper_orders`
 - `paper_positions`
@@ -164,4 +175,4 @@ Local SQL validation does not approve production persistence. For Task 008J:
 
 ## Current Readiness Outcome
 
-With ordered migration execution and Task 008J schema-alignment checks, local/test SQL validation now covers both the baseline schema and Simulation Desk persistence-alignment draft while preserving advisory-only, paper-only, non-production boundaries.
+With ordered migration execution and Task 008J/008K schema-alignment checks, local/test SQL validation now covers both the baseline schema and Simulation Desk persistence-alignment draft while preserving advisory-only, paper-only, non-production boundaries.

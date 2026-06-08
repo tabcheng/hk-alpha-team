@@ -171,7 +171,7 @@ Define the exact required HK Alpha Team v1 Supabase/Postgres schema table set wi
 ### `paper_orders`
 - **Purpose:** Simulation paper order intents and lifecycle events for both user-recorded paper trades and system-generated learning simulations.
 - **Primary key:** `id` (uuid).
-- **Major columns:** `portfolio_id`, `stock_id`, `strategy_recommendation_id`, `source_recommendation_id`, `simulation_origin`, `paper_order_origin`, `created_by_type`, `user_recorded_notes`, `system_learning_reason`, `requires_human_review`, `learning_proposal_id`, `side`, `order_type`, `quantity`, `limit_price`, `status`, `submitted_at`, `filled_at`, `created_at`.
+- **Major columns:** `portfolio_id`, `stock_id`, `strategy_recommendation_id`, `source_recommendation_id`, `simulation_origin`, `paper_order_origin`, `created_by_type`, `user_recorded_notes`, `system_learning_reason`, `requires_human_review`, `learning_proposal_id`, `boundary_flags_json`, `source_metadata_json`, `historical_recommendation_fields_json`, `outcome_preview_json`, `side`, `order_type`, `quantity`, `limit_price`, `status`, `submitted_at`, `filled_at`, `created_at`.
 - **Important foreign keys:** `portfolio_id -> paper_portfolios.id`; `stock_id -> stocks.id`; `strategy_recommendation_id -> strategy_recommendations.id`; `source_recommendation_id -> strategy_recommendations.id` when system-learning lineage needs explicit source terminology; `learning_proposal_id -> learning_proposals.id` when a reviewable proposal is created.
 - **Indexes:** index on `(portfolio_id, submitted_at desc)`; index on `(stock_id, submitted_at desc)`; planned index on `(simulation_origin, created_at desc)`; planned index on `(source_recommendation_id, created_at desc)`.
 - **Notes/constraints:** non-negative quantity; paper execution only; `simulation_origin` / `paper_order_origin` allowed values are `user_recorded` and `system_generated_learning`; `created_by_type` distinguishes human/user/Harness Engineering from Simulation Investment Desk/system; `requires_human_review` must be true for system-generated learning proposal linkage.
@@ -277,7 +277,7 @@ The additive draft migration `supabase/migrations/0002_align_simulation_desk_per
 | Canonical table | Gap in `0001_create_core_schema.sql` relative to Task 008I runtime | Task 008J additive draft alignment |
 |---|---|---|
 | `paper_portfolios` | Canonical table exists, but Task 008I runtime portfolio IDs remain process-local strings and are not persisted. | No destructive change; future adapter must resolve portfolio identity explicitly. |
-| `paper_orders` | Missing explicit `simulation_origin`, `paper_order_origin`, `created_by_type`, canonical UUID `source_recommendation_id`, user-recorded notes, system learning reason, human-review flag, canonical UUID `learning_proposal_id`, boundary flags, outcome preview, and source metadata fields. | `0002` additively drafts these fields; runtime string fixture lineage remains in JSON metadata rather than canonical UUID FK columns. |
+| `paper_orders` | Missing explicit `simulation_origin`, `paper_order_origin`, `created_by_type`, canonical UUID `source_recommendation_id`, user-recorded notes, system learning reason, human-review flag, canonical UUID `learning_proposal_id`, boundary flags, outcome preview, source metadata fields, and historical recommendation metadata fields. | `0002` additively drafts most of these fields; `0003` additively drafts `historical_recommendation_fields_json`; runtime string fixture lineage remains in JSON metadata rather than canonical UUID FK columns. |
 | `paper_positions` | Missing `simulation_origin`, so future positions could lose whether they came from `user_recorded` or `system_generated_learning` records. | `0002` additively drafts `simulation_origin`. |
 | `portfolio_snapshots` | Missing mixed-origin summary metadata for Task 008I runtime snapshots. | `0002` additively drafts `simulation_origin_summary_json`. |
 | `trade_reviews` | Missing explicit origin, user/system note fields, improvement suggestions, and human-review flag aligned to Simulation Desk learning semantics. | `0002` additively drafts these fields while preserving existing review JSON fields. |
@@ -289,3 +289,10 @@ The additive draft migration `supabase/migrations/0002_align_simulation_desk_per
 Future persistence must preserve the approved origins (`user_recorded`, `system_generated_learning`) and these boundary fields together: `paper_only`, `advisory_only`, `human_in_the_loop`, `real_money_order_placed`, `real_money_trading_automation_enabled`, `autonomous_real_money_execution`, `broker_execution_enabled`, `broker_api_called`, `production_supabase_connected`, `persistence_write_performed`, `secrets_required`, `external_api_called`, `billing_runtime_enabled`, `membership_runtime_enabled`, `auth_runtime_enabled`, and `deployment_required`.
 
 Future persistence must also preserve learning and loss guardrails: `proposals_reviewable`, `proposals_auto_applied`, `losing_outcomes_remain_visible`, and `historical_recommendations_overwritten`.
+
+
+## Task 008K Schema Alignment Note — Local/Test PostgreSQL Roundtrip
+
+Date: 2026-06-07
+
+Task 008K adds `supabase/migrations/0003_add_paper_order_historical_recommendation_fields_json.sql` as an additive local/test-only migration draft so Task 008J paper-order persistence-intent payloads can preserve `historical_recommendation_fields_json` through PostgreSQL write/read validation. This does not apply migrations to production Supabase, does not add a Supabase client, does not introduce hosted credentials or secrets, and does not rename canonical tables, locked endpoints, response envelope fields, preferred strategy labels, MVP phase names, or Investment Strategy Office required fields.

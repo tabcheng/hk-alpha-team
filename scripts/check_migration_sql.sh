@@ -11,6 +11,16 @@ MIGRATIONS_DIR="${ROOT_DIR}/supabase/migrations"
 : "${PGDATABASE:=hk_alpha_validation}"
 export PGHOST PGPORT PGUSER PGPASSWORD PGDATABASE
 
+if [[ ! "${PGDATABASE}" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]; then
+  echo "ERROR: PGDATABASE must be a simple local/test database identifier." >&2
+  exit 1
+fi
+
+if [[ "${PGDATABASE}" != "hk_alpha_validation" && "${PGDATABASE}" != "hk_alpha_test" && ! "${PGDATABASE}" =~ ^hk_alpha_validation_ && ! "${PGDATABASE}" =~ ^hk_alpha_test_ ]]; then
+  echo "ERROR: PGDATABASE must be hk_alpha_validation, hk_alpha_test, or start with hk_alpha_validation_ / hk_alpha_test_ for destructive local/test validation." >&2
+  exit 1
+fi
+
 if ! command -v psql >/dev/null 2>&1; then
   echo "ERROR: psql is required for SQL migration validation." >&2
   exit 1
@@ -52,7 +62,7 @@ if [[ "${CONSTRAINT_COUNT}" != "6" ]]; then
   exit 1
 fi
 
-echo "[check] validating Task 008J additive migration columns"
+echo "[check] validating Task 008J/008K additive migration columns"
 COLUMN_COUNT="$(psql -v ON_ERROR_STOP=1 -d "${PGDATABASE}" -tAc "
   select count(*)
   from information_schema.columns
@@ -63,6 +73,7 @@ COLUMN_COUNT="$(psql -v ON_ERROR_STOP=1 -d "${PGDATABASE}" -tAc "
       ('paper_orders', 'boundary_flags_json'),
       ('paper_orders', 'source_recommendation_id'),
       ('paper_orders', 'learning_proposal_id'),
+      ('paper_orders', 'historical_recommendation_fields_json'),
       ('paper_positions', 'simulation_origin'),
       ('portfolio_snapshots', 'simulation_origin_summary_json'),
       ('trade_reviews', 'simulation_origin'),
@@ -71,11 +82,25 @@ COLUMN_COUNT="$(psql -v ON_ERROR_STOP=1 -d "${PGDATABASE}" -tAc "
       ('audit_events', 'simulation_origin')
     );
 " | tr -d '[:space:]')"
-if [[ "${COLUMN_COUNT}" != "11" ]]; then
-  echo "ERROR: expected 11 Task 008J additive columns, found ${COLUMN_COUNT}" >&2
+if [[ "${COLUMN_COUNT}" != "12" ]]; then
+  echo "ERROR: expected 12 Task 008J/008K additive columns, found ${COLUMN_COUNT}" >&2
   exit 1
 fi
 
+
+echo "[check] validating Task 008K JSONB metadata column type"
+HISTORICAL_JSONB_COLUMN_COUNT="$(psql -v ON_ERROR_STOP=1 -d "${PGDATABASE}" -tAc "
+  select count(*)
+  from information_schema.columns
+  where table_schema = 'public'
+    and table_name = 'paper_orders'
+    and column_name = 'historical_recommendation_fields_json'
+    and data_type = 'jsonb';
+" | tr -d '[:space:]')"
+if [[ "${HISTORICAL_JSONB_COLUMN_COUNT}" != "1" ]]; then
+  echo "ERROR: expected paper_orders.historical_recommendation_fields_json to be jsonb." >&2
+  exit 1
+fi
 
 echo "[check] validating Task 008J lineage column types"
 UUID_LINEAGE_COLUMN_COUNT="$(psql -v ON_ERROR_STOP=1 -d "${PGDATABASE}" -tAc "
