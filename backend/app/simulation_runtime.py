@@ -61,8 +61,9 @@ RUNTIME_WARNINGS = [
 ]
 
 LOCAL_TEST_POSTGRES_WARNINGS = [
-    "Simulation Desk runtime persistence mode is local_test_postgres for local/test evidence only.",
-    "The endpoint writes and reads paper-order records only through HK_ALPHA_TEST_POSTGRES_DSN; DATABASE_URL alone is ignored.",
+    "Simulation Desk runtime is paper-only and advisory-only; all real-money decisions remain human-controlled.",
+    "Simulation Desk local/test PostgreSQL persistence is enabled for explicit test evidence only (mode: local_test_postgres).",
+    "Paper-order records are written/read only through HK_ALPHA_TEST_POSTGRES_DSN; DATABASE_URL alone is ignored.",
     "No production Supabase connection, no Supabase service role key, no broker API, no real-money order, no live market data, no vendor API, and no secrets are used.",
 ]
 
@@ -427,7 +428,7 @@ def create_paper_order_response_data(
 
 def runtime_warnings_for_persistence_config(config: SimulationPersistenceConfig) -> list[str]:
     if config.mode == SIMULATION_PERSISTENCE_LOCAL_TEST_POSTGRES:
-        return [*RUNTIME_WARNINGS, *LOCAL_TEST_POSTGRES_WARNINGS]
+        return list(LOCAL_TEST_POSTGRES_WARNINGS)
     return list(RUNTIME_WARNINGS)
 
 

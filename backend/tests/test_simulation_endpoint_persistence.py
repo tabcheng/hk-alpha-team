@@ -110,13 +110,25 @@ def _assert_advisory_local_test_disclosures(envelope: dict) -> None:
     for phrase in [
         "paper-only",
         "advisory-only",
+        "local/test postgresql persistence is enabled",
         "local_test_postgres",
+        "test evidence only",
+        "hk_alpha_test_postgres_dsn",
+        "database_url alone is ignored",
         "no production supabase",
         "no broker api",
         "no real-money",
+        "no vendor api",
+        "no live market data",
         "no secrets",
     ]:
         assert phrase in warning_text
+    for contradictory_phrase in [
+        "process-local in-memory records only",
+        "no persistence write is performed",
+        "in-memory records only",
+    ]:
+        assert contradictory_phrase not in warning_text
 
 
 def _assert_persisted_roundtrip(envelope: dict, origin: str) -> None:
@@ -172,6 +184,9 @@ def test_default_memory_mode_does_not_require_postgresql_or_database_url(monkeyp
     assert "simulation_persistence_mode" not in envelope["metadata"]
     assert "database_url_authorizes_persistence" not in envelope["metadata"]
     assert "runtime_metadata" not in envelope["data"]
+    memory_warning_text = " ".join(envelope["warnings"]).lower()
+    assert "process-local in-memory records only" in memory_warning_text
+    assert "no production supabase connection or persistence write is performed" in memory_warning_text
     assert envelope["data"]["paper_order"]["status"] == "recorded_in_memory_only"
     assert envelope["data"]["paper_order"]["persistence_write_performed"] is False
 
