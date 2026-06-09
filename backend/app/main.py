@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import Depends, FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
@@ -8,14 +8,23 @@ from app.contracts import error_envelope, success_envelope
 from app.simulation_runtime import (
     RUNTIME_WARNINGS,
     PaperOrderRequest,
+    SIMULATION_PERSISTENCE_LOCAL_TEST_POSTGRES,
+    SimulationPersistenceConfig,
+    SimulationRuntimeConfigurationError,
     SimulationRuntimeNotFoundError,
     SimulationRuntimeValidationError,
     build_paper_portfolio_snapshot,
-    create_paper_order_record,
+    create_paper_order_response_data,
+    runtime_warnings_for_persistence_config,
+    simulation_persistence_config_from_env,
 )
 from app.status_reader import read_project_status
 
 app = FastAPI(title="HK Alpha Team Backend", version="0.1.0")
+
+
+def resolve_simulation_persistence_config() -> SimulationPersistenceConfig:
+    return simulation_persistence_config_from_env()
 
 
 @app.exception_handler(RequestValidationError)
@@ -26,6 +35,26 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
             "VALIDATION_ERROR",
             "Request validation failed.",
             {"errors": exc.errors(), "path": str(request.url.path)},
+        ),
+    )
+
+
+@app.exception_handler(SimulationRuntimeConfigurationError)
+async def simulation_configuration_exception_handler(
+    request: Request,
+    exc: SimulationRuntimeConfigurationError,
+) -> JSONResponse:
+    return JSONResponse(
+        status_code=500,
+        content=error_envelope(
+            "CONFIGURATION_ERROR",
+            "Simulation Desk local/test persistence configuration failed safely.",
+            {
+                "message": str(exc),
+                "path": str(request.url.path),
+                "production_supabase_connected": False,
+                "database_url_authorizes_persistence": False,
+            },
         ),
     )
 
@@ -46,9 +75,12 @@ def analyze_stock(request: AnalyzeStockRequest) -> dict:
 
 
 @app.post("/api/v1/simulation/paper-orders")
-def create_simulation_paper_order(request: PaperOrderRequest):
+def create_simulation_paper_order(
+    request: PaperOrderRequest,
+    persistence_config: SimulationPersistenceConfig = Depends(resolve_simulation_persistence_config),
+):
     try:
-        data = create_paper_order_record(request)
+        data = create_paper_order_response_data(request, persistence_config=persistence_config)
     except SimulationRuntimeValidationError as exc:
         return JSONResponse(
             status_code=422,
@@ -58,7 +90,30 @@ def create_simulation_paper_order(request: PaperOrderRequest):
                 {"message": str(exc), "path": "/api/v1/simulation/paper-orders"},
             ),
         )
-    return success_envelope(data, warnings=RUNTIME_WARNINGS)
+    except SimulationRuntimeConfigurationError as exc:
+        return JSONResponse(
+            status_code=500,
+            content=error_envelope(
+                "CONFIGURATION_ERROR",
+                "Simulation Desk local/test persistence configuration failed safely.",
+                {
+                    "message": str(exc),
+                    "path": "/api/v1/simulation/paper-orders",
+                    "production_supabase_connected": False,
+                    "database_url_authorizes_persistence": False,
+                },
+            ),
+        )
+    metadata_extra = (
+        persistence_config.metadata
+        if persistence_config.mode == SIMULATION_PERSISTENCE_LOCAL_TEST_POSTGRES
+        else None
+    )
+    return success_envelope(
+        data,
+        warnings=runtime_warnings_for_persistence_config(persistence_config),
+        metadata_extra=metadata_extra,
+    )
 
 
 @app.get("/api/v1/paper-portfolios/{portfolio_id}")

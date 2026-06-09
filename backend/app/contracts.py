@@ -20,12 +20,19 @@ def _metadata() -> dict[str, str]:
     }
 
 
-def success_envelope(data: dict[str, Any], warnings: list[str] | None = None) -> dict[str, Any]:
+def success_envelope(
+    data: dict[str, Any],
+    warnings: list[str] | None = None,
+    metadata_extra: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    metadata: dict[str, Any] = _metadata()
+    if metadata_extra:
+        metadata.update(metadata_extra)
     return {
         "request_id": str(uuid4()),
         "status": "success",
         "data": data,
-        "metadata": _metadata(),
+        "metadata": metadata,
         "warnings": warnings or [],
     }
 

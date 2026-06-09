@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+import os
 import re
 from copy import deepcopy
+from dataclasses import dataclass
 from typing import Any, Mapping
+from urllib.parse import unquote, urlsplit
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -43,11 +46,24 @@ LEARNING_LOSS_GUARDRAIL_EXPECTATIONS = {
     "historical_recommendations_overwritten": False,
 }
 
+SIMULATION_PERSISTENCE_MODE_ENV = "HK_ALPHA_SIMULATION_PERSISTENCE_MODE"
+TEST_POSTGRES_DSN_ENV = "HK_ALPHA_TEST_POSTGRES_DSN"
+SIMULATION_PERSISTENCE_MEMORY = "memory"
+SIMULATION_PERSISTENCE_LOCAL_TEST_POSTGRES = "local_test_postgres"
+APPROVED_TEST_DATABASE_NAMES = {"hk_alpha_validation", "hk_alpha_test"}
+APPROVED_TEST_DATABASE_PREFIXES = ("hk_alpha_validation_", "hk_alpha_test_")
+
 RUNTIME_WARNINGS = [
     "Simulation Desk runtime is paper-only and advisory-only; all real-money decisions remain human-controlled.",
     "No real-money order is placed, no broker API is called, and autonomous real-money execution is disabled.",
     "This non-production runtime uses process-local in-memory records only; no production Supabase connection or persistence write is performed.",
     "No secrets, billing, membership, auth, deployment, live market data, or external API integrations are required by this slice.",
+]
+
+LOCAL_TEST_POSTGRES_WARNINGS = [
+    "Simulation Desk runtime persistence mode is local_test_postgres for local/test evidence only.",
+    "The endpoint writes and reads paper-order records only through HK_ALPHA_TEST_POSTGRES_DSN; DATABASE_URL alone is ignored.",
+    "No production Supabase connection, no Supabase service role key, no broker API, no real-money order, no live market data, no vendor API, and no secrets are used.",
 ]
 
 
@@ -81,6 +97,69 @@ class SimulationRuntimeValidationError(ValueError):
 
 class SimulationRuntimeNotFoundError(ValueError):
     pass
+
+
+class SimulationRuntimeConfigurationError(ValueError):
+    pass
+
+
+@dataclass(frozen=True)
+class SimulationPersistenceConfig:
+    mode: str = SIMULATION_PERSISTENCE_MEMORY
+    dsn: str | None = None
+
+    @property
+    def metadata(self) -> dict[str, Any]:
+        return {
+            "simulation_persistence_mode": self.mode,
+            "paper_only": True,
+            "advisory_only": True,
+            "human_in_the_loop": True,
+            "production_supabase_connected": False,
+            "supabase_client_used": False,
+            "broker_api_called": False,
+            "real_money_order_placed": False,
+            "secrets_required": False,
+            "database_url_authorizes_persistence": False,
+            "local_test_postgres_dsn_required": self.mode == SIMULATION_PERSISTENCE_LOCAL_TEST_POSTGRES,
+        }
+
+
+def database_name_from_dsn(dsn: str) -> str:
+    return unquote(urlsplit(dsn).path.lstrip("/"))
+
+
+def is_approved_local_test_database_name(database_name: str) -> bool:
+    return database_name in APPROVED_TEST_DATABASE_NAMES or database_name.startswith(APPROVED_TEST_DATABASE_PREFIXES)
+
+
+def validate_local_test_postgres_dsn(dsn: str | None) -> str:
+    if not isinstance(dsn, str) or dsn.strip() == "":
+        raise SimulationRuntimeConfigurationError(
+            "HK_ALPHA_TEST_POSTGRES_DSN is required when HK_ALPHA_SIMULATION_PERSISTENCE_MODE=local_test_postgres"
+        )
+    database_name = database_name_from_dsn(dsn)
+    if not is_approved_local_test_database_name(database_name):
+        raise SimulationRuntimeConfigurationError(
+            "HK_ALPHA_TEST_POSTGRES_DSN database name must be hk_alpha_validation, hk_alpha_test, "
+            "or start with hk_alpha_validation_ / hk_alpha_test_ for local/test endpoint persistence"
+        )
+    return dsn
+
+
+def simulation_persistence_config_from_env(env: Mapping[str, str] | None = None) -> SimulationPersistenceConfig:
+    source = os.environ if env is None else env
+    mode = source.get(SIMULATION_PERSISTENCE_MODE_ENV, SIMULATION_PERSISTENCE_MEMORY).strip() or SIMULATION_PERSISTENCE_MEMORY
+    if mode == SIMULATION_PERSISTENCE_MEMORY:
+        return SimulationPersistenceConfig()
+    if mode != SIMULATION_PERSISTENCE_LOCAL_TEST_POSTGRES:
+        raise SimulationRuntimeConfigurationError(
+            "HK_ALPHA_SIMULATION_PERSISTENCE_MODE must be memory or local_test_postgres"
+        )
+    return SimulationPersistenceConfig(
+        mode=mode,
+        dsn=validate_local_test_postgres_dsn(source.get(TEST_POSTGRES_DSN_ENV)),
+    )
 
 
 def _require(condition: bool, message: str) -> None:
@@ -307,6 +386,49 @@ def create_paper_order_record(
     }
     store.create_paper_order(record, audit_event_preview)
     return {"paper_order": deepcopy(record), "audit_event_preview": audit_event_preview, "learning_proposal_preview": learning_proposal}
+
+
+def create_paper_order_response_data(
+    request: PaperOrderRequest | Mapping[str, Any],
+    *,
+    persistence_config: SimulationPersistenceConfig | None = None,
+    store: InMemorySimulationStore = simulation_store,
+) -> dict[str, Any]:
+    config = persistence_config or SimulationPersistenceConfig()
+    response_data = create_paper_order_record(request, store=store)
+
+    if config.mode == SIMULATION_PERSISTENCE_MEMORY:
+        return response_data
+
+    if config.mode != SIMULATION_PERSISTENCE_LOCAL_TEST_POSTGRES:
+        raise SimulationRuntimeConfigurationError("unsupported Simulation Desk persistence mode")
+
+    dsn = validate_local_test_postgres_dsn(config.dsn)
+    from app.simulation_persistence_boundary import build_paper_order_persistence_payload
+    from app.simulation_postgres_persistence import LocalTestPostgresSimulationPersistence
+
+    persistence_payload = build_paper_order_persistence_payload(response_data["paper_order"])
+    persisted = LocalTestPostgresSimulationPersistence(dsn).write_paper_order_payload(persistence_payload)
+    response_data["local_test_persistence"] = {
+        "mode": SIMULATION_PERSISTENCE_LOCAL_TEST_POSTGRES,
+        "scope": "local_test_postgresql_only",
+        "paper_order_written_and_read_back": True,
+        "database_name": database_name_from_dsn(dsn),
+        "production_supabase_connected": False,
+        "supabase_client_used": False,
+        "broker_api_called": False,
+        "real_money_order_placed": False,
+        "secrets_required": False,
+        "metadata": config.metadata,
+        "persisted_paper_order": persisted,
+    }
+    return response_data
+
+
+def runtime_warnings_for_persistence_config(config: SimulationPersistenceConfig) -> list[str]:
+    if config.mode == SIMULATION_PERSISTENCE_LOCAL_TEST_POSTGRES:
+        return [*RUNTIME_WARNINGS, *LOCAL_TEST_POSTGRES_WARNINGS]
+    return list(RUNTIME_WARNINGS)
 
 
 def build_paper_portfolio_snapshot(
