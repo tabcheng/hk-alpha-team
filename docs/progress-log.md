@@ -340,3 +340,12 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Added regression tests proving `DATABASE_URL` cannot trigger destructive reset, unsafe explicit DSNs are skipped before destructive SQL, and approved local/test database names are allowed.
 - Hardened `scripts/check_migration_sql.sh` with the same test-only database-name boundary for local SQL validation.
 - Reconfirmed the fix does not add production Supabase, hosted credentials, Supabase client runtime, vendor/API calls, live market data, broker integration, real-money trading, autonomous execution, or secrets.
+
+## 2026-06-08 — Task 008L Local/Test Endpoint Persistence Wiring
+
+- Added an explicit Simulation Desk persistence mode contract: default `memory`, with opt-in `local_test_postgres` enabled only by `HK_ALPHA_SIMULATION_PERSISTENCE_MODE=local_test_postgres` plus safe `HK_ALPHA_TEST_POSTGRES_DSN`.
+- Wired the paper-order endpoint through a local/test dependency-injection path so the default endpoint remains in-memory, while explicit local/test mode builds the Task 008J/008K persistence payload, writes it with the local/test PostgreSQL adapter, and reads back the written paper-order row.
+- Added endpoint-level tests covering default memory behavior, `DATABASE_URL` not authorizing persistence, safe failure for missing/unsafe config, `user_recorded` PostgreSQL write/read, `system_generated_learning` PostgreSQL write/read, locked envelope fields, reviewable/non-auto-applied learning previews, losing outcome visibility, and historical recommendation preservation.
+- Preserved out-of-scope boundaries: no production Supabase, no Supabase client runtime, no hosted credentials, no vendor/API calls, no live market data, no broker integration, no real-money trading, no autonomous execution, no real-money account connectivity, no billing/auth/deployment/frontend runtime, and no secrets.
+- No new `docs/decision-log.md` entry was required because Task 008L stays inside the existing Harness Engineering local/test approval scope and does not introduce a new governance decision.
+- Task 008 / M5 remains In Progress and is not claimed complete.
