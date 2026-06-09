@@ -6,7 +6,6 @@ from app.analysis_workflow import PHASE_4A_WARNINGS
 from app.analyze_stock import AnalyzeStockRequest, build_analyze_stock_response
 from app.contracts import error_envelope, success_envelope
 from app.simulation_runtime import (
-    RUNTIME_WARNINGS,
     PaperOrderRequest,
     SIMULATION_PERSISTENCE_LOCAL_TEST_POSTGRES,
     SimulationPersistenceConfig,
@@ -117,9 +116,12 @@ def create_simulation_paper_order(
 
 
 @app.get("/api/v1/paper-portfolios/{portfolio_id}")
-def get_paper_portfolio(portfolio_id: str):
+def get_paper_portfolio(
+    portfolio_id: str,
+    persistence_config: SimulationPersistenceConfig = Depends(resolve_simulation_persistence_config),
+):
     try:
-        data = build_paper_portfolio_snapshot(portfolio_id)
+        data = build_paper_portfolio_snapshot(portfolio_id, persistence_config=persistence_config)
     except SimulationRuntimeValidationError as exc:
         return JSONResponse(
             status_code=422,
@@ -129,13 +131,36 @@ def get_paper_portfolio(portfolio_id: str):
                 {"message": str(exc), "portfolio_id": portfolio_id},
             ),
         )
+    except SimulationRuntimeConfigurationError as exc:
+        return JSONResponse(
+            status_code=500,
+            content=error_envelope(
+                "CONFIGURATION_ERROR",
+                "Simulation Desk local/test persistence configuration failed safely.",
+                {
+                    "message": str(exc),
+                    "path": f"/api/v1/paper-portfolios/{portfolio_id}",
+                    "production_supabase_connected": False,
+                    "database_url_authorizes_persistence": False,
+                },
+            ),
+        )
     except SimulationRuntimeNotFoundError as exc:
         return JSONResponse(
             status_code=404,
             content=error_envelope(
                 "NOT_FOUND",
-                "Paper portfolio was not found in the non-production in-memory store.",
+                "Paper portfolio was not found in the non-production Simulation Desk store.",
                 {"message": str(exc), "portfolio_id": portfolio_id},
             ),
         )
-    return success_envelope(data, warnings=RUNTIME_WARNINGS)
+    metadata_extra = (
+        persistence_config.metadata
+        if persistence_config.mode == SIMULATION_PERSISTENCE_LOCAL_TEST_POSTGRES
+        else None
+    )
+    return success_envelope(
+        data,
+        warnings=runtime_warnings_for_persistence_config(persistence_config),
+        metadata_extra=metadata_extra,
+    )

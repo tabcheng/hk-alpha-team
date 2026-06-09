@@ -216,3 +216,30 @@ def test_postgres_adapter_has_no_supabase_vendor_broker_or_secret_imports() -> N
     ]
     for token in forbidden_tokens:
         assert token not in source_text
+
+
+def test_read_paper_orders_for_portfolio_returns_deterministic_order_evidence(postgres_dsn: str) -> None:
+    from app.simulation_postgres_persistence import LocalTestPostgresSimulationPersistence
+
+    adapter = LocalTestPostgresSimulationPersistence(postgres_dsn)
+    user_intent = _persistence_payload("user_recorded")
+    learning_intent = _persistence_payload("system_generated_learning")
+    user_intent["portfolio_id"] = "runtime-paper-portfolio-read-model-008m"
+    learning_intent["portfolio_id"] = user_intent["portfolio_id"]
+
+    adapter.write_paper_order_payload(user_intent)
+    adapter.write_paper_order_payload(learning_intent)
+    persisted_orders = adapter.read_paper_orders_for_portfolio(user_intent["portfolio_id"])
+
+    assert [order["simulation_origin"] for order in persisted_orders] == ["user_recorded", "system_generated_learning"]
+    assert persisted_orders[0]["source_metadata_json"]["user_recorded_notes"] == "Human-recorded paper trade journal entry."
+    assert persisted_orders[0]["learning_proposal_readback"] is None
+    assert persisted_orders[1]["requires_human_review"] is True
+    learning_readback = persisted_orders[1]["learning_proposal_readback"]
+    assert learning_readback["requires_human_review"] is True
+    assert learning_readback["auto_apply"] is False
+    assert learning_readback["status"] == "preview_only_not_applied"
+    assert learning_readback["readback_source"] == "local_test_postgresql_paper_orders"
+    assert persisted_orders[1]["historical_recommendation_fields_json"]["original_recommendation"] == "WAIT_FOR_PULLBACK"
+    assert persisted_orders[1]["outcome_preview_json"]["losing_outcome_visible"] is True
+    assert persisted_orders[1]["local_test_adapter_boundary_flags"]["broker_api_called"] is False

@@ -349,3 +349,13 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Preserved out-of-scope boundaries: no production Supabase, no Supabase client runtime, no hosted credentials, no vendor/API calls, no live market data, no broker integration, no real-money trading, no autonomous execution, no real-money account connectivity, no billing/auth/deployment/frontend runtime, and no secrets.
 - No new `docs/decision-log.md` entry was required because Task 008L stays inside the existing Harness Engineering local/test approval scope and does not introduce a new governance decision.
 - Task 008 / M5 remains In Progress and is not claimed complete.
+
+## 2026-06-09 — Task 008M Local/Test Persisted Portfolio Readback
+
+- Added an explicit local/test PostgreSQL read path for `GET /api/v1/paper-portfolios/{portfolio_id}` so paper orders written by the explicit `local_test_postgres` paper-order endpoint path can be read back as portfolio snapshot evidence.
+- Preserved default memory behavior: `DATABASE_URL` alone does not authorize persisted writes or readback, and default portfolio snapshots remain process-local in-memory.
+- Added adapter and endpoint tests for persisted portfolio consistency across both approved origins, including `user_recorded` source metadata and `system_generated_learning` human-review flags, persisted learning-proposal readback evidence, non-auto-apply behavior, historical recommendation metadata, and losing outcome visibility.
+- Preserved safe-failure behavior for missing/unsafe DSN values and unknown persistence modes using contract-compliant configuration errors.
+- Reconfirmed Task 008M does not add production Supabase, Supabase client runtime, hosted credentials, vendor/API calls, live market data, broker integration, broker execution APIs, real-money trading, autonomous execution, real-money account connectivity, hidden/irreversible investment actions, billing/payment/auth/deployment/frontend runtime, or secrets.
+- No new `docs/decision-log.md` entry was required because Task 008M stays inside the existing Harness Engineering local/test, paper-only, advisory-only, non-real-money approval scope and does not introduce a new governance decision.
+- Task 008 / M5 remains In Progress and is not claimed complete.
