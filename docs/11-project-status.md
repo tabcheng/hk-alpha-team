@@ -6,7 +6,7 @@
 
 ## Current Phase
 
-**Phase 6 — Simple UI or Report Output (Planned / not started)**
+**Phase 6 — Simple User Interface or Report Output**
 
 ## Tasks 001–010 Status
 
@@ -33,7 +33,7 @@
 | M3 | Backend Skeleton | Completed |
 | M4 | First Analysis Workflow | Completed |
 | M5 | Simulation Desk MVP | Completed |
-| M6 | Simple UI or Report Output | Planned |
+| M6 | Simple User Interface or Report Output | Planned |
 | M7 | Review and Learning Loop | Planned |
 
 ## Current Decisions Summary
