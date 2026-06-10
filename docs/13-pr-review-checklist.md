@@ -23,6 +23,10 @@ Large PR handling rules:
 
 ## A. Scope and Boundary Compliance
 
+- [ ] Primary deliverable is stated in the task prompt or PR body.
+- [ ] For ordinary non-real-money product work, the PR prioritizes executable implementation, tests, runtime behavior, API-visible output, and CI evidence over documentation-only progress.
+- [ ] If the PR is docs-only, it explains why a safe implementation-limited slice is not safe, not appropriate, or blocked by production-sensitive, security-sensitive, contract-changing, vendor/API, production Supabase, secrets, deployment, auth/payment, broker, or real-money boundaries.
+- [ ] Documentation supports the implementation through concise status/log/decision updates rather than becoming the main deliverable for normal non-real-money product work.
 - [ ] Changes match the stated task scope.
 - [ ] No real-money trading automation introduced.
 - [ ] No brokerage execution API integration introduced.
@@ -64,6 +68,8 @@ If `docs/09-api-and-agent-contracts.md` changed:
 - [ ] Commit and PR description explain what changed and what remains out of scope.
 
 ## F. Implementation PR Validation Evidence
+
+For ordinary scoped implementation PRs, reviewers should expect an approximate delivery mix of 65–75% executable implementation/tests/runtime or API-visible behavior, 15–20% validation/CI/safety/Evidence Closure, and 10–15% concise documentation/status/log/decision updates, unless a documented governance gate justifies a different balance.
 
 For implementation PRs:
 

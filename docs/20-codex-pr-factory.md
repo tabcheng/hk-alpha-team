@@ -14,6 +14,20 @@ Its purpose is to:
 
 The Factory is a governance workflow, not a production runtime. It does not add backend features, frontend features, market data integration, production infrastructure, broker connectivity, or real-money trading automation.
 
+## Implementation-First Delivery Balance
+
+Future task recommendations should prioritize executable, testable product capability over documentation-only progress. Documentation/governance PRs remain appropriate where production-sensitive, security-sensitive, contract-changing, vendor/API, production Supabase, secrets, deployment, auth/payment, broker, or real-money boundaries require a gate. For normal non-real-money product work, prefer implementation-limited vertical slices that produce runnable behavior, API-visible output, tests, and CI evidence. Documentation should support the implementation through concise status/log/decision updates, not become the main deliverable.
+
+Before recommending a docs-only task, check whether a safe implementation-limited slice can deliver working product value without crossing hard prohibitions. If docs-only delivery is still recommended, explain why implementation-limited delivery is not safe, not appropriate, or blocked by a required governance gate.
+
+For ordinary scoped, non-real-money product tasks, use this target delivery mix unless the task explicitly requires a different balance:
+
+- **65–75% executable implementation, tests, runtime behavior, or API-visible output.**
+- **15–20% validation, CI evidence, safety checks, and Evidence Closure.**
+- **10–15% documentation, status, progress, or decision updates.**
+
+Future Codex prompts should state the primary deliverable up front, such as executable implementation, tests, API-visible output, validation evidence, governance update, or documentation-only decision record. This delivery-balance rule does not weaken hard prohibitions, contract locks, advisory-only requirements, security/secrets gates, or production-sensitive approval gates.
+
 ## Tool Model
 
 The approved PR Factory tool model is:
@@ -80,7 +94,7 @@ Required sources usually include:
 
 ### Task Planner
 
-Translates task instructions and current source-of-truth state into a bounded file-change plan.
+Translates task instructions and current source-of-truth state into a bounded file-change plan. Task planning should state the primary deliverable and apply the Implementation-First Delivery Balance unless a governance-sensitive gate requires documentation-only sequencing.
 
 ### Contract Reviewer
 
@@ -137,7 +151,7 @@ If a task follows a merge, review current repository history and status docs. Up
 
 ### Scope Gate
 
-Confirm the PR changes only what the task authorizes. Documentation-only tasks must remain documentation-only.
+Confirm the PR changes only what the task authorizes. Documentation-only tasks must remain documentation-only. For normal non-real-money product work, confirm whether the task delivers a safe implementation-limited vertical slice or documents why a docs-only recommendation is required.
 
 ### Contract Lock Gate
 
@@ -172,10 +186,12 @@ Update progress/status/decision logs when the task changes governance state, pro
 Each PR Factory pull request body should include:
 
 - **Summary** — concise description of what changed.
+- **Primary Deliverable** — executable implementation, tests/API-visible output, validation evidence, governance update, or documentation-only decision record.
 - **Review Map** — files or sections reviewers should inspect first.
 - **Grouped File Changes** — docs, code, tests, CI, logs, and status grouped separately where applicable.
 - **Risk Areas** — known high-risk or governance-sensitive areas.
-- **Validation Evidence** — exact commands and results, plus CI status when available.
+- **Validation Evidence** — exact commands and local results.
+- **CI Evidence** — required and relevant workflow conclusions when available, or a clear pending/not-yet-run status.
 - **Scope Compliance Check** — explicit confirmation against task scope.
 - **Out-of-Scope Confirmation** — explicit statement of intentionally excluded work.
 - **Follow-Up Tasks** — recommended next work based on current repository source-of-truth review.

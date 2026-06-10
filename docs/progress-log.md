@@ -383,3 +383,16 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Hardened `.github/workflows/backend-check.yml` so documentation/status-only PRs can run the project-status backend test path without starting a PostgreSQL service container, avoiding Docker Hub `postgres:16` pull failures before checkout/tests.
 - Preserved full PostgreSQL-backed backend validation for runtime, persistence, migration, and non-doc/status changes; those paths still run `PYTHONPATH=backend pytest backend/tests` with `HK_ALPHA_TEST_POSTGRES_DSN`.
 - Preserved Task 008N documentation/governance scope: no backend runtime feature changes, no production Supabase, no Supabase client runtime, no hosted credentials or secrets, no production migration application, no vendor/API, no live market data, no broker integration, no real-money trading, and no autonomous execution.
+
+
+## 2026-06-10 — Task 009A Implementation-First Delivery Balance Guardrail
+
+- Added a Codex PR Factory guardrail requiring future task recommendations to prioritize executable, testable product capability for ordinary non-real-money product work, while preserving documentation/governance-first sequencing for production-sensitive, security-sensitive, contract-changing, vendor/API, production Supabase, secrets, deployment, auth/payment, broker, and real-money boundaries.
+- Recorded the target delivery mix for ordinary scoped tasks: 65–75% executable implementation/tests/runtime or API-visible behavior, 15–20% validation/CI/safety checks/Evidence Closure, and 10–15% concise documentation/status/progress/decision updates.
+- Updated the PR review checklist so future docs-only recommendations must explain why a safe implementation-limited slice is not safe, not appropriate, or blocked by a required governance gate.
+- Preserved documentation-only Task 009A scope: no backend runtime, frontend/UI, report output implementation, Supabase runtime, production Supabase, credentials/secrets, SQL migrations, vendor/API calls, broker integration, auth/payment/deployment runtime, or real-money trading automation was introduced.
+
+## 2026-06-10 — PR #37 Task Template Blocker Closure
+
+- Updated `docs/14-codex-task-template.md` so the reusable Codex task prompt template now carries the Task 009A implementation-first guardrail, primary deliverable field, implementation-first fit and docs-only rationale placeholders, target delivery mix, docs-only rationale requirement, implementation-limited acceptance criteria, expanded PR body sections, and minimum Evidence Closure checklist items.
+- Preserved PR #37 documentation-only guardrail scope: no backend runtime, frontend/UI, report output implementation, Supabase runtime, production Supabase, hosted credentials or secrets, SQL migrations, vendor/API calls, broker integration, auth/payment/deployment runtime, real-money trading automation, autonomous real-money execution, real-money account connectivity, hidden/irreversible investment actions, or locked contract-name changes were introduced.
