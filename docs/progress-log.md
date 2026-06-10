@@ -359,3 +359,10 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Reconfirmed Task 008M does not add production Supabase, Supabase client runtime, hosted credentials, vendor/API calls, live market data, broker integration, broker execution APIs, real-money trading, autonomous execution, real-money account connectivity, hidden/irreversible investment actions, billing/payment/auth/deployment/frontend runtime, or secrets.
 - No new `docs/decision-log.md` entry was required because Task 008M stays inside the existing Harness Engineering local/test, paper-only, advisory-only, non-real-money approval scope and does not introduce a new governance decision.
 - Task 008 / M5 remains In Progress and is not claimed complete.
+
+## 2026-06-10 — Task 008M PR #35 Stable UUID Readback Blocker Closure
+
+- Fixed the local/test PostgreSQL portfolio readback predicate to use the stable `paper_portfolios.portfolio_uuid` identity derived from the runtime `portfolio_id`, instead of non-unique `paper_portfolios.name`.
+- Added regression coverage that inserts a decoy `paper_portfolios` row with the same display name but a different stable identity and proves readback returns only the target portfolio order.
+- Fixed backend-check expectation mismatches for the current deterministic system-generated-learning fixture values.
+- Preserved Task 008M local/test-only scope and did not add production Supabase, Supabase client runtime, hosted credentials, vendor/API calls, live market data, broker integration, real-money trading, autonomous execution, real-money account connectivity, hidden/irreversible investment actions, or secrets.

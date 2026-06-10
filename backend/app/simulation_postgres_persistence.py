@@ -46,6 +46,10 @@ def _stable_uuid(label: str, value: str) -> UUID:
     return uuid5(NAMESPACE_URL, f"hk-alpha-team:local-test:{label}:{value}")
 
 
+def stable_local_test_paper_portfolio_uuid(portfolio_id: str) -> UUID:
+    return _stable_uuid("paper_portfolio", str(portfolio_id or "").strip())
+
+
 def _json_copy(value: Any, fallback: Any) -> Any:
     if value is None:
         return deepcopy(fallback)
@@ -153,7 +157,7 @@ class LocalTestPostgresSimulationPersistence:
         _require(side in {"buy", "sell"}, "side must be buy or sell")
         quantity = _normalize_quantity(order.get("quantity"))
 
-        portfolio_uuid = _stable_uuid("paper_portfolio", portfolio_runtime_id)
+        portfolio_uuid = stable_local_test_paper_portfolio_uuid(portfolio_runtime_id)
         with psycopg.connect(self.dsn, row_factory=dict_row) as connection:
             with connection.cursor() as cursor:
                 cursor.execute(
@@ -247,6 +251,7 @@ class LocalTestPostgresSimulationPersistence:
                     select
                       po.id,
                       pp.name as portfolio_id,
+                      pp.portfolio_uuid,
                       s.symbol,
                       po.side,
                       po.order_type,
@@ -283,6 +288,8 @@ class LocalTestPostgresSimulationPersistence:
     def _format_paper_order_row(row: Mapping[str, Any]) -> dict[str, Any]:
         result = dict(row)
         result["id"] = str(result["id"])
+        if result.get("portfolio_uuid") is not None:
+            result["portfolio_uuid"] = str(result["portfolio_uuid"])
         for field_name in ("strategy_recommendation_id", "source_recommendation_id", "learning_proposal_id"):
             result[field_name] = str(result[field_name]) if result[field_name] is not None else None
         result["quantity"] = float(result["quantity"])
@@ -298,6 +305,7 @@ class LocalTestPostgresSimulationPersistence:
     def read_paper_orders_for_portfolio(self, portfolio_id: str) -> list[dict[str, Any]]:
         portfolio_runtime_id = str(portfolio_id or "").strip()
         _require(portfolio_runtime_id != "", "portfolio_id is required")
+        portfolio_uuid = stable_local_test_paper_portfolio_uuid(portfolio_runtime_id)
         with psycopg.connect(self.dsn, row_factory=dict_row) as connection:
             with connection.cursor() as cursor:
                 cursor.execute(
@@ -305,6 +313,7 @@ class LocalTestPostgresSimulationPersistence:
                     select
                       po.id,
                       pp.name as portfolio_id,
+                      pp.portfolio_uuid,
                       pp.base_currency,
                       s.symbol,
                       po.side,
@@ -330,10 +339,10 @@ class LocalTestPostgresSimulationPersistence:
                     from paper_orders po
                     join paper_portfolios pp on pp.id = po.portfolio_id
                     join stocks s on s.id = po.stock_id
-                    where pp.name = %s
+                    where pp.portfolio_uuid = %s
                     order by coalesce(po.submitted_at, po.created_at) asc, po.created_at asc, po.id asc
                     """,
-                    (portfolio_runtime_id,),
+                    (portfolio_uuid,),
                 )
                 rows = cursor.fetchall()
         return [self._format_paper_order_row(row) for row in rows]

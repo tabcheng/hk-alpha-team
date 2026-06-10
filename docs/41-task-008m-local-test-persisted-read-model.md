@@ -18,7 +18,7 @@ Task 008M adds a local/test-only persisted read path for Simulation Desk paper-p
 
 In memory mode, `GET /api/v1/paper-portfolios/{portfolio_id}` keeps the existing in-memory snapshot behavior and warnings.
 
-In explicit local/test PostgreSQL mode, the endpoint reads persisted `paper_orders` joined to the matching `paper_portfolios.name` value and returns a non-production portfolio snapshot containing recent persisted paper-order evidence, including:
+In explicit local/test PostgreSQL mode, the endpoint reads persisted `paper_orders` by the same stable local/test `paper_portfolios.portfolio_uuid` identity used by the write path, not by the non-unique portfolio display `name`, and returns a non-production portfolio snapshot containing recent persisted paper-order evidence, including:
 
 - simulation origin and paper-order origin;
 - source metadata;

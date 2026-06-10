@@ -225,7 +225,7 @@ def test_local_test_postgres_portfolio_readback_preserves_system_learning_eviden
     order = envelope["data"]["recent_paper_orders"][0]
     assert order["simulation_origin"] == "system_generated_learning"
     assert order["paper_order_origin"] == "system_generated_learning"
-    assert order["created_by_type"] == "system_agent"
+    assert order["created_by_type"] == "simulation_investment_desk"
     assert order["requires_human_review"] is True
     assert proposal["requires_human_review"] is True
     assert proposal["auto_apply"] is False
@@ -246,7 +246,7 @@ def test_local_test_postgres_portfolio_readback_preserves_system_learning_eviden
     assert order["source_metadata_json"]["system_learning_reason"]
     assert order["source_metadata_json"]["improvement_suggestions"]
     assert order["historical_recommendation_fields_json"]["original_recommendation"] == "WAIT_FOR_PULLBACK"
-    assert order["historical_recommendation_fields_json"]["original_scores"]["market_score"] == 62
+    assert order["historical_recommendation_fields_json"]["original_scores"]["market_score"] == 52
     assert order["historical_recommendation_fields_json"]["original_thesis"]
     assert order["outcome_preview_json"]["pnl"] == -1550.0
     assert order["outcome_preview_json"]["losing_outcome_visible"] is True

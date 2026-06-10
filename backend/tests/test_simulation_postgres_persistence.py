@@ -243,3 +243,84 @@ def test_read_paper_orders_for_portfolio_returns_deterministic_order_evidence(po
     assert persisted_orders[1]["historical_recommendation_fields_json"]["original_recommendation"] == "WAIT_FOR_PULLBACK"
     assert persisted_orders[1]["outcome_preview_json"]["losing_outcome_visible"] is True
     assert persisted_orders[1]["local_test_adapter_boundary_flags"]["broker_api_called"] is False
+
+
+def test_portfolio_readback_uses_stable_uuid_not_non_unique_name(postgres_dsn: str) -> None:
+    import psycopg
+    from psycopg.rows import dict_row
+    from psycopg.types.json import Jsonb
+
+    from app.simulation_postgres_persistence import (
+        LocalTestPostgresSimulationPersistence,
+        stable_local_test_paper_portfolio_uuid,
+    )
+
+    adapter = LocalTestPostgresSimulationPersistence(postgres_dsn)
+    target_portfolio_id = "same-name-portfolio-008m"
+    target_intent = _persistence_payload("user_recorded")
+    target_intent["portfolio_id"] = target_portfolio_id
+    target_intent["symbol"] = "0700.HK"
+    adapter.write_paper_order_payload(target_intent)
+
+    decoy_portfolio_uuid = stable_local_test_paper_portfolio_uuid("different-stable-identity-008m")
+    with psycopg.connect(postgres_dsn, row_factory=dict_row) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                insert into stocks (symbol, name, exchange, currency)
+                values (%s, %s, 'HKEX', 'HKD')
+                on conflict (symbol) do update set name = excluded.name
+                returning id
+                """,
+                ("0005.HK", "Local/test decoy fixture"),
+            )
+            decoy_stock_id = cursor.fetchone()["id"]
+            cursor.execute(
+                """
+                insert into paper_portfolios (portfolio_uuid, name, base_currency, starting_cash, status)
+                values (%s, %s, 'HKD', 0, 'local_test_only_decoy')
+                returning id
+                """,
+                (decoy_portfolio_uuid, target_portfolio_id),
+            )
+            decoy_portfolio_db_id = cursor.fetchone()["id"]
+            cursor.execute(
+                """
+                insert into paper_orders (
+                  portfolio_id,
+                  stock_id,
+                  side,
+                  order_type,
+                  quantity,
+                  status,
+                  submitted_at,
+                  simulation_origin,
+                  paper_order_origin,
+                  created_by_type,
+                  requires_human_review,
+                  boundary_flags_json,
+                  outcome_preview_json,
+                  source_metadata_json,
+                  historical_recommendation_fields_json
+                )
+                values (%s, %s, 'buy', 'market', 5, 'local_test_decoy', %s, 'user_recorded',
+                        'user_recorded', 'harness_engineering', false, %s::jsonb, %s::jsonb, %s::jsonb, %s::jsonb)
+                """,
+                (
+                    decoy_portfolio_db_id,
+                    decoy_stock_id,
+                    target_intent["created_at"],
+                    Jsonb(target_intent["boundary_flags_json"]),
+                    Jsonb({"pnl": 9999, "losing_outcome_visible": True}),
+                    Jsonb({"user_recorded_notes": "decoy order with same non-unique name"}),
+                    Jsonb({}),
+                ),
+            )
+
+    persisted_orders = adapter.read_paper_orders_for_portfolio(target_portfolio_id)
+
+    assert len(persisted_orders) == 1
+    assert persisted_orders[0]["portfolio_id"] == target_portfolio_id
+    assert persisted_orders[0]["portfolio_uuid"] == str(stable_local_test_paper_portfolio_uuid(target_portfolio_id))
+    assert persisted_orders[0]["symbol"] == "0700.HK"
+    assert persisted_orders[0]["source_metadata_json"]["user_recorded_notes"] == "Human-recorded paper trade journal entry."
