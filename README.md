@@ -160,7 +160,14 @@ Task 008B does **not** add IO, HTTP, database access, Supabase clients, endpoint
 - `GET /api/v1/paper-portfolios/{portfolio_id}` returns a process-local in-memory paper portfolio snapshot with recent records and audit-event previews.
 - The runtime preserves the locked success/error envelope, distinguishes both origins, keeps learning proposals reviewable/not auto-applied, and keeps losing outcomes visible.
 - Task 008I does not add SQL migrations, Supabase persistence, production Supabase, deployment, billing/payment runtime, membership/subscription runtime, auth runtime, live data, external API calls, broker integration, secrets, real-money trading, or autonomous real-money execution.
-- Task 008 / M5 remains In Progress.
+- Task 008 / M5 is closed by Task 008N as a non-production, advisory-only Simulation Desk MVP; production Supabase remains not implemented and blocked behind explicit future Harness approval gates.
+
+
+## Phase 5 Task 008N M5 Closeout and Production Supabase Readiness Gate
+
+- `docs/42-task-008n-m5-closeout-and-production-supabase-readiness-gate.md` records the M5 closeout audit after Task 008K local/test PostgreSQL adapter evidence, Task 008L explicit local/test endpoint persistence wiring, and Task 008M local/test persisted portfolio readback.
+- Task 008 / M5 is closed only as a non-production, advisory-only Simulation Desk MVP. Default runtime remains in-memory, and local/test persistence remains explicitly gated.
+- Production Supabase, Supabase client runtime, hosted credentials/secrets, production migration application, production runtime persistence, vendor/API integration, broker integration, live market data, real-money trading, and autonomous execution remain not implemented and blocked behind explicit future Harness approval gates.
 
 ## Documentation Map
 
@@ -191,6 +198,7 @@ Task 008B does **not** add IO, HTTP, database access, Supabase clients, endpoint
 - `docs/22-phase-4b-department-adapters.md` — Phase 4B deterministic local-only department adapter runbook.
 - `docs/23-phase-4c-agent-handoff-mapping.md` — Phase 4C deterministic local-only adapter-to-agent-run handoff mapping runbook.
 - `docs/24-phase-4d-handoff-preview-exposure-decision.md` — Phase 4D handoff preview exposure decision and public-exposure gate checklist.
+- `docs/42-task-008n-m5-closeout-and-production-supabase-readiness-gate.md` — Task 008N M5 closeout audit and future Production Supabase Readiness Gate.
 - `codex-tasks/005-create-supabase-migration-draft.md` — Task 005 phase-entry card for migration draft planning.
 - `docs/decision-log.md` — key project decisions.
 - `docs/progress-log.md` — milestone progress tracking.

@@ -56,7 +56,7 @@ def test_project_status_current_phase_line_is_parser_safe() -> None:
     current_phase_idx = lines.index("## Current Phase")
     current_phase_line = lines[current_phase_idx + 2].strip()
 
-    assert current_phase_line == "**Phase 5 — Simulation Desk MVP**"
+    assert current_phase_line == "**Phase 6 — Simple User Interface or Report Output**"
     assert current_phase_line.startswith("**")
     assert current_phase_line.endswith("**")
     assert current_phase_line.count("**") == 2
@@ -74,18 +74,18 @@ def test_project_status_endpoint_returns_required_envelope() -> None:
     status_doc_lines = _project_status_doc_lines()
     assert _extract_table_status(status_doc_lines, "M3") == "Completed"
     assert _extract_table_status(status_doc_lines, "M4") == "Completed"
-    assert _extract_table_status(status_doc_lines, "M5") == "In Progress"
+    assert _extract_table_status(status_doc_lines, "M5") == "Completed"
+    assert _extract_table_status(status_doc_lines, "M6") == "Planned"
     assert _extract_table_status(status_doc_lines, "005") == "Completed"
     assert _extract_table_status(status_doc_lines, "006") == "Completed"
     assert _extract_table_status(status_doc_lines, "007") == "Completed"
-    assert _extract_table_status(status_doc_lines, "008") == "In Progress"
+    assert _extract_table_status(status_doc_lines, "008") == "Completed"
 
-    assert payload["data"]["current_phase"] == "Phase 5 — Simulation Desk MVP"
-    assert payload["data"]["current_milestone"] == "M5 (In Progress)"
+    assert payload["data"]["current_phase"] == "Phase 6 — Simple User Interface or Report Output"
+    assert payload["data"]["current_milestone"] == "M6 (Planned)"
     assert payload["data"]["task_status"]["005"] == "Completed"
     assert payload["data"]["task_status"]["006"] == "Completed"
     assert payload["data"]["task_status"]["007"] == "Completed"
-    assert payload["data"]["task_status"]["008"] == "In Progress"
 
 
 def test_analyze_stock_contract_doc_matches_phase4a_runtime() -> None:

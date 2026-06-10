@@ -366,3 +366,20 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Added regression coverage that inserts a decoy `paper_portfolios` row with the same display name but a different stable identity and proves readback returns only the target portfolio order.
 - Fixed backend-check expectation mismatches for the current deterministic system-generated-learning fixture values.
 - Preserved Task 008M local/test-only scope and did not add production Supabase, Supabase client runtime, hosted credentials, vendor/API calls, live market data, broker integration, real-money trading, autonomous execution, real-money account connectivity, hidden/irreversible investment actions, or secrets.
+
+## 2026-06-10 — Task 008N M5 Closeout Readiness and Production Supabase Readiness Gate
+
+- Added `docs/42-task-008n-m5-closeout-and-production-supabase-readiness-gate.md` as the Task 008N source-of-truth audit after Tasks 008K, 008L, and 008M.
+- Closed Task 008 / Milestone M5 as a non-production, advisory-only Simulation Desk MVP based on current endpoint, local/test PostgreSQL adapter, local/test endpoint persistence, and local/test persisted portfolio readback evidence.
+- Recorded that no smallest remaining local/test-only M5 gap was identified; remaining limitations are production-readiness limitations, not M5 blockers.
+- Created a formal Production Supabase Readiness Gate for any future Production Supabase Readiness Package: explicit Harness approval remains required before production Supabase connection, hosted credentials/secrets, production migration application, Supabase client runtime, production persistence, or user-facing production data paths.
+- Preserved hard prohibitions: no production Supabase implementation, no Supabase client runtime, no hosted credentials or secrets, no production migration application, no vendor/API or live market data integration, no broker integration, no real-money trading, no autonomous execution, no real-money account connectivity, and no hidden or irreversible investment actions.
+- Updated `docs/11-project-status.md` to mark Task 008 / M5 Completed while explicitly keeping production Supabase not implemented and not approved.
+- Added a `docs/decision-log.md` entry because Task 008N marks M5 closed and creates a formal Production Supabase Readiness Gate.
+
+
+## 2026-06-10 — PR #36 Backend-Check Infrastructure Hardening
+
+- Hardened `.github/workflows/backend-check.yml` so documentation/status-only PRs can run the project-status backend test path without starting a PostgreSQL service container, avoiding Docker Hub `postgres:16` pull failures before checkout/tests.
+- Preserved full PostgreSQL-backed backend validation for runtime, persistence, migration, and non-doc/status changes; those paths still run `PYTHONPATH=backend pytest backend/tests` with `HK_ALPHA_TEST_POSTGRES_DSN`.
+- Preserved Task 008N documentation/governance scope: no backend runtime feature changes, no production Supabase, no Supabase client runtime, no hosted credentials or secrets, no production migration application, no vendor/API, no live market data, no broker integration, no real-money trading, and no autonomous execution.
