@@ -155,6 +155,13 @@ Before any future PR touches the named production capabilities, it must satisfy 
 | Secrets leakage | Not introduced; no secrets added. |
 | Hidden or irreversible investment actions | Not introduced; simulation outputs remain advisory and reviewable. |
 
+
+## Backend-Check CI Hardening Note
+
+Task 008N includes a minimal `backend-check` workflow hardening after GitHub Actions failed before checkout/tests while pulling the `postgres:16` service image for this documentation/status PR. The hardened workflow keeps full PostgreSQL-backed backend tests for runtime, persistence, migration, and non-doc/status changes, but avoids starting PostgreSQL for PRs whose changed files are limited to documentation, `README.md`, `backend/tests/test_api.py`, or the `backend-check` workflow itself.
+
+This is safe for Task 008N because the PR changes status documentation and the project-status test expectations only; it does not change backend runtime behavior, persistence behavior, migrations, production Supabase, secrets, vendors, brokers, or real-money capabilities. For runtime/persistence changes, `backend-check` still starts PostgreSQL and runs the full `PYTHONPATH=backend pytest backend/tests` suite with `HK_ALPHA_TEST_POSTGRES_DSN`.
+
 ## Manual Setup / Android-Only Validation Note
 
 Harness Engineering is Android-only and is not expected to run local manual validation for Task 008N. PR evidence and GitHub checks must carry validation. The PR body must include exact local command results where available, CI-equivalent evidence for local/test PostgreSQL, and explicit notes for any environment limitation.

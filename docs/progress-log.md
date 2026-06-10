@@ -376,3 +376,10 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Preserved hard prohibitions: no production Supabase implementation, no Supabase client runtime, no hosted credentials or secrets, no production migration application, no vendor/API or live market data integration, no broker integration, no real-money trading, no autonomous execution, no real-money account connectivity, and no hidden or irreversible investment actions.
 - Updated `docs/11-project-status.md` to mark Task 008 / M5 Completed while explicitly keeping production Supabase not implemented and not approved.
 - Added a `docs/decision-log.md` entry because Task 008N marks M5 closed and creates a formal Production Supabase Readiness Gate.
+
+
+## 2026-06-10 — PR #36 Backend-Check Infrastructure Hardening
+
+- Hardened `.github/workflows/backend-check.yml` so documentation/status-only PRs can run the project-status backend test path without starting a PostgreSQL service container, avoiding Docker Hub `postgres:16` pull failures before checkout/tests.
+- Preserved full PostgreSQL-backed backend validation for runtime, persistence, migration, and non-doc/status changes; those paths still run `PYTHONPATH=backend pytest backend/tests` with `HK_ALPHA_TEST_POSTGRES_DSN`.
+- Preserved Task 008N documentation/governance scope: no backend runtime feature changes, no production Supabase, no Supabase client runtime, no hosted credentials or secrets, no production migration application, no vendor/API, no live market data, no broker integration, no real-money trading, and no autonomous execution.
