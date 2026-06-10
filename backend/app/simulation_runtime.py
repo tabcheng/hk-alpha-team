@@ -168,6 +168,16 @@ def _require(condition: bool, message: str) -> None:
         raise SimulationRuntimeValidationError(message)
 
 
+def validate_paper_portfolio_id(portfolio_id: str) -> str:
+    _require(isinstance(portfolio_id, str) and portfolio_id.strip() != "", "portfolio_id must be present")
+    normalized_portfolio_id = portfolio_id.strip()
+    _require(
+        PORTFOLIO_ID_PATTERN.fullmatch(normalized_portfolio_id) is not None,
+        "portfolio_id must use 3-64 URL-safe characters: letters, numbers, dot, underscore, colon, or hyphen",
+    )
+    return normalized_portfolio_id
+
+
 def _as_payload(request: PaperOrderRequest | Mapping[str, Any]) -> dict[str, Any]:
     if isinstance(request, PaperOrderRequest):
         return request.model_dump(mode="python")
@@ -432,17 +442,74 @@ def runtime_warnings_for_persistence_config(config: SimulationPersistenceConfig)
     return list(RUNTIME_WARNINGS)
 
 
+def _paper_portfolio_snapshot_boundary_fields() -> dict[str, Any]:
+    return {
+        "paper_only": True,
+        "advisory_only": True,
+        "human_in_the_loop": True,
+        **{flag_name: False for flag_name in RUNTIME_FALSE_BOUNDARY_FLAGS},
+        "boundary_flags": {flag_name: False for flag_name in RUNTIME_FALSE_BOUNDARY_FLAGS},
+    }
+
+
+def build_local_test_postgres_paper_portfolio_snapshot(
+    portfolio_id: str,
+    *,
+    persistence_config: SimulationPersistenceConfig,
+) -> dict[str, Any]:
+    normalized_portfolio_id = validate_paper_portfolio_id(portfolio_id)
+    if persistence_config.mode != SIMULATION_PERSISTENCE_LOCAL_TEST_POSTGRES:
+        raise SimulationRuntimeConfigurationError("unsupported Simulation Desk persistence mode")
+    dsn = validate_local_test_postgres_dsn(persistence_config.dsn)
+
+    from app.simulation_postgres_persistence import LocalTestPostgresSimulationPersistence
+
+    persisted_orders = LocalTestPostgresSimulationPersistence(dsn).read_paper_orders_for_portfolio(normalized_portfolio_id)
+    if not persisted_orders:
+        raise SimulationRuntimeNotFoundError("paper portfolio not found in local/test PostgreSQL readback")
+
+    base_currency = persisted_orders[-1].get("base_currency", "HKD") or "HKD"
+    return {
+        "portfolio_id": normalized_portfolio_id,
+        "record_type": "paper_portfolio_snapshot",
+        "status": "local_test_postgresql_readback_non_production",
+        "base_currency": base_currency,
+        "cash_placeholder": {"amount": 0, "currency": base_currency, "source": "placeholder_not_broker_cash"},
+        "nav_placeholder": {"amount": 0, "currency": base_currency, "source": "placeholder_not_market_valuation"},
+        "recent_paper_orders": persisted_orders[-20:],
+        "audit_event_previews": [],
+        "local_test_persistence": {
+            "mode": SIMULATION_PERSISTENCE_LOCAL_TEST_POSTGRES,
+            "scope": "local_test_postgresql_only",
+            "paper_orders_read_back": True,
+            "paper_order_count": len(persisted_orders),
+            "database_name": database_name_from_dsn(dsn),
+            "production_supabase_connected": False,
+            "supabase_client_used": False,
+            "broker_api_called": False,
+            "real_money_order_placed": False,
+            "vendor_api_called": False,
+            "live_market_data_called": False,
+            "secrets_required": False,
+            "metadata": persistence_config.metadata,
+        },
+        **_paper_portfolio_snapshot_boundary_fields(),
+    }
+
+
 def build_paper_portfolio_snapshot(
     portfolio_id: str,
     *,
+    persistence_config: SimulationPersistenceConfig | None = None,
     store: InMemorySimulationStore = simulation_store,
 ) -> dict[str, Any]:
-    _require(isinstance(portfolio_id, str) and portfolio_id.strip() != "", "portfolio_id must be present")
-    normalized_portfolio_id = portfolio_id.strip()
-    _require(
-        PORTFOLIO_ID_PATTERN.fullmatch(normalized_portfolio_id) is not None,
-        "portfolio_id must use 3-64 URL-safe characters: letters, numbers, dot, underscore, colon, or hyphen",
-    )
+    config = persistence_config or SimulationPersistenceConfig()
+    if config.mode == SIMULATION_PERSISTENCE_LOCAL_TEST_POSTGRES:
+        return build_local_test_postgres_paper_portfolio_snapshot(portfolio_id, persistence_config=config)
+    if config.mode != SIMULATION_PERSISTENCE_MEMORY:
+        raise SimulationRuntimeConfigurationError("unsupported Simulation Desk persistence mode")
+
+    normalized_portfolio_id = validate_paper_portfolio_id(portfolio_id)
     records = store.get_portfolio_snapshot_records(normalized_portfolio_id)
     if records is None:
         raise SimulationRuntimeNotFoundError("paper portfolio not found")
@@ -457,9 +524,5 @@ def build_paper_portfolio_snapshot(
         "nav_placeholder": {"amount": 0, "currency": base_currency, "source": "placeholder_not_market_valuation"},
         "recent_paper_orders": orders[-20:],
         "audit_event_previews": audits[-20:],
-        "paper_only": True,
-        "advisory_only": True,
-        "human_in_the_loop": True,
-        **{flag_name: False for flag_name in RUNTIME_FALSE_BOUNDARY_FLAGS},
-        "boundary_flags": {flag_name: False for flag_name in RUNTIME_FALSE_BOUNDARY_FLAGS},
+        **_paper_portfolio_snapshot_boundary_fields(),
     }

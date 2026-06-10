@@ -46,6 +46,10 @@ def _stable_uuid(label: str, value: str) -> UUID:
     return uuid5(NAMESPACE_URL, f"hk-alpha-team:local-test:{label}:{value}")
 
 
+def stable_local_test_paper_portfolio_uuid(portfolio_id: str) -> UUID:
+    return _stable_uuid("paper_portfolio", str(portfolio_id or "").strip())
+
+
 def _json_copy(value: Any, fallback: Any) -> Any:
     if value is None:
         return deepcopy(fallback)
@@ -103,6 +107,30 @@ def _uuid_or_none(value: Any) -> UUID | None:
     return None
 
 
+def _learning_proposal_readback(order: Mapping[str, Any]) -> dict[str, Any] | None:
+    if order.get("simulation_origin") != "system_generated_learning":
+        return None
+
+    source_metadata = order.get("source_metadata_json")
+    historical_fields = order.get("historical_recommendation_fields_json")
+    source_metadata = dict(source_metadata) if isinstance(source_metadata, Mapping) else {}
+    historical_fields = dict(historical_fields) if isinstance(historical_fields, Mapping) else {}
+    return {
+        "proposal_type": "reviewable_learning_proposal_readback",
+        "status": "preview_only_not_applied",
+        "requires_human_review": order.get("requires_human_review") is True,
+        "auto_apply": False,
+        "proposals_auto_applied": False,
+        "production_strategy_logic_changed": False,
+        "readback_source": "local_test_postgresql_paper_orders",
+        "source_recommendation_id": order.get("source_recommendation_id")
+        or historical_fields.get("source_recommendation_id"),
+        "system_learning_reason": order.get("system_learning_reason")
+        or source_metadata.get("system_learning_reason"),
+        "improvement_suggestions": deepcopy(source_metadata.get("improvement_suggestions")),
+    }
+
+
 class LocalTestPostgresSimulationPersistence:
     """Local/test-only PostgreSQL adapter for Simulation Desk paper-order roundtrips.
 
@@ -129,7 +157,7 @@ class LocalTestPostgresSimulationPersistence:
         _require(side in {"buy", "sell"}, "side must be buy or sell")
         quantity = _normalize_quantity(order.get("quantity"))
 
-        portfolio_uuid = _stable_uuid("paper_portfolio", portfolio_runtime_id)
+        portfolio_uuid = stable_local_test_paper_portfolio_uuid(portfolio_runtime_id)
         with psycopg.connect(self.dsn, row_factory=dict_row) as connection:
             with connection.cursor() as cursor:
                 cursor.execute(
@@ -223,6 +251,7 @@ class LocalTestPostgresSimulationPersistence:
                     select
                       po.id,
                       pp.name as portfolio_id,
+                      pp.portfolio_uuid,
                       s.symbol,
                       po.side,
                       po.order_type,
@@ -253,8 +282,14 @@ class LocalTestPostgresSimulationPersistence:
                 )
                 row = cursor.fetchone()
         _require(row is not None, "paper order was not found in local/test PostgreSQL")
+        return self._format_paper_order_row(row)
+
+    @staticmethod
+    def _format_paper_order_row(row: Mapping[str, Any]) -> dict[str, Any]:
         result = dict(row)
         result["id"] = str(result["id"])
+        if result.get("portfolio_uuid") is not None:
+            result["portfolio_uuid"] = str(result["portfolio_uuid"])
         for field_name in ("strategy_recommendation_id", "source_recommendation_id", "learning_proposal_id"):
             result[field_name] = str(result[field_name]) if result[field_name] is not None else None
         result["quantity"] = float(result["quantity"])
@@ -263,5 +298,51 @@ class LocalTestPostgresSimulationPersistence:
         if result["submitted_at"] is not None:
             result["submitted_at"] = result["submitted_at"].isoformat()
         result["created_at"] = result["created_at"].isoformat()
+        result["learning_proposal_readback"] = _learning_proposal_readback(result)
         result["local_test_adapter_boundary_flags"] = deepcopy(LOCAL_TEST_ADAPTER_BOUNDARY_FLAGS)
         return result
+
+    def read_paper_orders_for_portfolio(self, portfolio_id: str) -> list[dict[str, Any]]:
+        portfolio_runtime_id = str(portfolio_id or "").strip()
+        _require(portfolio_runtime_id != "", "portfolio_id is required")
+        portfolio_uuid = stable_local_test_paper_portfolio_uuid(portfolio_runtime_id)
+        with psycopg.connect(self.dsn, row_factory=dict_row) as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    """
+                    select
+                      po.id,
+                      pp.name as portfolio_id,
+                      pp.portfolio_uuid,
+                      pp.base_currency,
+                      s.symbol,
+                      po.side,
+                      po.order_type,
+                      po.quantity,
+                      po.limit_price,
+                      po.status,
+                      po.submitted_at,
+                      po.created_at,
+                      po.strategy_recommendation_id,
+                      po.source_recommendation_id,
+                      po.simulation_origin,
+                      po.paper_order_origin,
+                      po.created_by_type,
+                      po.user_recorded_notes,
+                      po.system_learning_reason,
+                      po.requires_human_review,
+                      po.learning_proposal_id,
+                      po.boundary_flags_json,
+                      po.outcome_preview_json,
+                      po.source_metadata_json,
+                      po.historical_recommendation_fields_json
+                    from paper_orders po
+                    join paper_portfolios pp on pp.id = po.portfolio_id
+                    join stocks s on s.id = po.stock_id
+                    where pp.portfolio_uuid = %s
+                    order by coalesce(po.submitted_at, po.created_at) asc, po.created_at asc, po.id asc
+                    """,
+                    (portfolio_uuid,),
+                )
+                rows = cursor.fetchall()
+        return [self._format_paper_order_row(row) for row in rows]
