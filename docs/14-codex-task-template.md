@@ -40,6 +40,12 @@ State the primary deliverable before listing scope details. Choose the best fit,
 - governance update
 - documentation-only decision record
 
+Fill in:
+
+- **Primary deliverable:** [one of the examples above, or a specific equivalent]
+- **Implementation-first fit:** [how this task produces runnable behavior, tests, API-visible output, or validation evidence]
+- **Docs-only rationale:** [required if documentation-only; explain why implementation-limited delivery is not safe, not appropriate, or is blocked by a required governance gate]
+
 For ordinary non-real-money product tasks, prefer executable, testable product capability over documentation-only progress when a safe implementation-limited vertical slice is available.
 
 Use this target delivery mix unless the task explicitly requires a different balance:
@@ -156,6 +162,22 @@ Include sections:
 13. Evidence Closure Checklist
 14. Follow-Up Tasks
 15. Post-Merge Verification Required
+
+The Evidence Closure Checklist should include, at minimum:
+
+- public web availability if used;
+- authenticated GitHub source-of-truth status;
+- latest reviewed head SHA;
+- branch freshness;
+- workflow conclusions;
+- job/step inspection level;
+- exact command outputs;
+- local rerun classification;
+- branch protection visibility;
+- unresolved review thread status;
+- PR body Factory sections complete;
+- expected-head-SHA merge lock;
+- post-merge verification requirement.
 
 ---
 

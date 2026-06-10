@@ -394,5 +394,5 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 
 ## 2026-06-10 — PR #37 Task Template Blocker Closure
 
-- Updated `docs/14-codex-task-template.md` so the reusable Codex task prompt template now carries the Task 009A implementation-first guardrail, primary deliverable field, target delivery mix, docs-only rationale requirement, implementation-limited acceptance criteria, and expanded PR body Evidence Closure sections.
+- Updated `docs/14-codex-task-template.md` so the reusable Codex task prompt template now carries the Task 009A implementation-first guardrail, primary deliverable field, implementation-first fit and docs-only rationale placeholders, target delivery mix, docs-only rationale requirement, implementation-limited acceptance criteria, expanded PR body sections, and minimum Evidence Closure checklist items.
 - Preserved PR #37 documentation-only guardrail scope: no backend runtime, frontend/UI, report output implementation, Supabase runtime, production Supabase, hosted credentials or secrets, SQL migrations, vendor/API calls, broker integration, auth/payment/deployment runtime, real-money trading automation, autonomous real-money execution, real-money account connectivity, hidden/irreversible investment actions, or locked contract-name changes were introduced.
