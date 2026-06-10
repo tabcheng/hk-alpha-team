@@ -391,3 +391,8 @@ Scope check: documentation-only, no implementation code, no deployment config, n
 - Recorded the target delivery mix for ordinary scoped tasks: 65–75% executable implementation/tests/runtime or API-visible behavior, 15–20% validation/CI/safety checks/Evidence Closure, and 10–15% concise documentation/status/progress/decision updates.
 - Updated the PR review checklist so future docs-only recommendations must explain why a safe implementation-limited slice is not safe, not appropriate, or blocked by a required governance gate.
 - Preserved documentation-only Task 009A scope: no backend runtime, frontend/UI, report output implementation, Supabase runtime, production Supabase, credentials/secrets, SQL migrations, vendor/API calls, broker integration, auth/payment/deployment runtime, or real-money trading automation was introduced.
+
+## 2026-06-10 — PR #37 Task Template Blocker Closure
+
+- Updated `docs/14-codex-task-template.md` so the reusable Codex task prompt template now carries the Task 009A implementation-first guardrail, primary deliverable field, target delivery mix, docs-only rationale requirement, implementation-limited acceptance criteria, and expanded PR body Evidence Closure sections.
+- Preserved PR #37 documentation-only guardrail scope: no backend runtime, frontend/UI, report output implementation, Supabase runtime, production Supabase, hosted credentials or secrets, SQL migrations, vendor/API calls, broker integration, auth/payment/deployment runtime, real-money trading automation, autonomous real-money execution, real-money account connectivity, hidden/irreversible investment actions, or locked contract-name changes were introduced.
