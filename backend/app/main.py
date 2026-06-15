@@ -5,6 +5,7 @@ from fastapi.responses import JSONResponse
 from app.analysis_workflow import PHASE_4A_WARNINGS
 from app.analyze_stock import AnalyzeStockRequest, build_analyze_stock_response
 from app.contracts import error_envelope, success_envelope
+from app.report_output import REPORT_OUTPUT_METADATA, REPORT_OUTPUT_WARNINGS, build_simulation_summary_report
 from app.simulation_runtime import (
     PaperOrderRequest,
     SIMULATION_PERSISTENCE_LOCAL_TEST_POSTGRES,
@@ -66,6 +67,15 @@ def health() -> dict:
 @app.get("/api/v1/project-status")
 def project_status() -> dict:
     return success_envelope(read_project_status())
+
+
+@app.get("/api/v1/reports/simulation-summary")
+def simulation_summary_report() -> dict:
+    return success_envelope(
+        build_simulation_summary_report(),
+        warnings=REPORT_OUTPUT_WARNINGS,
+        metadata_extra=REPORT_OUTPUT_METADATA,
+    )
 
 
 @app.post("/api/v1/analyze-stock")

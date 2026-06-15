@@ -49,6 +49,8 @@ def _current_milestone_id(phase: str) -> str:
 def _tracked_task_ids_for_phase(phase: str) -> tuple[str, ...]:
     if phase.startswith("Phase 5"):
         return ("005", "006", "007", "008")
+    if phase.startswith("Phase 6"):
+        return ("005", "006", "007", "008", "009")
     return ("005", "006", "007")
 
 
