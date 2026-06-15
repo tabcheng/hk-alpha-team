@@ -2,7 +2,7 @@
 
 ## Snapshot Date
 
-2026-06-10
+2026-06-11
 
 ## Current Phase
 
@@ -20,7 +20,7 @@
 | 006 | Backend Skeleton | Completed | PR #8 merged the analyze-stock stub, validation envelope handling, backend tests, and mobile-first strategy notes, completing M3 readiness for Phase 4. |
 | 007 | First Analysis Workflow | Completed | Completed by Phase 4G closeout readiness review after Phase 4A deterministic local-only workflow skeleton, Phase 4B deterministic department adapters, Phase 4C local-only handoff mapping, Phase 4D internal-only handoff preview decision, Phase 4E internal workflow validation, and Phase 4F fixture-backed validation/M4 readiness evidence. Public handoff previews, live research, persistence, production Supabase, broker execution, paper orders, and real-money trading remain out of scope. |
 | 008 | Simulation Desk MVP | Completed | Closed by Task 008N as a non-production, advisory-only Simulation Desk MVP after evidence from Task 008K local/test PostgreSQL paper-order write/read, Task 008L explicit local/test endpoint persistence wiring, and Task 008M local/test paper-portfolio persisted readback. Default runtime remains in-memory; production Supabase, Supabase client runtime, hosted credentials, production migration application, production runtime persistence, vendors, brokers, live data, secrets, and real-money actions remain out of scope and blocked behind explicit future Harness approval gates. |
-| 009 | Simple UI or Report Output | Planned | Minimal output layer for strategy reports. |
+| 009 | Simple UI or Report Output | In Progress | Task 009B adds the first backend-only deterministic JSON report output endpoint for a minimal Phase 6 report surface. Frontend, deployment, auth/payment, production Supabase, vendor/API, broker, secrets, and real-money execution remain out of scope. |
 | 010 | Review and Learning Loop | Planned | Trade reviews, proposals, and audit continuity. |
 
 ## Milestones M0–M7
@@ -33,12 +33,13 @@
 | M3 | Backend Skeleton | Completed |
 | M4 | First Analysis Workflow | Completed |
 | M5 | Simulation Desk MVP | Completed |
-| M6 | Simple User Interface or Report Output | Planned |
+| M6 | Simple User Interface or Report Output | In Progress |
 | M7 | Review and Learning Loop | Planned |
 
 ## Current Decisions Summary
 
 - Task 008N closed Task 008 / M5 as a non-production, advisory-only Simulation Desk MVP based on Task 008K/008L/008M local/test evidence. Production Supabase remains not implemented and blocked behind explicit future Harness approval gates for production connection, hosted credentials/secrets, production migration application, Supabase client runtime, production persistence, RLS/security review, Evidence Closure, and post-merge verification.
+- Task 009B starts Task 009 / M6 with a backend-only deterministic JSON report output endpoint, preserving advisory-only, paper-only, human-decision framing and no production Supabase, vendor/API, live market data, broker, secrets, frontend, deployment, auth/payment, or real-money execution.
 
 - Canonical schema table names are locked unless same-PR decision-log justification is added.
 - MVP endpoint names and required response envelope are locked for implementation continuity.
@@ -95,7 +96,7 @@
 - SQL migration draft added: **Yes — local/test-only additive drafts only (`0002`, `0003`)**
 - Production migration applied: **No**
 - Supabase client added: **No**
-- Endpoint runtime added: **Yes — Task 008I default in-memory Simulation Desk endpoints, Task 008L explicit local/test paper-order persistence write/readback, and Task 008M explicit local/test paper-portfolio persisted readback**
+- Endpoint runtime added: **Yes — Task 008I default in-memory Simulation Desk endpoints, Task 008L explicit local/test paper-order persistence write/readback, Task 008M explicit local/test paper-portfolio persisted readback, and Task 009B backend-only deterministic report output at `GET /api/v1/reports/simulation-summary`**
 - Real-money trading automation added: **No**
 - Broker integration added: **No**
 - Secrets committed: **No**
